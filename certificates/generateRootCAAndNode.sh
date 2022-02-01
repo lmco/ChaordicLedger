@@ -9,6 +9,15 @@ set -e
 
 export PATH=.:"$PATH"
 
+# Check if jq is available.
+if ! result=$(which jq); then
+  echo "jq not available ($result). Downloading..."
+  wget https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64 -O jq
+  chmod +x jq
+else
+  echo "The jq tool is available."
+fi
+
 readonly ROOT_PASSPHRASE="temp"
 readonly NODE_PASSPHRASE="something"
 
@@ -23,7 +32,7 @@ readonly ROOT_COMMON_NAME="ChaordicLedger Root CA"
 readonly NODE_COMMON_NAME="ChaordicLedger Node 1"
 readonly NODE_RESULTS_FILE_NAME="nodeResults.json"
 
-./generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+./generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
 
 readonly ROOT_RESULTS_FILE_PATH="$OUTPUT_DIR/$ROOT_RESULTS_FILE_NAME"
 
@@ -33,7 +42,7 @@ ROOT_CA_CERT_FILE_NAME="$(jq '(.Inputs.OutputDirectory) + "/" + (.Outputs.RootCA
 echo "Root Private Keyfile: $ROOT_CA_PRIVATE_KEYFILE_NAME"
 echo "Root Certificate file: $ROOT_CA_CERT_FILE_NAME"
 
-./generateNodeCert.sh -f "$NODE_RESULTS_FILE_NAME" -a "$ROOT_CA_CERT_FILE_NAME" -b "$ROOT_CA_PRIVATE_KEYFILE_NAME" -d "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -p "$NODE_PASSPHRASE" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$NODE_COMMON_NAME"
+./generateNodeCert/bin/generateNodeCert.sh -f "$NODE_RESULTS_FILE_NAME" -a "$ROOT_CA_CERT_FILE_NAME" -b "$ROOT_CA_PRIVATE_KEYFILE_NAME" -d "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -p "$NODE_PASSPHRASE" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$NODE_COMMON_NAME"
 
 readonly NODE_RESULTS_FILE_PATH="$OUTPUT_DIR/$NODE_RESULTS_FILE_NAME"
 
