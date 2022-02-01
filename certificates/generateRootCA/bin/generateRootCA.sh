@@ -6,6 +6,7 @@
 # Useful references:
 #   https://datacenteroverlords.com/2012/03/01/creating-your-own-ssl-certificate-authority/
 #   https://www.assertnotmagic.com/2019/03/08/bash-advanced-arguments
+set -e
 
 PHRASE=""
 OUTDIR=""

@@ -48,6 +48,9 @@ Describe 'Root Certificate Authority (CA) Generation'
     }
 }'
 
+    CERTSUBJECT=$(openssl x509 -noout -in /tmp/rootCAtest1/rootCACert.pem -subject 2>/dev/null)
+    The value "$CERTSUBJECT" should equal "subject= /C=US/ST=Colorado/L=Denver/O=Lockheed Martin Corporation/OU=Space/CN=ChaordicLedger Root CA"
+
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $OUTPUT_DIR
   End
@@ -95,6 +98,10 @@ Describe 'Root Certificate Authority (CA) Generation'
       }
     }
 }'
+
+    CERTSUBJECT=$(openssl x509 -noout -in /tmp/rootCAtest2/rootCACert.pem -subject 2>/dev/null)
+    The value "$CERTSUBJECT" should equal "subject= /C=AU/ST=WA/L=Northbridge/O=Hotels/OU=Fancy/CN=Yet another root cert authority"
+
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $OUTPUT_DIR
   End

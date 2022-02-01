@@ -1,10 +1,9 @@
 #!/bin/sh
-# TODO: Augment to check the contents of the certificate.
 
 Describe 'Node Certificate Generation'
   ROOT_PASSPHRASE="something"
-  ROOT_CA_CERT_FILE_NAME="testRootCA.pem"
-  ROOT_CA_PRIVATE_KEYFILE_NAME="testRootCA.key"
+  ROOT_CA_CERT_FILE_NAME="rootCACert.pem"
+  ROOT_CA_PRIVATE_KEYFILE_NAME="rootCA.key"
   ROOT_PASSPHRASE="testRootCAPhrase"
   ROOT_RESULTS_FILE_NAME="rootCAResults.json"
   ROOT_TEMP_DIR="/tmp/nodeTestSupport"
@@ -48,8 +47,8 @@ It 'generates a node certificate file and private key file with no passphrase'
     The contents of file "$NODE_OUTPUT_DIR/$NODE_RESULTS_FILE_NAME" should equal '{
     "Inputs": {
         "ResultsFileName": "nodeResults01234.json",
-        "RootCACertFile": "/tmp/nodeTestSupport/testRootCA.pem",
-        "RootCAKeyFile": "/tmp/nodeTestSupport/testRootCA.key",
+        "RootCACertFile": "/tmp/nodeTestSupport/rootCACert.pem",
+        "RootCAKeyFile": "/tmp/nodeTestSupport/rootCA.key",
         "RootCAPassphrase": "<MASKED>",
         "NodeCertPassphrase": "<None provided>",
         "OutputDirectory": "/tmp/nodetest42",
@@ -76,6 +75,9 @@ It 'generates a node certificate file and private key file with no passphrase'
     }
 }'
 
+    CERTSUBJECT=$(openssl x509 -noout -in /tmp/nodetest42/nodeCert.pem -subject 2>/dev/null)
+    The value "$CERTSUBJECT" should equal "subject= /C=US/ST=Colorado/L=Denver/O=Lockheed Martin Corporation/OU=Space/CN=ChaordicLedger node"
+
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $NODE_OUTPUT_DIR
   End
@@ -99,8 +101,8 @@ It 'generates a node certificate file and private key file with no passphrase'
     The contents of file "$NODE_OUTPUT_DIR/$NODE_RESULTS_FILE_NAME" should equal '{
     "Inputs": {
         "ResultsFileName": "nodeResults0.json",
-        "RootCACertFile": "/tmp/nodeTestSupport/testRootCA.pem",
-        "RootCAKeyFile": "/tmp/nodeTestSupport/testRootCA.key",
+        "RootCACertFile": "/tmp/nodeTestSupport/rootCACert.pem",
+        "RootCAKeyFile": "/tmp/nodeTestSupport/rootCA.key",
         "RootCAPassphrase": "<MASKED>",
         "NodeCertPassphrase": "<MASKED>",
         "OutputDirectory": "/tmp/nodetest1",
@@ -126,6 +128,9 @@ It 'generates a node certificate file and private key file with no passphrase'
       }
     }
 }'
+
+    CERTSUBJECT=$(openssl x509 -noout -in /tmp/nodetest1/nodeCert.pem -subject 2>/dev/null)
+    The value "$CERTSUBJECT" should equal "subject= /C=US/ST=Colorado/L=Denver/O=Lockheed Martin Corporation/OU=Space/CN=ChaordicLedger node"
 
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $NODE_OUTPUT_DIR
