@@ -76,7 +76,7 @@ It 'generates a node certificate file and private key file with no passphrase'
 }'
 
     CERTSUBJECT=$(openssl x509 -noout -in /tmp/nodetest42/nodeCert.pem -subject 2>/dev/null)
-    The value "$CERTSUBJECT" should equal "subject= /C=US/ST=Colorado/L=Denver/O=Lockheed Martin Corporation/OU=Space/CN=ChaordicLedger node"
+    The value "$CERTSUBJECT" should equal "subject=C = US, ST = Colorado, L = Denver, O = Lockheed Martin Corporation, OU = Space, CN = ChaordicLedger node"
 
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $NODE_OUTPUT_DIR
@@ -130,7 +130,7 @@ It 'generates a node certificate file and private key file with no passphrase'
 }'
 
     CERTSUBJECT=$(openssl x509 -noout -in /tmp/nodetest1/nodeCert.pem -subject 2>/dev/null)
-    The value "$CERTSUBJECT" should equal "subject= /C=US/ST=Colorado/L=Denver/O=Lockheed Martin Corporation/OU=Space/CN=ChaordicLedger node"
+    The value "$CERTSUBJECT" should equal "subject=C = US, ST = Colorado, L = Denver, O = Lockheed Martin Corporation, OU = Space, CN = ChaordicLedger node"
 
     # Using this since there's a race condition between evaluation and the use of an AfterRun hook.
     rm -rf $NODE_OUTPUT_DIR

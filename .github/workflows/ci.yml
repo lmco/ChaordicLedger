@@ -1,0 +1,18 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: No-op
+      run: echo "Hi!"
+  test:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v1
+    - name: Install shellspec
+      run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
+    - name: Execute shellspec
+      run: shellspec

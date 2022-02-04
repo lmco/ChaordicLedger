@@ -71,7 +71,8 @@ Usage: ../bin/generateNodeCert.sh
     -r <Organization>
     -u <Organizational Unit>
     -n <Common Name>'
-    The stderr should equal '../bin/generateNodeCert.sh: illegal option -- Z'
+    # The stderr can vary between operating systems ('Illegal option -Z' vs 'illegal option -- Z'), but in any case should exist.
+    The stderr should end with "Z"
     The status should equal 3
   End
 
