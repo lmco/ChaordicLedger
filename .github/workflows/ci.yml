@@ -19,6 +19,7 @@ jobs:
   PrerequisiteRootCA:
     runs-on: ubuntu-latest
     steps:
+    - uses: actions/checkout@v1
     - name: Create Root Certificate Authority (CA)
       run: |
         ROOT_RESULTS_FILE_NAME="rootCAResults.json"
