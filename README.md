@@ -1,3 +1,5 @@
+[![CI](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml)
+
 # CharodicLedger
 The ChaordicLedger is the implementation of a design for a combination of Distributed Ledger Technology (DLT) and a Distributed File System (DFS) to create a secure, enterprise-grade platform for storing interlinked project artifacts.
 
@@ -16,9 +18,9 @@ The development of this platform is in pursuit of the author's PhD research obje
 1. Free and Open-Source technologies shall be leveraged.
 
 ## Implementation Roadmap
-|Item|Implementation Status|Test Status|Documentation Status|Pipeline Status|
+|Item|Implementation Status|Test Status|Documentation Status|Pipeline Execution|
 |---|---|---|---|---|
-|Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;||
+|Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;|&#9745;|
 |Scripted generation of node certificate signed by generated root certificate authority.|&#9745;|&#9745;|&#9745;||
 |Creation of Hyperledger Nodes|   |   |   ||
 |Creation of hybrid Hyperledger/IPFS Nodes|   |   |   ||
