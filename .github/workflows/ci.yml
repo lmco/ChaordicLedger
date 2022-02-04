@@ -16,3 +16,21 @@ jobs:
       run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
     - name: Execute shellspec
       run: shellspec
+  PrerequisiteRootCA:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Create Root Certificate Authority (CA)
+      run: |
+        ROOT_RESULTS_FILE_NAME="rootCAResults.json"
+        COUNTRY_CODE="AU"
+        STATE="WA"
+        LOCATION="Northbridge"
+        ORGANIZATION="Hotels"
+        ORGANIZATIONAL_UNIT="Fancy"
+        ROOT_COMMON_NAME="Yet another root cert authority"
+        OUTPUT_DIR="."
+        
+        # Use when a passphrase secret can be defined in the pipeline.
+        #./certificates/bin/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+        ./certificates/bin/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+        openssl x509 -text -noout -in rootCACert.pem
