@@ -5,7 +5,9 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    steps: echo "Hi"
+    steps:
+    - name: No-op
+      run: echo "Hi!""
   test:
     runs-on: ubuntu-latest
     steps:
