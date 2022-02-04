@@ -10,6 +10,7 @@ jobs:
       run: echo "Hi!"
   test:
     runs-on: ubuntu-latest
+    needs: build
     steps:
     - uses: actions/checkout@v1
     - name: Install shellspec
@@ -18,6 +19,7 @@ jobs:
       run: shellspec
   PrerequisiteRootCA:
     runs-on: ubuntu-latest
+    needs: test
     steps:
     - uses: actions/checkout@v1
     - name: Create Root Certificate Authority (CA)
