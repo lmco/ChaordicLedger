@@ -132,6 +132,7 @@ if [ "$PHRASE" = "" ]; then
   echo "WARN: Empty passphrase provided for Root CA private key."
   openssl genrsa -out "$KEYFILE_PATH" "$KEYSIZE_IN_BITS"
 else
+  echo "Passphrase provided for Root CA private key."
   openssl genrsa -des3 -passout "pass:$PHRASE" -out "$KEYFILE_PATH" "$KEYSIZE_IN_BITS"
 fi
 
