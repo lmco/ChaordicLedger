@@ -68,3 +68,7 @@ jobs:
           push: true
           tags: localhost:5000/name/chaordic-ledger:latest
           #tags: localhost:5000/name/chaordic-ledger:$(date +%s)
+      -
+        name: Inspect
+        run: |
+          docker buildx imagetools inspect localhost:5000/name/chaordic-ledger:latest
