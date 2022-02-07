@@ -35,9 +35,7 @@ jobs:
         ROOT_COMMON_NAME="Yet another root cert authority"
         OUTPUT_DIR="."
         
-        # Use when a passphrase secret can be defined in the pipeline.
-        #./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
-        ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+        ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
         openssl x509 -text -noout -in rootCACert.pem
 
   BuildDockerImage:
