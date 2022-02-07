@@ -25,8 +25,8 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Create Root Certificate Authority (CA)
-      with:
-        credentials: ${{ secrets.ROOT_PASSPHRASE }}
+      env:
+        ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
       run: |
         ROOT_RESULTS_FILE_NAME="rootCAResults.json"
         COUNTRY_CODE="AU"
