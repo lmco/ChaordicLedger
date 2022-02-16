@@ -1,0 +1,6 @@
+export HTTP_PROXY=${PIPELINE_HTTP_PROXY}
+export http_proxy=${HTTP_PROXY}
+export HTTPS_PROXY=${PIPELINE_HTTPS_PROXY}
+export https_proxy=${HTTPS_PROXY}
+export NO_PROXY=${PIPELINE_NO_PROXY}
+export no_proxy=${NO_PROXY}

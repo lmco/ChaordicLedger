@@ -13,17 +13,15 @@ jobs:
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
   prerequisites:
     runs-on: ubuntu-latest
+    env:
+      AGNOSTIC_DIR: ../setup/agnostic
+      UBUNTU_DIR: ../setup/ubuntu
+      RHEL_DIR: ../setup/rhel
     steps:
     - name: Setup local
       run: |
-        mkdir -p ~/.local/bin
-        export HTTP_PROXY=${PIPELINE_HTTP_PROXY}
-        export http_proxy=${HTTP_PROXY}
-        export HTTPS_PROXY=${PIPELINE_HTTPS_PROXY}
-        export https_proxy=${HTTPS_PROXY}
-        export NO_PROXY=${PIPELINE_NO_PROXY}
-        export no_proxy=${NO_PROXY}
-        env | sort
+        source ${AGNOSTIC_DIR}/local_source
+        ${AGNOSTIC_DIR}/local_setup.sh
     - name: Get kubectl
       run: |
         curl -LO https://dl.k8s.io/release/v1.23.3/bin/linux/amd64/kubectl
