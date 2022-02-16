@@ -46,20 +46,20 @@ jobs:
         mkdir -p ~/.local/bin
         mv ./jq-linux64 ~/.local/bin/jq
         jq --version
-    - name: Get yum
+    - name: Update apt
       run: |
         sudo apt update -y
-        sudo apt -y install yum-utils
+        #sudo apt -y install yum-utils
     - name: Get shasum
       run: |
-        sudo yum install -y perl-Digest-SHA
+        sudo apt -y install perl-Digest-SHA
     - name: Get Docker
       run: |
         echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
-        sudo yum -y install git
-        sudo yum -y install curl
-        sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-        sudo yum -y install docker-ce docker-ce-cli containerd.io
+        sudo apt -y install git
+        sudo apt -y install curl
+        sudo add-apt-repository https://download.docker.com/linux/centos/docker-ce.repo
+        sudo apt -y install docker-ce docker-ce-cli containerd.io
         sudo mkdir -p /etc/systemd/system/docker.service.d/
         proxy_config="/etc/systemd/system/docker.service.d/http-proxy.conf"
         sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
