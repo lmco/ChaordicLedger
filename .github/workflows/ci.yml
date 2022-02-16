@@ -14,9 +14,9 @@ jobs:
   prerequisites:
     runs-on: ubuntu-latest
     env:
-      AGNOSTIC_DIR: ../setup/agnostic
-      UBUNTU_DIR: ../setup/ubuntu
-      RHEL_DIR: ../setup/rhel
+      AGNOSTIC_DIR: setup/agnostic
+      UBUNTU_DIR: setup/ubuntu
+      RHEL_DIR: setup/rhel
     steps:
     - uses: actions/checkout@v2
     - name: Setup local
