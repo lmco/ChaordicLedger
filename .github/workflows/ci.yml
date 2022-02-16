@@ -18,6 +18,7 @@ jobs:
       UBUNTU_DIR: ../setup/ubuntu
       RHEL_DIR: ../setup/rhel
     steps:
+    - uses: actions/checkout@v2
     - name: Setup local
       run: |
         source ${AGNOSTIC_DIR}/local_source
