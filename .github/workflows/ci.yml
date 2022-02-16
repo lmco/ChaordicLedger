@@ -52,7 +52,8 @@ jobs:
         #sudo apt -y install yum-utils
     - name: Get shasum
       run: |
-        sudo apt -y install perl-Digest-SHA
+        sudo apt install -y libdigest-sha-perl
+        #sudo apt -y install perl-Digest-SHA
     - name: Get Docker
       run: |
         echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
