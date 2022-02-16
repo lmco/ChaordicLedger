@@ -2,7 +2,7 @@
 
 # Note: libdigest-sha-perl contains the 'shasum' tool.
 sudo apt-get -y install \
-                git
+                git \
                 ca-certificates \
                 curl \
                 gnupg \
