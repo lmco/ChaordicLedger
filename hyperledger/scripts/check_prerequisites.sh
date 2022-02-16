@@ -14,5 +14,8 @@ function check_return_code() {
 
 check_return_code "docker" "version"
 check_return_code "kind" "version"
-check_return_code "kubectl" "version"
 check_return_code "jq" "--version"
+
+# Note: Using the version option with kubectl will cause a non-zero return code 
+# if the client and the server have drifted too far in version.
+check_return_code "kubectl" "" 

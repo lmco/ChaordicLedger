@@ -88,17 +88,13 @@ function pull_docker_images() {
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION
-  docker pull ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 }
 
 function load_docker_images() {
-  push_fn "Loading docker images to KIND control plane"
+  echo "Loading docker images into the control plane"
 
-  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:$FABRIC_CA_VERSION
-  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION
-  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION
-  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION
-  kind load docker-image ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
-  
-  pop_fn 
+  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:$FABRIC_CA_VERSION --name ${CLUSTER_NAME}
+  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION --name ${CLUSTER_NAME}
+  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION --name ${CLUSTER_NAME}
+  kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION --name ${CLUSTER_NAME}
 }

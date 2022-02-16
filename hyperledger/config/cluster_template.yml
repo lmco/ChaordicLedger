@@ -15,10 +15,6 @@ nodes:
       - containerPort: 443
         hostPort: ${ingress_https_port}
         protocol: TCP
-    extraMounts:
-    - hostPath: /etc/ssl/certs/
-      containerPath: /externalCerts
-      readOnly: true
 networking:
   kubeProxyMode: "ipvs"
 
