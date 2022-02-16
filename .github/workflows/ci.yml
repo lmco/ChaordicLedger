@@ -79,7 +79,7 @@ jobs:
         echo "Environment=\"https_proxy=${https_proxy}\"" | sudo tee -a $proxy_config
         echo "Environment=\"NO_PROXY=${NO_PROXY}\"" | sudo tee -a $proxy_config
         echo "Environment=\"no_proxy=${no_proxy}\"" | sudo tee -a $proxy_config
-        sudo groupadd docker
+        #sudo groupadd docker
         sudo usermod -aG docker ${USER}
         sudo systemctl daemon-reload
         sudo systemctl restart docker
