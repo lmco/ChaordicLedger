@@ -59,8 +59,14 @@ jobs:
         echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
         sudo apt -y install git
         sudo apt -y install curl
-        sudo add-apt-repository https://download.docker.com/linux/centos/docker-ce.repo
-        sudo apt -y install docker-ce docker-ce-cli containerd.io
+        #sudo add-apt-repository https://download.docker.com/linux/centos/docker-ce.repo
+        sudo apt-get install \
+                      ca-certificates \
+                      curl \
+                      gnupg \
+                      lsb-release
+        sudo apt-get install docker-ce docker-ce-cli containerd.io
+        #sudo apt -y install docker-ce docker-ce-cli containerd.io
         sudo mkdir -p /etc/systemd/system/docker.service.d/
         proxy_config="/etc/systemd/system/docker.service.d/http-proxy.conf"
         sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
@@ -76,6 +82,7 @@ jobs:
         sudo systemctl daemon-reload
         sudo systemctl restart docker
         sudo su $USER # or log off/on
+        docker run hello-world
     - name: Setup Hyperledger
       run: |
           qgit clone https://github.com/marchinm/fabric-samples.git
