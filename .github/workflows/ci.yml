@@ -11,7 +11,7 @@ jobs:
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
-  hyperledger:
+  prerequisites:
     runs-on: ubuntu-latest
     steps:
     - name: Setup local
@@ -59,7 +59,10 @@ jobs:
         echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
         sudo apt-get -y install git
         sudo apt-get -y install curl
-        sudo add-apt-repository https://download.docker.com/linux/centos/docker-ce.repo
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo \
+          "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+          $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
         sudo apt-get -y install \
                       ca-certificates \
                       curl \
@@ -83,9 +86,12 @@ jobs:
         sudo systemctl restart docker
         sudo su $USER # or log off/on
         docker run hello-world
+  hyperledger:
+    runs-on: ubuntu-latest
+    needs: prerequisites
     - name: Setup Hyperledger
       run: |
-          qgit clone https://github.com/marchinm/fabric-samples.git
+          git clone https://github.com/marchinm/fabric-samples.git
           cd fabric-samples/test-network-k8s/
           ./network kind
           # ./network up
