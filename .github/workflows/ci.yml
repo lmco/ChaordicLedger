@@ -85,22 +85,28 @@ jobs:
         sudo systemctl restart docker
         sudo su $USER # or log off/on
         docker run hello-world
-  # hyperledger:
-  #   runs-on: ubuntu-latest
-  #   needs: prerequisites
     - name: Setup Hyperledger
       run: |
           git clone https://github.com/marchinm/fabric-samples.git
           cd fabric-samples/test-network-k8s/
           ./network kind
-          # ./network up
+          ./network up
           # ./network channel create
           # ./network chaincode deploy
           # ./network chaincode invoke '{"Args":["CreateAsset","1","blue","35","tom","1000"]}'
           # ./network chaincode query '{"Args":["ReadAsset","1"]}'
           # ./network rest-easy
-          # ./network down
+          ./network down
           ./network unkind
+    - name: Cleanup
+      run: |
+          docker container ls -a
+          docker ps --format "{{.ID}}" | xargs docker container stop
+          docker container prune -f
+          docker container ls -a
+          docker image ls
+          docker image prune -af
+          docker image ls
 
   test:
     runs-on: ubuntu-latest
