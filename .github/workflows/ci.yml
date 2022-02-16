@@ -23,6 +23,7 @@ jobs:
       run: |
         source ${AGNOSTIC_DIR}/local_source
         ${AGNOSTIC_DIR}/local_setup.sh
+    - name: Get kubectl
       run: ${AGNOSTIC_DIR}/get_kubectl.sh
     - name: Get kind
       run: ${AGNOSTIC_DIR}/get_kind.sh
