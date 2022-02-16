@@ -21,93 +21,25 @@ jobs:
     - uses: actions/checkout@v2
     - name: Setup local
       run: |
-        ls -al
-        pwd
         source ${AGNOSTIC_DIR}/local_source
         ${AGNOSTIC_DIR}/local_setup.sh
-    - name: Get kubectl
-      run: |
-        curl -LO https://dl.k8s.io/release/v1.23.3/bin/linux/amd64/kubectl
-        curl -LO "https://dl.k8s.io/v1.23.3/bin/linux/amd64/kubectl.sha256"
-        echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
-        rm kubectl.sha256
-        chmod +x kubectl
-        mv ./kubectl ~/.local/bin/
-        kubectl version --client
+      run: ${AGNOSTIC_DIR}/get_kubectl.sh
     - name: Get kind
-      run: |
-        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
-        chmod +x ./kind
-        mv ./kind ~/.local/bin/
-        kind --version
+      run: ${AGNOSTIC_DIR}/get_kind.sh
     - name: Get jq
-      run: |
-        curl -LO https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
-        chmod +x jq-linux64
-        mkdir -p ~/.local/bin
-        mv ./jq-linux64 ~/.local/bin/jq
-        jq --version
-    - name: Update apt
-      run: |
-        sudo apt-get update -y
-        #sudo apt -y install yum-utils
-    - name: Get shasum
-      run: |
-        sudo apt-get install -y libdigest-sha-perl
-        #sudo apt -y install perl-Digest-SHA
+      run: ${AGNOSTIC_DIR}/get_jq.sh
+    - name: Update package manager
+      run: ${UBUNTU_DIR}/update_package_manager.sh
+    - name: Get prerequisite tools
+      run: ${UBUNTU_DIR}/get_prerequisite_tools.sh
     - name: Get Docker
-      run: |
-        echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
-        sudo apt-get -y install git
-        sudo apt-get -y install curl
-        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
-        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
-        sudo apt-get update -y
-        sudo apt-get -y install \
-                      ca-certificates \
-                      curl \
-                      gnupg \
-                      lsb-release
-        sudo apt-get -y install docker-ce docker-ce-cli containerd.io
-        #sudo apt -y install docker-ce docker-ce-cli containerd.io
-        sudo mkdir -p /etc/systemd/system/docker.service.d/
-        proxy_config="/etc/systemd/system/docker.service.d/http-proxy.conf"
-        sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
-        echo "[Service]" | sudo tee -a $proxy_config
-        echo "Environment=\"HTTP_PROXY=${HTTPS_PROXY}\"" | sudo tee -a $proxy_config
-        echo "Environment=\"http_proxy=${http_proxy}\"" | sudo tee -a $proxy_config
-        echo "Environment=\"HTTPS_PROXY=${HTTPS_PROXY}\"" | sudo tee -a $proxy_config	
-        echo "Environment=\"https_proxy=${https_proxy}\"" | sudo tee -a $proxy_config
-        echo "Environment=\"NO_PROXY=${NO_PROXY}\"" | sudo tee -a $proxy_config
-        echo "Environment=\"no_proxy=${no_proxy}\"" | sudo tee -a $proxy_config
-        #sudo groupadd docker
-        sudo usermod -aG docker ${USER}
-        sudo systemctl daemon-reload
-        sudo systemctl restart docker
-        sudo su $USER # or log off/on
-        docker run hello-world
+      run: ${UBUNTU_DIR}/get_docker.sh
+    - name: Setup Docker
+      run: ${AGNOSTIC_DIR}/setup_docker.sh
     - name: Setup Hyperledger
-      run: |
-          git clone https://github.com/marchinm/fabric-samples.git
-          cd fabric-samples/test-network-k8s/
-          ./network kind
-          ./network up
-          ./network channel create
-          ./network chaincode deploy
-          ./network chaincode invoke '{"Args":["CreateAsset","1","blue","35","tom","1000"]}'
-          ./network chaincode query '{"Args":["ReadAsset","1"]}'
-          ./network rest-easy
-          ./network down
-          ./network unkind
+      run: ${AGNOSTIC_DIR}/setup_hyperledger.sh
     - name: Cleanup
-      run: |
-          docker container ls -a
-          docker ps --format "{{.ID}}" | xargs docker container stop
-          docker container prune -f
-          docker container ls -a
-          docker image ls
-          docker image prune -af
-          docker image ls
+      run: ${AGNOSTIC_DIR}/cleanup_hyperledger.sh
 
   test:
     runs-on: ubuntu-latest
