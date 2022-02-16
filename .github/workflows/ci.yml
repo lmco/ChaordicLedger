@@ -48,15 +48,15 @@ jobs:
         jq --version
     - name: Get shasum
       run: |
-        sudo dnf install -y perl-Digest-SHA
+        sudo yum install -y perl-Digest-SHA
     - name: Get Docker
       run: |
         echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
-        sudo dnf -y install git
-        sudo dnf -y install curl
-        sudo dnf -y install yum-utils
+        sudo yum -y install git
+        sudo yum -y install curl
+        sudo yum -y install yum-utils
         sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-        sudo dnf -y install docker-ce docker-ce-cli containerd.io
+        sudo yum -y install docker-ce docker-ce-cli containerd.io
         sudo mkdir -p /etc/systemd/system/docker.service.d/
         proxy_config="/etc/systemd/system/docker.service.d/http-proxy.conf"
         sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
