@@ -8,6 +8,105 @@ jobs:
     steps:
     - name: No-op
       run: echo "Hi!"
+  
+  # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
+  #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
+  prerequisites:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Setup local
+      run: |
+        mkdir -p ~/.local/bin
+        export HTTP_PROXY=${PIPELINE_HTTP_PROXY}
+        export http_proxy=${HTTP_PROXY}
+        export HTTPS_PROXY=${PIPELINE_HTTPS_PROXY}
+        export https_proxy=${HTTPS_PROXY}
+        export NO_PROXY=${PIPELINE_NO_PROXY}
+        export no_proxy=${NO_PROXY}
+        env | sort
+    - name: Get kubectl
+      run: |
+        curl -LO https://dl.k8s.io/release/v1.23.3/bin/linux/amd64/kubectl
+        curl -LO "https://dl.k8s.io/v1.23.3/bin/linux/amd64/kubectl.sha256"
+        echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
+        rm kubectl.sha256
+        chmod +x kubectl
+        mv ./kubectl ~/.local/bin/
+        kubectl version --client
+    - name: Get kind
+      run: |
+        curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
+        chmod +x ./kind
+        mv ./kind ~/.local/bin/
+        kind --version
+    - name: Get jq
+      run: |
+        curl -LO https://github.com/stedolan/jq/releases/download/jq-1.6/jq-linux64
+        chmod +x jq-linux64
+        mkdir -p ~/.local/bin
+        mv ./jq-linux64 ~/.local/bin/jq
+        jq --version
+    - name: Update apt
+      run: |
+        sudo apt-get update -y
+        #sudo apt -y install yum-utils
+    - name: Get shasum
+      run: |
+        sudo apt-get install -y libdigest-sha-perl
+        #sudo apt -y install perl-Digest-SHA
+    - name: Get Docker
+      run: |
+        echo "proxy=${http_proxy}" | sudo tee -a /etc/yum.conf
+        sudo apt-get -y install git
+        sudo apt-get -y install curl
+        curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg
+        echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+        sudo apt-get update -y
+        sudo apt-get -y install \
+                      ca-certificates \
+                      curl \
+                      gnupg \
+                      lsb-release
+        sudo apt-get -y install docker-ce docker-ce-cli containerd.io
+        #sudo apt -y install docker-ce docker-ce-cli containerd.io
+        sudo mkdir -p /etc/systemd/system/docker.service.d/
+        proxy_config="/etc/systemd/system/docker.service.d/http-proxy.conf"
+        sudo touch /etc/systemd/system/docker.service.d/http-proxy.conf
+        echo "[Service]" | sudo tee -a $proxy_config
+        echo "Environment=\"HTTP_PROXY=${HTTPS_PROXY}\"" | sudo tee -a $proxy_config
+        echo "Environment=\"http_proxy=${http_proxy}\"" | sudo tee -a $proxy_config
+        echo "Environment=\"HTTPS_PROXY=${HTTPS_PROXY}\"" | sudo tee -a $proxy_config	
+        echo "Environment=\"https_proxy=${https_proxy}\"" | sudo tee -a $proxy_config
+        echo "Environment=\"NO_PROXY=${NO_PROXY}\"" | sudo tee -a $proxy_config
+        echo "Environment=\"no_proxy=${no_proxy}\"" | sudo tee -a $proxy_config
+        #sudo groupadd docker
+        sudo usermod -aG docker ${USER}
+        sudo systemctl daemon-reload
+        sudo systemctl restart docker
+        sudo su $USER # or log off/on
+        docker run hello-world
+    - name: Setup Hyperledger
+      run: |
+          git clone https://github.com/marchinm/fabric-samples.git
+          cd fabric-samples/test-network-k8s/
+          ./network kind
+          ./network up
+          ./network channel create
+          ./network chaincode deploy
+          ./network chaincode invoke '{"Args":["CreateAsset","1","blue","35","tom","1000"]}'
+          ./network chaincode query '{"Args":["ReadAsset","1"]}'
+          ./network rest-easy
+          ./network down
+          ./network unkind
+    - name: Cleanup
+      run: |
+          docker container ls -a
+          docker ps --format "{{.ID}}" | xargs docker container stop
+          docker container prune -f
+          docker container ls -a
+          docker image ls
+          docker image prune -af
+          docker image ls
 
   test:
     runs-on: ubuntu-latest
@@ -40,11 +139,35 @@ jobs:
         ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
         openssl x509 -text -noout -in rootCACert.pem
 
-  BuildDockerImage:
-    runs-on: ubuntu-latest
-    #needs: PrerequisiteRootCA
-    steps:
-    - uses: actions/checkout@v2
-    - name: Create Docker Image
-      run: |
-        docker build . --file Dockerfile --tag chaordic-ledger:$(date +%s)
+  # docker:
+  #   #needs: PrerequisiteRootCA
+  #   runs-on: ubuntu-latest
+  #   services:
+  #     registry:
+  #       image: registry:2
+  #       ports:
+  #         - 5000:5000
+  #   steps:
+  #     -
+  #       name: Checkout
+  #       uses: actions/checkout@v2
+  #     -
+  #       name: Set up QEMU
+  #       uses: docker/setup-qemu-action@v1
+  #     -
+  #       name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v1
+  #       with:
+  #         driver-opts: network=host
+  #     -
+  #       name: Build and push to local registry
+  #       uses: docker/build-push-action@v2
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: localhost:5000/name/chaordic-ledger:latest
+  #         #tags: localhost:5000/name/chaordic-ledger:$(date +%s)
+  #     -
+  #       name: Inspect
+  #       run: |
+  #         docker buildx imagetools inspect localhost:5000/name/chaordic-ledger:latest
