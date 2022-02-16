@@ -45,13 +45,15 @@ if [ "${MODE}" == "init" ]; then
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
-  ./setup/agnostic/cleanup_hyperledger.sh
+  pushd cleanup/agnostic
+  ./cleanup_hyperledger.sh
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
 elif [ "${MODE}" == "purge" ]; then
   echo "Purging cluster \"${CLUSTER_NAME}\":"
   
-  ./setup/agnostic/purge_hyperledger.sh
+  pushd cleanup/agnostic
+  ./purge_hyperledger.sh
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
 fi
