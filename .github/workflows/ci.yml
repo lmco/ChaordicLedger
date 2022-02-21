@@ -37,7 +37,7 @@ jobs:
       run: ${UBUNTU_DIR}/get_docker.sh
     - name: Setup Docker
       run: ${AGNOSTIC_DIR}/setup_docker.sh
-    - name: Setup Hyperledger
+    - name: Setup Test Network for Hyperledger
       run: ${AGNOSTIC_DIR}/setup_hyperledger.sh
     - name: Cleanup
       run: ${AGNOSTIC_DIR}/cleanup_hyperledger.sh

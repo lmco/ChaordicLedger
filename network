@@ -26,6 +26,7 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
+. hyperledger/scripts/fabric_config.sh
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
@@ -36,17 +37,30 @@ else
   shift
 fi
 
+
+# TODO: Segregate the creation of MSPs, Orders, and Peers
+# TODO: Use kubectl to go into each peer and issue a 'peer' command.
+# TODO: Need ability to launch and join an existing network.
+# TODO: Look into creating a Windows variant.
+
 if [ "${MODE}" == "init" ]; then
   echo "Initializing cluster \"${CLUSTER_NAME}\":"
   pushd hyperledger/scripts
   cluster_init
   popd
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "msp" ]; then
+  pushd hyperledger/scripts
+  ./create_msp.sh $@
+  popd
+  
+  echo "🏁 - MSP for \"${CLUSTER_NAME}\" is gone."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
   pushd cleanup/agnostic
   ./cleanup_hyperledger.sh
+  popd
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
 elif [ "${MODE}" == "purge" ]; then
@@ -54,6 +68,7 @@ elif [ "${MODE}" == "purge" ]; then
   
   pushd cleanup/agnostic
   ./purge_hyperledger.sh
+  popd
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
 fi

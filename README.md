@@ -30,7 +30,8 @@ The development of this platform is in pursuit of the author's PhD research obje
 |Defining and Executing Simulations|   |   |   ||
 
 ## References
+* All indexed publications by author: [https://orcid.org/0000-0001-5594-9756](https://orcid.org/0000-0001-5594-9756)
 * Markdown Editor: [https://jbt.github.io/markdown-editor/](https://jbt.github.io/markdown-editor/)
 * kind: [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)
 * Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
-* All indexed publications by author: [https://orcid.org/0000-0001-5594-9756](https://orcid.org/0000-0001-5594-9756)
+* Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
