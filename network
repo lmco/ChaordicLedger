@@ -18,6 +18,8 @@ CHANNEL_NAME="cl"
 LOCAL_REGISTRY_NAME="kind-registry"
 LOCAL_REGISTRY_PORT="5000"
 
+RCAADMIN_AUTH=rcaadmin:rcaadminpw
+
 # LOG_FILE=${TEST_NETWORK_LOG_FILE:-network.log}
 # DEBUG_FILE=${TEST_NETWORK_DEBUG_FILE:-network-debug.log}
 
@@ -26,7 +28,8 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
-. hyperledger/scripts/fabric_config.sh
+. hyperledger/scripts/create_msp.sh
+#. hyperledger/scripts/fabric_config.sh
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
@@ -51,10 +54,10 @@ if [ "${MODE}" == "init" ]; then
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "msp" ]; then
   pushd hyperledger/scripts
-  ./create_msp.sh $@
+  create_msp $@
   popd
   
-  echo "🏁 - MSP for \"${CLUSTER_NAME}\" is gone."
+  echo "🏁 - MSP for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   

@@ -6,16 +6,16 @@ function cluster_init() {
   apply_nginx_ingress
   install_cert_manager
   launch_docker_registry
-  pull_docker_images 
-  load_docker_images 
+  pull_docker_images
+  load_docker_images
 }
 
 function cluster_create() {
   echo "Creating cluster \"${CLUSTER_NAME}\""
 
-  local cluster_config=/tmp/cluster_config.yml
+  local cluster_config=/tmp/cluster_config.yaml
 
-  cat ../config/cluster_template.yml | 
+  cat ../config/cluster-template.yaml | 
     sed "s|\${ingress_http_port}|${NGINX_HTTP_PORT}|g" |
     sed "s|\${ingress_https_port}|${NGINX_HTTPS_PORT}|g" |
     sed "s|\${reg_name}|${LOCAL_REGISTRY_NAME}|g" |
@@ -51,6 +51,7 @@ function install_cert_manager() {
   kubectl -n cert-manager rollout status deploy/cert-manager-webhook
 }
 
+# TODO: Need a teardown_docker_registry function.
 function launch_docker_registry() {
   echo "Launching container registry \"${LOCAL_REGISTRY_NAME}\" at localhost:${LOCAL_REGISTRY_PORT}"
 
@@ -71,9 +72,9 @@ function launch_docker_registry() {
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
-  local reg_config=/tmp/local_registry.yml
+  local reg_config=/tmp/local-registry.yaml
 
-  cat ../config/local_registry_template.yml | 
+  cat ../config/local-registry-template.yaml | 
     sed "s|\${reg_port}|${LOCAL_REGISTRY_PORT}|g" > ${reg_config}
 
   kubectl apply -f ${reg_config}
