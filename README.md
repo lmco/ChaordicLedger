@@ -22,8 +22,8 @@ The development of this platform is in pursuit of the author's PhD research obje
 |---|---|---|---|---|
 |Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;|&#9745;|
 |Scripted generation of node certificate signed by generated root certificate authority.|&#9745;|&#9745;|&#9745;||
-|Creation of Hyperledger Nodes|   |   |   ||
-|Creation of hybrid Hyperledger/IPFS Nodes|   |   |   ||
+|Creation of Hyperledger Nodes|In Progress|   |   ||
+|Creation of hybrid Hyperledger/IPFS Nodes|In Progress|   |   ||
 |Creation of RESTful API|   |   |   ||
 |Creation of Smart Contracts|   |   |   ||
 |Gathering Key Performance Indicators (KPIs)|   |   |   ||
@@ -34,4 +34,5 @@ The development of this platform is in pursuit of the author's PhD research obje
 * Markdown Editor: [https://jbt.github.io/markdown-editor/](https://jbt.github.io/markdown-editor/)
 * kind: [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)
 * Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
+* Kubernetes Cheat Sheet [https://kubernetes.io/docs/reference/kubectl/cheatsheet/](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)

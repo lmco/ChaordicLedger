@@ -60,6 +60,9 @@ function load_org_config() {
     cat ../config/org/fabric-ca-server-config-template.yaml |
       sed "s|{{ORG_NUMBER}}|${i}|" > ${caconfig}
     
+    # TODO: Perform this refactoring after this is confirmed working.
+    cp ../config/toBeRefactored/* ${dir}
+
     # echo "Creating fabric config map for org ${i}"
     # cat ../config/org/admin-cli-template.yaml |
     #   sed "s|{{ORG_NUMBER}}|${i}|" > ${org_config}
@@ -128,7 +131,7 @@ function enroll_bootstrap_ECert_CA_users() {
 
   for ((i=0; i<${orgcount}; i++))
   do
-    local org=$i
+    local org=org${i}
     local auth=${RCAADMIN_AUTH}
     local ecert_ca=${org}-ca
 
@@ -149,14 +152,17 @@ function create_local_MSPs()
 
   for ((i=0; i<${orgcount}; i++))
   do
-    # echo "Creating fabric config map for org ${i}"
-    # cat ../config/org_template.yaml |
-    #   sed "s|\${number}|${i}|" > ${org_config}
-    ORG_NUMBER=$i
+    # cat enroll_admin_with_ca_client.sh |
+    #   sed "s|{{ORG_NUMBER}}|${i}|g" |
+    #   exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
 
-    cat enroll_msp_with_ca_client.sh |
-      sed "s|{{ORG_NUMBER}}|${i}|g" | 
-      exec kubectl -n $NS exec deploy org${i}-ca -i -- /bin/sh
+    for ((j=1; j<=${orderercount}; j++))
+    do
+      cat enroll_msp_with_ca_client.sh |
+        sed "s|{{ORG_NUMBER}}|${i}|g" |
+        sed "s|{{ORDERER_NUMBER}}|${j}|g" |
+        exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
+    done
   done
 }
 
@@ -164,6 +170,13 @@ function launch() {
   local yaml=$1
   local orgnumber=$2
   local orderernumber=$3
+
+  cat ${yaml} \
+    | sed 's,{{ORG_NUMBER}},'${orgnumber}',g' \
+    | sed 's,{{ORDERER_NUMBER}},'${orderernumber}',g' \
+    | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
+    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > /tmp/orderer_${orgnumber}_${orderernumber}.yaml
+
   cat ${yaml} \
     | sed 's,{{ORG_NUMBER}},'${orgnumber}',g' \
     | sed 's,{{ORDERER_NUMBER}},'${orderernumber}',g' \
@@ -198,7 +211,7 @@ function create_msp() {
   init_tls_cert_issuers
   launch_ECert_CAs $orgcount
   enroll_bootstrap_ECert_CA_users $orgcount
-  create_local_MSPs $orgcount
+  create_local_MSPs $orgcount $orderercount
   launch_orderers $orgcount $orderercount
   # launch_peers
 
