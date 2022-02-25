@@ -321,7 +321,7 @@ csr:
     - localhost
     - 127.0.0.1
     - org0-ecert-ca
-    - org0-ecert-ca.test-network.svc.cluster.local
+    - org0-ecert-ca.{{NETWORK_NAME}}.svc.cluster.local
   ca:
     expiry: 131400h
     pathlength: 1

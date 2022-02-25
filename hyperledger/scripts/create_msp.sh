@@ -1,6 +1,7 @@
 #!/bin/sh
 
 # Reference: test-network-k8s/scripts/test_network.sh
+MSP_TMP_DIR=/tmp/msp
 
 function init_namespace() {
   echo "Creating namespace \"$NS\""
@@ -11,7 +12,7 @@ function init_namespace() {
 function provision_persistent_volume()
 {
   local orgnumber=$1
-  local pv_config=/tmp/msp-pv-config.yaml
+  local pv_config=$MSP_TMP_DIR/msp-pv-config.yaml
 
   echo "Provisioning volume storage for Org ${orgnumber}"
   cat ../config/org/msp-pv-template.yaml |
@@ -23,7 +24,7 @@ function provision_persistent_volume()
 function claim_persistant_volume()
 {
   local orgnumber=$1
-  local pvc_config=/tmp/msp-pvc-config.yaml
+  local pvc_config=$MSP_TMP_DIR/msp-pvc-config.yaml
 
   echo "Claiming volume for Org ${orgnumber}"
   cat ../config/org/msp-pvc-template.yaml |
@@ -49,16 +50,17 @@ function load_org_config() {
 
   echo "Creating fabric config maps for ${orgcount} org(s)"
 
-  #local org_config=/tmp/org-admin-cli.yaml
+  #local org_config=$MSP_TMP_DIR/org-admin-cli.yaml
 
   for ((i=0; i<${orgcount}; i++))
   do
-    local dir=/tmp/org${i}
+    local dir=$MSP_TMP_DIR/org${i}
     mkdir -p ${dir}
     local caconfig=${dir}/fabric-ca-server-config.yaml
     echo "Creating fabric CA server config for org ${i}"
     cat ../config/org/fabric-ca-server-config-template.yaml |
-      sed "s|{{ORG_NUMBER}}|${i}|" > ${caconfig}
+      sed "s|{{ORG_NUMBER}}|${i}|" |
+      sed "s|{{NETWORK_NAME}}|${NETWORK_NAME}|" > ${caconfig}
     
     # TODO: Perform this refactoring after this is confirmed working.
     cp ../config/toBeRefactored/* ${dir}
@@ -78,6 +80,8 @@ function init_tls_cert_issuers()
 {
   echo "Initializing Root TLS certificate Issuers"
 
+  local orgcount=$1
+
   # Create a self-signing certificate issuer / root TLS certificate for the blockchain.
   # TODO : Bring-Your-Own-Key - allow the network bootstrap to read an optional ECDSA key pair for the TLS trust root CA.
   kubectl -n $NS apply -f ../config/root-tls-cert-issuer.yaml
@@ -87,7 +91,7 @@ function init_tls_cert_issuers()
 
   for ((i=0; i<${orgcount}; i++))
   do
-    local issuer_config=/tmp/tls-cert-issuer.yaml
+    local issuer_config=$MSP_TMP_DIR/tls-cert-issuer.yaml
     echo "Creating org ${i} TLS cert issuer"
     cat ../config/org/tls-cert-issuer-template.yaml |
       sed "s|{{ORG_NUMBER}}|${i}|" > ${issuer_config}
@@ -158,12 +162,17 @@ function create_local_MSPs()
 
     for ((j=1; j<=${orderercount}; j++))
     do
+      #TODO: Note: peer1 is currently hard-coded.
       cat enroll_msp_with_ca_client.sh |
         sed "s|{{ORG_NUMBER}}|${i}|g" |
         sed "s|{{ORDERER_NUMBER}}|${j}|g" |
         exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
     done
   done
+
+  # Ref create_org0_local_MSP in test_network.sh
+
+
 }
 
 function launch() {
@@ -172,12 +181,14 @@ function launch() {
   local orderernumber=$3
 
   cat ${yaml} \
+    | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
     | sed 's,{{ORG_NUMBER}},'${orgnumber}',g' \
     | sed 's,{{ORDERER_NUMBER}},'${orderernumber}',g' \
     | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
-    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > /tmp/orderer_${orgnumber}_${orderernumber}.yaml
+    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > $MSP_TMP_DIR/orderer_${orgnumber}_${orderernumber}.yaml
 
   cat ${yaml} \
+    | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
     | sed 's,{{ORG_NUMBER}},'${orgnumber}',g' \
     | sed 's,{{ORDERER_NUMBER}},'${orderernumber}',g' \
     | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
@@ -200,22 +211,89 @@ function launch_orderers() {
   done
 }
 
+function launch_peers() {
+  local orgcount=$1
+  local peercount=$2
+  echo "Launching ${peercount} peer(s) for each of ${orgcount} org(s)"
+
+  # TODO: Note: peer-template.yaml currently has peer1 hard-coded.
+
+  for ((i=0; i<${orgcount}; i++))
+  do
+    for ((j=1; j<=${peercount}; j++))
+    do
+      cat ../config/org/peer-template.yaml \
+        | sed 's,{{PEER_NUMBER}},'${j}',g' \
+        | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
+        | sed 's,{{ORG_NUMBER}},'${i}',g' \
+        | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
+        | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' \
+        > $MSP_TMP_DIR/org${i}/org${i}-peer${j}.yaml
+
+      cat ../config/org/peer-template.yaml \
+        | sed 's,{{PEER_NUMBER}},'${j}',g' \
+        | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
+        | sed 's,{{ORG_NUMBER}},'${i}',g' \
+        | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
+        | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' \
+        | kubectl -n $NS apply -f -
+      
+      kubectl -n $NS rollout status deploy/org${i}-peer${j}
+    done
+  done
+}
+
+# TLS certificates are isused by the CA's Issuer, stored in a Kube secret, and mounted into the pod at /var/hyperledger/fabric/config/tls.
+# For consistency with the Fabric-CA guide, his function copies the orderer's TLS certs into the traditional Fabric MSP / folder structure.
+function extract_orderer_tls_cert() {
+  local orgnumber=$1
+  local orderer=$2
+
+  echo "set -x
+
+  mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org${orgnumber}.example.com/orderers/${orderer}.org${orgnumber}.example.com/tls/signcerts/
+
+  cp \
+    var/hyperledger/fabric/config/tls/tls.crt \
+    /var/hyperledger/fabric/organizations/ordererOrganizations/org${orgnumber}.example.com/orderers/${orderer}.org${orgnumber}.example.com/tls/signcerts/cert.pem
+
+  " | exec kubectl -n $NS exec deploy/${orderer} -i -c main -- /bin/sh
+}
+
+function extract_orderer_tls_certs() {
+  echo "Extracting orderer TLS certs to local MSP folder"
+  orgcount=$1
+  orderercount=$2
+
+  for ((i=0; i<${orgcount}; i++))
+  do
+    for ((j=1; j<=${orderercount}; j++))
+    do
+      extract_orderer_tls_cert ${i} org${i}-orderer${j}
+    done
+  done
+}
+
 function create_msp() {
   local orgcount=$1
   shift
   local orderercount=$1
+  shift
+  local peercount=$1
+
+  mkdir -p $MSP_TMP_DIR
 
   init_namespace
   init_storage_volumes $orgcount
   load_org_config $orgcount
-  init_tls_cert_issuers
+  init_tls_cert_issuers $orgcount
   launch_ECert_CAs $orgcount
   enroll_bootstrap_ECert_CA_users $orgcount
   create_local_MSPs $orgcount $orderercount
   launch_orderers $orgcount $orderercount
-  # launch_peers
+  launch_peers $orgcount $peercount
 
-  # extract_orderer_tls_certs
+  extract_orderer_tls_certs $orgcount $orderercount
 }
 
 function purge_storage_volumes() {

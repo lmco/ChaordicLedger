@@ -21,5 +21,32 @@ echo "NodeOUs:
   OrdererOUIdentifier:
     Certificate: cacerts/org{{ORG_NUMBER}}-ca.pem
     OrganizationalUnitIdentifier: orderer" > /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp/config.yaml
-# cp /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer2.org{{ORG_NUMBER}}.example.com/msp/config.yaml
-# cp /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer3.org{{ORG_NUMBER}}.example.com/msp/config.yaml
+#cp /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer2.org{{ORG_NUMBER}}.example.com/msp/config.yaml
+#cp /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org{{ORG_NUMBER}}.example.com/orderers/org{{ORG_NUMBER}}-orderer3.org{{ORG_NUMBER}}.example.com/msp/config.yaml
+
+# Each identity in the network needs a registration and enrollment.
+fabric-ca-client register --id.name org{{ORG_NUMBER}}-peer1 --id.secret peerpw --id.type peer --url https://org{{ORG_NUMBER}}-ca --mspdir $FABRIC_CA_CLIENT_HOME/org{{ORG_NUMBER}}-ca/rcaadmin/msp
+#fabric-ca-client register --id.name org{{ORG_NUMBER}}-peer2 --id.secret peerpw --id.type peer --url https://org{{ORG_NUMBER}}-ca --mspdir $FABRIC_CA_CLIENT_HOME/org{{ORG_NUMBER}}-ca/rcaadmin/msp
+fabric-ca-client register --id.name org{{ORG_NUMBER}}-admin --id.secret org{{ORG_NUMBER}}adminpw  --id.type admin   --url https://org{{ORG_NUMBER}}-ca --mspdir $FABRIC_CA_CLIENT_HOME/org{{ORG_NUMBER}}-ca/rcaadmin/msp --id.attrs "hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert"
+
+fabric-ca-client enroll --url https://org{{ORG_NUMBER}}-peer1:peerpw@org{{ORG_NUMBER}}-ca --csr.hosts localhost,org{{ORG_NUMBER}}-peer1,org{{ORG_NUMBER}}-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/peers/org{{ORG_NUMBER}}-peer1.org{{ORG_NUMBER}}.example.com/msp
+#fabric-ca-client enroll --url https://org{{ORG_NUMBER}}-peer2:peerpw@org{{ORG_NUMBER}}-ca --csr.hosts localhost,org{{ORG_NUMBER}}-peer2,org{{ORG_NUMBER}}-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/peers/org{{ORG_NUMBER}}-peer2.org{{ORG_NUMBER}}.example.com/msp
+fabric-ca-client enroll --url https://org{{ORG_NUMBER}}-admin:org{{ORG_NUMBER}}adminpw@org{{ORG_NUMBER}}-ca  --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/users/Admin@org{{ORG_NUMBER}}.example.com/msp
+
+cp /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/users/Admin@org{{ORG_NUMBER}}.example.com/msp/keystore/*_sk /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/users/Admin@org{{ORG_NUMBER}}.example.com/msp/keystore/server.key
+
+# Create local MSP config.yaml
+echo "NodeOUs:
+  Enable: true
+  ClientOUIdentifier:
+    Certificate: cacerts/org{{ORG_NUMBER}}-ca.pem
+    OrganizationalUnitIdentifier: client
+  PeerOUIdentifier:
+    Certificate: cacerts/org{{ORG_NUMBER}}-ca.pem
+    OrganizationalUnitIdentifier: peer
+  AdminOUIdentifier:
+    Certificate: cacerts/org{{ORG_NUMBER}}-ca.pem
+    OrganizationalUnitIdentifier: admin
+  OrdererOUIdentifier:
+    Certificate: cacerts/org{{ORG_NUMBER}}-ca.pem
+    OrganizationalUnitIdentifier: orderer" > /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/peers/org{{ORG_NUMBER}}-peer1.org{{ORG_NUMBER}}.example.com/msp/config.yaml

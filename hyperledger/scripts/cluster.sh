@@ -98,4 +98,5 @@ function load_docker_images() {
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION --name ${CLUSTER_NAME}
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION --name ${CLUSTER_NAME}
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION --name ${CLUSTER_NAME}
+  kind load docker-image localhost:5000/test/mypeer:latest --name ${CLUSTER_NAME}
 }
