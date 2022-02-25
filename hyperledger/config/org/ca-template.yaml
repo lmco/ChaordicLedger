@@ -10,7 +10,7 @@ spec:
   dnsNames:
     - localhost
     - org{{ORG_NUMBER}}-ca
-    - org{{ORG_NUMBER}}-ca.test-network.svc.cluster.local
+    - org{{ORG_NUMBER}}-ca.{{NETWORK_NAME}}.svc.cluster.local
   ipAddresses:
     - 127.0.0.1
   secretName: org{{ORG_NUMBER}}-ca-tls-cert

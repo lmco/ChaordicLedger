@@ -8,4 +8,5 @@ clear &&
 ./network purge &&
 ./network init &&
 clear &&
-./network msp 1 1 1
+./network msp 1 1 1 &&
+./network channel 1

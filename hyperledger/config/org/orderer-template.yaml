@@ -16,7 +16,7 @@ spec:
     - 127.0.0.1
   secretName: org{{ORG_NUMBER}}-orderer{{ORDERER_NUMBER}}-tls-cert
   issuerRef:
-    name: org0-tls-cert-issuer
+    name: org{{ORG_NUMBER}}-tls-cert-issuer
 
 ---
 

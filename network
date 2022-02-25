@@ -13,7 +13,7 @@ FABRIC_CONTAINER_REGISTRY="hyperledger"
 NETWORK_NAME="chaordicledger"
 CLUSTER_NAME="chaordiccluster"
 NS=${NETWORK_NAME}
-CHANNEL_NAME="cl"
+PRIMARY_CHANNEL_NAME="cl"
 
 LOCAL_REGISTRY_NAME="kind-registry"
 LOCAL_REGISTRY_PORT="5000"
@@ -29,6 +29,7 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
 . hyperledger/scripts/create_msp.sh
+. hyperledger/scripts/create_channel.sh
 #. hyperledger/scripts/fabric_config.sh
 
 ## Parse mode
@@ -58,6 +59,12 @@ elif [ "${MODE}" == "msp" ]; then
   popd
   
   echo "🏁 - MSP for \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "channel" ]; then
+  pushd hyperledger/scripts
+  channel_init $@
+  popd
+
+  echo "🏁 - Channel \"${PRIMARY_CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   

@@ -376,6 +376,19 @@ Channel: &ChannelDefaults
 ################################################################################
 Profiles:
 
+  OneOrgApplicationGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+      Capabilities: *ApplicationCapabilities
+
   # test network profile with application (not system) channel.
   TwoOrgsApplicationGenesis:
     <<: *ChannelDefaults
