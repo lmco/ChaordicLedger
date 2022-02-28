@@ -25,7 +25,7 @@ The development of this platform is in pursuit of the author's PhD research obje
 |Creation of Hyperledger Nodes|In Progress|   |   ||
 |Creation of hybrid Hyperledger/IPFS Nodes|In Progress|   |   ||
 |Creation of RESTful API|   |   |   ||
-|Creation of Smart Contracts|   |   |   ||
+|Creation of Smart Contracts|In Progress|   |   ||
 |Gathering Key Performance Indicators (KPIs)|   |   |   ||
 |Defining and Executing Simulations|   |   |   ||
 
@@ -36,3 +36,4 @@ The development of this platform is in pursuit of the author's PhD research obje
 * Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
 * Kubernetes Cheat Sheet [https://kubernetes.io/docs/reference/kubectl/cheatsheet/](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
+* K9s - Kubernetes CLI To Manage Your Clusters In Style!: [https://github.com/derailed/k9s](https://github.com/derailed/k9s)

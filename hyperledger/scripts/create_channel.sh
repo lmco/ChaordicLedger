@@ -7,11 +7,14 @@ function launch_admin_clis() {
 
   for ((i=0; i<${orgcount}; i++))
   do
+    local admin_cli_config=$CHANNEL_TMP_DIR/org${i}-admin-cli.template.yaml
+
     cat ../config/org/admin-cli-template.yaml \
     | sed 's,{{ORG_NUMBER}},'${i}',g' \
     | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
-    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' \
-    | kubectl -n $NS apply -f -
+    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > ${admin_cli_config}
+
+    cat ${admin_cli_config} | kubectl -n $NS apply -f -
 
     kubectl -n $NS rollout status deploy/org${i}-admin-cli
   done
@@ -74,13 +77,40 @@ function create_genesis_block() {
   echo "Creating channel \"${PRIMARY_CHANNEL_NAME}\""
 
   echo 'set -x
-  configtxgen -profile OneOrgApplicationGenesis -channelID '${PRIMARY_CHANNEL_NAME}' -outputBlock genesis_block.pb
+  configtxgen -profile TwoOrgsApplicationGenesis -channelID '${PRIMARY_CHANNEL_NAME}' -outputBlock genesis_block.pb
   # configtxgen -inspectBlock genesis_block.pb
   
   osnadmin channel join --orderer-address org0-orderer1:9443 --channelID '${PRIMARY_CHANNEL_NAME}' --config-block genesis_block.pb
+  osnadmin channel join --orderer-address org0-orderer2:9443 --channelID '${PRIMARY_CHANNEL_NAME}' --config-block genesis_block.pb
+  osnadmin channel join --orderer-address org0-orderer3:9443 --channelID '${PRIMARY_CHANNEL_NAME}' --config-block genesis_block.pb
+  
   ' | exec kubectl -n $NS exec deploy/org0-admin-cli -i -- /bin/bash
   
   sleep 10
+}
+
+function join_org_peers()
+{
+  local org=$1
+  echo "Joining ${org} peers to channel \"${PRIMARY_CHANNEL_NAME}\""
+
+  echo 'set -x
+    # Fetch the genesis block from an orderer
+    peer channel \
+      fetch oldest \
+      genesis_block.pb \
+      -c '${PRIMARY_CHANNEL_NAME}' \
+      -o org0-orderer1:6050 \
+      --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+
+    # Join peer1 to the channel.
+    CORE_PEER_ADDRESS='${org}'-peer1:7051 \
+    peer channel \
+      join \
+      -b genesis_block.pb \
+      -o org0-orderer1:6050 \
+      --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+    ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -i -- /bin/bash
 }
 
 function channel_init()
@@ -93,5 +123,7 @@ function channel_init()
   launch_admin_clis $orgcount
 
   create_genesis_block $orgcount
-  join_org_peers $orgcount
+  #join_org_peers org0
+  join_org_peers org1
+  join_org_peers org2
 }
