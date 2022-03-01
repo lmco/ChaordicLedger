@@ -13,7 +13,7 @@ FABRIC_CONTAINER_REGISTRY="hyperledger"
 NETWORK_NAME="chaordicledger"
 CLUSTER_NAME="chaordiccluster"
 NS=${NETWORK_NAME}
-PRIMARY_CHANNEL_NAME="cl"
+CHANNEL_NAME="cl"
 
 LOCAL_REGISTRY_NAME="kind-registry"
 LOCAL_REGISTRY_PORT="5000"
@@ -64,7 +64,13 @@ elif [ "${MODE}" == "channel" ]; then
   channel_init $@
   popd
 
-  echo "🏁 - Channel \"${PRIMARY_CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
+  echo "🏁 - Channel \"${CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "peer" ]; then
+  pushd hyperledger/scripts
+  channel_join $@
+  popd
+
+  echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   

@@ -61,14 +61,23 @@ function launch_docker_registry() {
 
   running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
   if [ "${running}" != 'true' ]; then
+    echo "Starting registry \"${reg_name}\""
     docker run \
       -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" \
       registry:2
+  else
+    echo "Registry \"${reg_name}\" is already running."
   fi
 
-  # connect the registry to the cluster network
-  # (the network may already be connected)
-  docker network connect "kind" "${reg_name}" || true
+  connectedItem=$(docker network inspect "kind" -f '{{json .Containers}}' | jq '.[].Name' | grep ${reg_name} | sed "s|\"||g")
+  if [ "${reg_name}" != "${connectedItem}"]; then
+    # connect the registry to the cluster network
+    # (the network may already be connected)
+    echo "Connecting registry \"${reg_name}\""
+    docker network connect "kind" "${reg_name}" || true
+  else
+    echo "Registry \"${reg_name}\" is already connected."
+  fi
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry

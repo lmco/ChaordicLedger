@@ -27,38 +27,28 @@ Organizations:
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('OrdererMSP.peer')"
+        Rule: "OR('OrdererMSP.member')"
       Writers:
         Type: Signature
         Rule: "OR('OrdererMSP.member')"
       Admins:
         Type: Signature
         Rule: "OR('OrdererMSP.admin')"
-    # Policies:
-    #   Readers:
-    #     Type: Signature
-    #     Rule: "OR('OrdererMSP.member')"
-    #   Writers:
-    #     Type: Signature
-    #     Rule: "OR('OrdererMSP.member')"
-    #   Admins:
-    #     Type: Signature
-    #     Rule: "OR('OrdererMSP.admin')"
 
     OrdererEndpoints:
       - org0-orderer1:6050
-      # - org0-orderer2:6050
-      # - org0-orderer3:6050
+      - org0-orderer2:6050
+      - org0-orderer3:6050
 
-  - &Org0
+  - &Org1
     # DefaultOrg defines the organization which is used in the sampleconfig
     # of the fabric.git development environment
-    Name: Org0MSP
+    Name: Org1MSP
 
     # ID to load the MSP definition as
-    ID: Org0MSP
+    ID: Org1MSP
 
-    MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org0.example.com/msp
+    MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp
 
     # Policies defines the set of policies at this level of the config tree
     # For organization policies, their canonical path is usually
@@ -66,93 +56,58 @@ Organizations:
     Policies:
       Readers:
         Type: Signature
-        Rule: "OR('Org0MSP.admin', 'Org0MSP.peer', 'Org0MSP.client')"
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
       Writers:
         Type: Signature
-        Rule: "OR('Org0MSP.admin', 'Org0MSP.client')"
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
       Admins:
         Type: Signature
-        Rule: "OR('Org0MSP.admin')"
+        Rule: "OR('Org1MSP.admin')"
       Endorsement:
         Type: Signature
-        Rule: "OR('Org0MSP.peer')"
+        Rule: "OR('Org1MSP.peer')"
 
     # leave this flag set to true.
     AnchorPeers:
       # AnchorPeers defines the location of peers which can be used
       # for cross org gossip communication.  Note, this value is only
       # encoded in the genesis block in the Application section context
-      - Host: org0-peer1
+      - Host: org1-peer1
         Port: 7051
 
-  # - &Org1
-  #   # DefaultOrg defines the organization which is used in the sampleconfig
-  #   # of the fabric.git development environment
-  #   Name: Org1MSP
+  - &Org2
+    # DefaultOrg defines the organization which is used in the sampleconfig
+    # of the fabric.git development environment
+    Name: Org2MSP
 
-  #   # ID to load the MSP definition as
-  #   ID: Org1MSP
+    # ID to load the MSP definition as
+    ID: Org2MSP
 
-  #   MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp
+    MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp
 
-  #   # Policies defines the set of policies at this level of the config tree
-  #   # For organization policies, their canonical path is usually
-  #   #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
-  #   Policies:
-  #     Readers:
-  #       Type: Signature
-  #       Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
-  #     Writers:
-  #       Type: Signature
-  #       Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
-  #     Admins:
-  #       Type: Signature
-  #       Rule: "OR('Org1MSP.admin')"
-  #     Endorsement:
-  #       Type: Signature
-  #       Rule: "OR('Org1MSP.peer')"
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org2MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org2MSP.peer')"
 
-  #   # leave this flag set to true.
-  #   AnchorPeers:
-  #     # AnchorPeers defines the location of peers which can be used
-  #     # for cross org gossip communication.  Note, this value is only
-  #     # encoded in the genesis block in the Application section context
-  #     - Host: org1-peer1
-  #       Port: 7051
-
-  # - &Org2
-  #   # DefaultOrg defines the organization which is used in the sampleconfig
-  #   # of the fabric.git development environment
-  #   Name: Org2MSP
-
-  #   # ID to load the MSP definition as
-  #   ID: Org2MSP
-
-  #   MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp
-
-  #   # Policies defines the set of policies at this level of the config tree
-  #   # For organization policies, their canonical path is usually
-  #   #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
-  #   Policies:
-  #     Readers:
-  #       Type: Signature
-  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
-  #     Writers:
-  #       Type: Signature
-  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
-  #     Admins:
-  #       Type: Signature
-  #       Rule: "OR('Org2MSP.admin')"
-  #     Endorsement:
-  #       Type: Signature
-  #       Rule: "OR('Org2MSP.peer')"
-
-  #   AnchorPeers:
-  #     # AnchorPeers defines the location of peers which can be used
-  #     # for cross org gossip communication.  Note, this value is only
-  #     # encoded in the genesis block in the Application section context
-  #     - Host: org2-peer1
-  #       Port: 7051
+    AnchorPeers:
+      # AnchorPeers defines the location of peers which can be used
+      # for cross org gossip communication.  Note, this value is only
+      # encoded in the genesis block in the Application section context
+      - Host: org2-peer1
+        Port: 7051
 
 ################################################################################
 #
@@ -239,10 +194,10 @@ Application: &ApplicationDefaults
       Rule: "MAJORITY Admins"
     LifecycleEndorsement:
       Type: Signature
-      Rule: "OR('Org0MSP.peer','Org1MSP.peer','Org2MSP.peer')"
+      Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
     Endorsement:
       Type: Signature
-      Rule: "OR('Org0MSP.peer','Org1MSP.peer','Org2MSP.peer')"
+      Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
 
   Capabilities:
     <<: *ApplicationCapabilities
@@ -265,14 +220,14 @@ Orderer: &OrdererDefaults
         Port: 6050
         ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
         ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
-      # - Host: org0-orderer2
-      #   Port: 6050
-      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
-      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
-      # - Host: org0-orderer3
-      #   Port: 6050
-      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
-      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+      - Host: org0-orderer2
+        Port: 6050
+        ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+        ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+      - Host: org0-orderer3
+        Port: 6050
+        ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+        ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
 
 
     # Options to be specified for all the etcd/raft nodes. The values here
@@ -386,20 +341,7 @@ Channel: &ChannelDefaults
 ################################################################################
 Profiles:
 
-  # OneOrgApplicationGenesis:
-  #   <<: *ChannelDefaults
-  #   Orderer:
-  #     <<: *OrdererDefaults
-  #     Organizations:
-  #       - *OrdererOrg
-  #     Capabilities: *OrdererCapabilities
-  #   Application:
-  #     <<: *ApplicationDefaults
-  #     Organizations:
-  #       - *Org0
-  #     Capabilities: *ApplicationCapabilities
-
-  # # test network profile with application (not system) channel.
+  # test network profile with application (not system) channel.
   TwoOrgsApplicationGenesis:
     <<: *ChannelDefaults
     Orderer:
@@ -423,45 +365,45 @@ Profiles:
   #
   # @enyeart - which profile should be used for the kube test network?
   #
-  # TwoOrgsOrdererGenesis:
-  #   <<: *ChannelDefaults
-  #   Orderer:
-  #     <<: *OrdererDefaults
-  #     OrdererType: etcdraft
-  #     Organizations:
-  #       - *OrdererOrg
-  #     Capabilities:
-  #       <<: *OrdererCapabilities
-  #   Consortiums:
-  #     SampleConsortium:
-  #       Organizations:
-  #         - *Org1
-  #         - *Org2
-  # TwoOrgsChannel:
-  #   Consortium: SampleConsortium
-  #   <<: *ChannelDefaults
-  #   Application:
-  #     <<: *ApplicationDefaults
-  #     Organizations:
-  #       - *Org1
-  #       - *Org2
-  #     Capabilities:
-  #       <<: *ApplicationCapabilities
-  # Org1Channel:
-  #   Consortium: SampleConsortium
-  #   <<: *ChannelDefaults
-  #   Application:
-  #     <<: *ApplicationDefaults
-  #     Organizations:
-  #       - *Org1
-  #     Capabilities:
-  #       <<: *ApplicationCapabilities
-  # Org2Channel:
-  #   Consortium: SampleConsortium
-  #   <<: *ChannelDefaults
-  #   Application:
-  #     <<: *ApplicationDefaults
-  #     Organizations:
-  #       - *Org2
-  #     Capabilities:
-  #       <<: *ApplicationCapabilities
+  TwoOrgsOrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      SampleConsortium:
+        Organizations:
+          - *Org1
+          - *Org2
+  TwoOrgsChannel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        - *Org2
+      Capabilities:
+        <<: *ApplicationCapabilities
+  Org1Channel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+      Capabilities:
+        <<: *ApplicationCapabilities
+  Org2Channel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org2
+      Capabilities:
+        <<: *ApplicationCapabilities

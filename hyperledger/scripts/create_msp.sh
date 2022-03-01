@@ -70,10 +70,9 @@ function load_org_config() {
       sed "s|{{NETWORK_NAME}}|${NETWORK_NAME}|" > ${caconfig}
     
     # TODO: Perform this refactoring after this is confirmed working.
-    cp ../config/toBeRefactored/org${i}/* ${dir}
+    cp ../config/toBeRefactored/org${i}/*.yaml ${dir}
 
-    kubectl -n $NS delete configmap org${i}-config || true
-    kubectl -n $NS create configmap org${i}-config --from-file=${dir}
+    kubectl -n $NS create configmap org${i}-config --from-file=${dir} -o yaml --dry-run=client | kubectl apply -f -
   done
 }
 
@@ -165,32 +164,24 @@ function create_local_MSPs()
 
   for ((i=0; i<${orgcount}; i++))
   do
-    # cat enroll_admin_with_ca_client.sh |
-    #   sed "s|{{ORG_NUMBER}}|${i}|g" |
-    #   exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
+    local msp_dir=$MSP_TMP_DIR/org${i}
+    mkdir -p $msp_dir
+    local config_file=${msp_dir}/enroll_org${i}_msp_with_ca_client.sh
 
-    for ((j=1; j<=${orderercount}; j++))
-    do
-      #TODO: Note: peer1 is currently hard-coded.
-      cat enroll_msp_with_ca_client.sh |
-        sed "s|{{ORG_NUMBER}}|${i}|g" |
-        sed "s|{{ORDERER_NUMBER}}|${j}|g" |
-        exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
-    done
+    cat ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh |
+      sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
+
+    cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
   done
-
-  # Ref create_org0_local_MSP in test_network.sh
-
-
 }
 
 function launch() {
   local yaml=$1
   local orgnumber=$2
   local orderernumber=$3
-  local msp_dir=$MSP_TMP_DIR/kube/org${number}/
+  local msp_dir=$MSP_TMP_DIR/kube/org${orgnumber}/
   mkdir -p ${msp_dir}
-  local orderer_config_file=${msp_dir}/org${number}_orderer${orderernumber}.yaml
+  local orderer_config_file=${msp_dir}/org${orgnumber}_orderer${orderernumber}.yaml
 
   cat ${yaml} \
     | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
@@ -224,16 +215,17 @@ function launch_peers() {
   local peercount=$2
   echo "Launching ${peercount} peer(s) for each of ${orgcount} non-root org(s)"
 
-  # TODO: Note: peer-template.yaml currently has peer1 hard-coded.
-
   # Launch no peers for Org 0
-  for ((i=1; i<=${orgcount}; i++))
+  for ((i=1; i<${orgcount}; i++))
   do
     for ((j=1; j<=${peercount}; j++))
     do
       local msp_dir=$MSP_TMP_DIR/kube/org${i}
       mkdir -p ${msp_dir}
       local peer_config_file=${msp_dir}/org${i}-peer${j}.yaml
+
+      echo "Creating config for Org ${i} Peer ${j} as ${peer_config_file}"
+
       cat ../config/org/peer-template.yaml \
         | sed 's,{{PEER_NUMBER}},'${j}',g' \
         | sed 's,{{NETWORK_NAME}},'${NETWORK_NAME}',g' \
@@ -243,8 +235,18 @@ function launch_peers() {
 
       cat ${peer_config_file} | kubectl -n $NS apply -f -
       
+      echo "Creating config for Org ${i} Peer ${j}"
       kubectl -n $NS rollout status deploy/org${i}-peer${j}
     done
+
+    # Only launch one peer gateway service per org.
+    local msp_dir=$MSP_TMP_DIR/kube/org${i}
+    mkdir -p ${msp_dir}
+    local peer_gateway_config_file=${msp_dir}/org${i}-peer-gateway.yaml
+    cat ../config/org/peer-gateway-service-template.yaml \
+      | sed 's,{{ORG_NUMBER}},'${i}',g' > ${peer_gateway_config_file}
+
+    cat ${peer_gateway_config_file} | kubectl -n $NS apply -f -
   done
 }
 
@@ -270,12 +272,9 @@ function extract_orderer_tls_certs() {
   orgcount=$1
   orderercount=$2
 
-  for ((i=0; i<${orgcount}; i++))
+  for ((j=1; j<=${orderercount}; j++))
   do
-    for ((j=1; j<=${orderercount}; j++))
-    do
-      extract_orderer_tls_cert ${i} org${i}-orderer${j}
-    done
+    extract_orderer_tls_cert 0 org0-orderer${j}
   done
 }
 

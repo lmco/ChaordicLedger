@@ -1,0 +1,672 @@
+[3J[H[2JPurging cluster "chaordiccluster":
+~/git/ChaordicLedger/cleanup/agnostic ~/git/ChaordicLedger
+CONTAINER ID   IMAGE                  COMMAND                  CREATED         STATUS         PORTS                                                                 NAMES
+20dc22f817d5   kindest/node:v1.21.1   "/usr/local/bin/entr…"   2 minutes ago   Up 2 minutes   0.0.0.0:80->80/tcp, 0.0.0.0:443->443/tcp, 127.0.0.1:35131->6443/tcp   chaordiccluster-control-plane
+9a57547f5799   registry:2             "/entrypoint.sh /etc…"   32 hours ago    Up 5 hours     127.0.0.1:5000->5000/tcp                                              kind-registry
+20dc22f817d5
+Deleted Containers:
+20dc22f817d5aa6d4c62747da14644e6e19db9051e4acd4f819d0166fa1f5b4b
+
+Total reclaimed space: 4.086MB
+CONTAINER ID   IMAGE        COMMAND                  CREATED        STATUS       PORTS                      NAMES
+9a57547f5799   registry:2   "/entrypoint.sh /etc…"   32 hours ago   Up 5 hours   127.0.0.1:5000->5000/tcp   kind-registry
+REPOSITORY                                                  TAG       IMAGE ID       CREATED        SIZE
+127.0.0.1:5000/test/mypeer                                  latest    0060cd89f4c1   4 days ago     63.3MB
+localhost:5000/test/mypeer                                  latest    0060cd89f4c1   4 days ago     63.3MB
+127.0.0.1:5000/test/myapp                                   latest    3f9bad78c8ad   4 days ago     37.2MB
+localhost:5000/test/myapp                                   latest    3f9bad78c8ad   4 days ago     37.2MB
+localhost:5000/test/myapp                                   <none>    a815be87c28e   4 days ago     37.2MB
+localhost:5000/test/myapp                                   <none>    ebeba5bee1e0   4 days ago     37.2MB
+127.0.0.1:5000/test/myapp                                   <none>    1b29bb984c63   4 days ago     37.2MB
+localhost:5000/test/myapp                                   <none>    1b29bb984c63   4 days ago     37.2MB
+test/myapp                                                  latest    cb32c53a9ec3   4 days ago     37.2MB
+127.0.0.1:5000/test/myapp                                   <none>    cb32c53a9ec3   4 days ago     37.2MB
+localhost:5000/test/myapp                                   <none>    cb32c53a9ec3   4 days ago     37.2MB
+registry                                                    2         9c97225e83c8   3 weeks ago    24.2MB
+hyperledger/fabric-tools                                    2.4.1     286b1b8f098f   2 months ago   458MB
+hyperledger/fabric-peer                                     2.4.1     b3e5bf2a6224   2 months ago   63.3MB
+hyperledger/fabric-orderer                                  2.4.1     37df790c7d16   2 months ago   37.2MB
+ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic   latest    395c87d593fa   5 months ago   496MB
+hyperledger/fabric-ca                                       1.5.2     4ea287b75c63   5 months ago   69.8MB
+kindest/node                                                <none>    32b8b755dee8   9 months ago   1.12GB
+DRIVER    VOLUME NAME
+local     1e64ca4a9ab0541194b13314b0181d71208b5126b524b315324f4dd3b40518cd
+local     80fd6d8f53ed7c1bd067f007815378e71de3c3a7c72c39d74a077e5cca20465e
+Deleted Volumes:
+80fd6d8f53ed7c1bd067f007815378e71de3c3a7c72c39d74a077e5cca20465e
+
+Total reclaimed space: 2.046GB
+DRIVER    VOLUME NAME
+local     1e64ca4a9ab0541194b13314b0181d71208b5126b524b315324f4dd3b40518cd
+~/git/ChaordicLedger
+🏁 - Cluster "chaordiccluster" and its supporting Docker images are gone.
+Initializing cluster "chaordiccluster":
+~/git/ChaordicLedger/hyperledger/scripts ~/git/ChaordicLedger
+Creating cluster "chaordiccluster"
+Creating cluster "chaordiccluster" ...
+ • Ensuring node image (kindest/node:v1.21.1) 🖼  ...
+ ✓ Ensuring node image (kindest/node:v1.21.1) 🖼
+ • Preparing nodes 📦   ...
+ ✓ Preparing nodes 📦 
+ • Writing configuration 📜  ...
+ ✓ Writing configuration 📜
+ • Starting control-plane 🕹️  ...
+ ✓ Starting control-plane 🕹️
+ • Installing CNI 🔌  ...
+ ✓ Installing CNI 🔌
+ • Installing StorageClass 💾  ...
+ ✓ Installing StorageClass 💾
+Set kubectl context to "kind-chaordiccluster"
+You can now use your cluster with:
+
+kubectl cluster-info --context kind-chaordiccluster
+
+Not sure what to do next? 😅  Check out https://kind.sigs.k8s.io/docs/user/quick-start/
+Applying proxy certificate trust to "chaordiccluster" from "/home/cloud-user/cachain/"
+Updating certificates in /etc/ssl/certs...
+41 added, 0 removed; done.
+Running hooks in /etc/ca-certificates/update.d...
+done.
+Launching NGINX ingress controller
+namespace/ingress-nginx created
+serviceaccount/ingress-nginx created
+serviceaccount/ingress-nginx-admission created
+role.rbac.authorization.k8s.io/ingress-nginx created
+role.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx created
+clusterrole.rbac.authorization.k8s.io/ingress-nginx-admission created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx created
+rolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx created
+clusterrolebinding.rbac.authorization.k8s.io/ingress-nginx-admission created
+configmap/ingress-nginx-controller created
+service/ingress-nginx-controller created
+service/ingress-nginx-controller-admission created
+deployment.apps/ingress-nginx-controller created
+job.batch/ingress-nginx-admission-create created
+job.batch/ingress-nginx-admission-patch created
+ingressclass.networking.k8s.io/nginx created
+validatingwebhookconfiguration.admissionregistration.k8s.io/ingress-nginx-admission created
+Installing cert-manager
+customresourcedefinition.apiextensions.k8s.io/certificaterequests.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/certificates.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/challenges.acme.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/clusterissuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/issuers.cert-manager.io created
+customresourcedefinition.apiextensions.k8s.io/orders.acme.cert-manager.io created
+namespace/cert-manager created
+serviceaccount/cert-manager-cainjector created
+serviceaccount/cert-manager created
+serviceaccount/cert-manager-webhook created
+clusterrole.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrole.rbac.authorization.k8s.io/cert-manager-view created
+clusterrole.rbac.authorization.k8s.io/cert-manager-edit created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrole.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests created
+clusterrole.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-cainjector created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-issuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-clusterissuers created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificates created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-orders created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-challenges created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-ingress-shim created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-approve:cert-manager-io created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-controller-certificatesigningrequests created
+clusterrolebinding.rbac.authorization.k8s.io/cert-manager-webhook:subjectaccessreviews created
+role.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager:leaderelection created
+role.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+rolebinding.rbac.authorization.k8s.io/cert-manager-cainjector:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager:leaderelection created
+rolebinding.rbac.authorization.k8s.io/cert-manager-webhook:dynamic-serving created
+service/cert-manager created
+service/cert-manager-webhook created
+deployment.apps/cert-manager-cainjector created
+deployment.apps/cert-manager created
+deployment.apps/cert-manager-webhook created
+mutatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+validatingwebhookconfiguration.admissionregistration.k8s.io/cert-manager-webhook created
+Waiting for deployment spec update to be observed...
+Waiting for deployment spec update to be observed...
+Waiting for deployment "cert-manager" rollout to finish: 0 out of 1 new replicas have been updated...
+Waiting for deployment "cert-manager" rollout to finish: 0 of 1 updated replicas are available...
+deployment "cert-manager" successfully rolled out
+deployment "cert-manager-cainjector" successfully rolled out
+Waiting for deployment "cert-manager-webhook" rollout to finish: 0 of 1 updated replicas are available...
+deployment "cert-manager-webhook" successfully rolled out
+Launching container registry "kind-registry" at localhost:5000
+Registry "kind-registry" is already running.
+hyperledger/scripts/cluster.sh: line 73: [: missing `]'
+Registry "kind-registry" is already connected.
+configmap/local-registry-hosting created
+Pulling docker images for Fabric 2.4.1
+1.5.2: Pulling from hyperledger/fabric-ca
+Digest: sha256:faa3b743d9ed391c30f518a7cc1168160bf335f3bf60ba6aaaf1aa49c1ed023e
+Status: Image is up to date for hyperledger/fabric-ca:1.5.2
+docker.io/hyperledger/fabric-ca:1.5.2
+2.4.1: Pulling from hyperledger/fabric-orderer
+Digest: sha256:f6753c1a079acc1403401c54939efe284efe4b1f8f873e5f5bfb3de09fca6124
+Status: Image is up to date for hyperledger/fabric-orderer:2.4.1
+docker.io/hyperledger/fabric-orderer:2.4.1
+2.4.1: Pulling from hyperledger/fabric-peer
+Digest: sha256:fa7bc1485e94253bbc24d1a970d993452ad1693b27c549d33e7e3434e809776d
+Status: Image is up to date for hyperledger/fabric-peer:2.4.1
+docker.io/hyperledger/fabric-peer:2.4.1
+2.4.1: Pulling from hyperledger/fabric-tools
+Digest: sha256:8ade1c0dc6ff981ffd1b08cf8d2be3923475ddc2982fa60af736ba8e75d9cae4
+Status: Image is up to date for hyperledger/fabric-tools:2.4.1
+docker.io/hyperledger/fabric-tools:2.4.1
+Loading docker images into the control plane
+Image: "hyperledger/fabric-ca:1.5.2" with ID "sha256:4ea287b75c6363fe72cbfad8b0e3236a6c4217701f0d3f1c7c19e02ee8561bda" not yet present on node "chaordiccluster-control-plane", loading...
+Image: "hyperledger/fabric-orderer:2.4.1" with ID "sha256:37df790c7d16055db5d2d9bb81c9b1b46331794dad392a5a52e95cdb918787d7" not yet present on node "chaordiccluster-control-plane", loading...
+Image: "hyperledger/fabric-peer:2.4.1" with ID "sha256:b3e5bf2a6224d2dcde2d1ae35cc021d01d1894eb164681a7677d7a165d9406d7" not yet present on node "chaordiccluster-control-plane", loading...
+Image: "hyperledger/fabric-tools:2.4.1" with ID "sha256:286b1b8f098fac9a48f0ceb27d711199980f75124b129d65f05d046851aba97e" not yet present on node "chaordiccluster-control-plane", loading...
+Image: "localhost:5000/test/mypeer:latest" with ID "sha256:0060cd89f4c13a42ac2fecdd16e8e53c80a56596ccc63bacce56e5798d45db2f" not yet present on node "chaordiccluster-control-plane", loading...
+~/git/ChaordicLedger
+🏁 - Cluster "chaordiccluster" is ready.
+[3J[H[2J~/git/ChaordicLedger/hyperledger/scripts ~/git/ChaordicLedger
+Creating namespace "chaordicledger"
+namespace/chaordicledger created
+Provisioning volume storage for 3 org(s)
+Provisioning volume storage for Org 0
+persistentvolume/fabric-org0 created
+Claiming volume for Org 0
+persistentvolumeclaim/fabric-org0 created
+Provisioning volume storage for Org 1
+persistentvolume/fabric-org1 created
+Claiming volume for Org 1
+persistentvolumeclaim/fabric-org1 created
+Provisioning volume storage for Org 2
+persistentvolume/fabric-org2 created
+Claiming volume for Org 2
+persistentvolumeclaim/fabric-org2 created
+Creating fabric config maps for 3 org(s)
+Creating fabric CA server config for org 0
+configmap/org0-config created
+Creating fabric CA server config for org 1
+configmap/org1-config created
+Creating fabric CA server config for org 2
+configmap/org2-config created
+Initializing Root TLS certificate Issuers
+issuer.cert-manager.io/root-tls-cert-issuer created
+issuer.cert-manager.io/root-tls-cert-issuer condition met
+Creating TLS cert issuer for each of 3 org(s)
+Creating org 0 TLS cert issuer
+certificate.cert-manager.io/org0-tls-cert-issuer created
+issuer.cert-manager.io/org0-tls-cert-issuer created
+issuer.cert-manager.io/org0-tls-cert-issuer condition met
+Creating org 1 TLS cert issuer
+certificate.cert-manager.io/org1-tls-cert-issuer created
+issuer.cert-manager.io/org1-tls-cert-issuer created
+issuer.cert-manager.io/org1-tls-cert-issuer condition met
+Creating org 2 TLS cert issuer
+certificate.cert-manager.io/org2-tls-cert-issuer created
+issuer.cert-manager.io/org2-tls-cert-issuer created
+issuer.cert-manager.io/org2-tls-cert-issuer condition met
+NAME                   READY   SECRET                        AGE
+org0-tls-cert-issuer   True    org0-tls-cert-issuer-secret   16s
+org1-tls-cert-issuer   True    org1-tls-cert-issuer-secret   10s
+org2-tls-cert-issuer   True    org2-tls-cert-issuer-secret   5s
+Launching Fabric CAs for each of 3 org(s)
+certificate.cert-manager.io/org0-ca-tls-cert created
+deployment.apps/org0-ca created
+service/org0-ca created
+Waiting for deployment "org0-ca" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org0-ca" successfully rolled out
+certificate.cert-manager.io/org1-ca-tls-cert created
+deployment.apps/org1-ca created
+service/org1-ca created
+Waiting for deployment "org1-ca" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org1-ca" successfully rolled out
+certificate.cert-manager.io/org2-ca-tls-cert created
+deployment.apps/org2-ca created
+service/org2-ca created
+Waiting for deployment "org2-ca" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org2-ca" successfully rolled out
+Enrolling bootstrap ECert CA users for 3 org(s)
++ fabric-ca-client enroll --url https://rcaadmin:rcaadminpw@org0-ca --tls.certfiles /var/hyperledger/fabric/config/tls/ca.crt --mspdir /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp
+2022/03/01 21:59:50 [INFO] Created a default configuration file at /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:50 [INFO] TLS Enabled
+2022/03/01 21:59:50 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:50 [INFO] encoded CSR
+2022/03/01 21:59:50 [INFO] Stored client certificate at /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp/signcerts/cert.pem
+2022/03/01 21:59:50 [INFO] Stored root CA certificate at /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp/cacerts/org0-ca.pem
+2022/03/01 21:59:50 [INFO] Stored Issuer public key at /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp/IssuerPublicKey
+2022/03/01 21:59:50 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://rcaadmin:rcaadminpw@org1-ca --tls.certfiles /var/hyperledger/fabric/config/tls/ca.crt --mspdir /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp
+2022/03/01 21:59:50 [INFO] Created a default configuration file at /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:50 [INFO] TLS Enabled
+2022/03/01 21:59:50 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:50 [INFO] encoded CSR
+2022/03/01 21:59:50 [INFO] Stored client certificate at /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp/signcerts/cert.pem
+2022/03/01 21:59:50 [INFO] Stored root CA certificate at /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp/cacerts/org1-ca.pem
+2022/03/01 21:59:50 [INFO] Stored Issuer public key at /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp/IssuerPublicKey
+2022/03/01 21:59:50 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://rcaadmin:rcaadminpw@org2-ca --tls.certfiles /var/hyperledger/fabric/config/tls/ca.crt --mspdir /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp
+2022/03/01 21:59:50 [INFO] Created a default configuration file at /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:50 [INFO] TLS Enabled
+2022/03/01 21:59:50 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:50 [INFO] encoded CSR
+2022/03/01 21:59:50 [INFO] Stored client certificate at /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp/signcerts/cert.pem
+2022/03/01 21:59:50 [INFO] Stored root CA certificate at /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp/cacerts/org2-ca.pem
+2022/03/01 21:59:50 [INFO] Stored Issuer public key at /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp/IssuerPublicKey
+2022/03/01 21:59:50 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp/IssuerRevocationPublicKey
+Creating an MSP for each of 3 org(s)
++ export 'FABRIC_CA_CLIENT_HOME=/var/hyperledger/fabric-ca-client'
++ export 'FABRIC_CA_CLIENT_TLS_CERTFILES=/var/hyperledger/fabric/config/tls/ca.crt'
++ fabric-ca-client register --id.name org0-orderer1 --id.secret ordererpw --id.type orderer --url https://org0-ca --mspdir /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp
+2022/03/01 21:59:51 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] TLS Enabled
+Password: ordererpw
++ fabric-ca-client register --id.name org0-orderer2 --id.secret ordererpw --id.type orderer --url https://org0-ca --mspdir /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp
+2022/03/01 21:59:51 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] TLS Enabled
+Password: ordererpw
++ fabric-ca-client register --id.name org0-orderer3 --id.secret ordererpw --id.type orderer --url https://org0-ca --mspdir /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp
+2022/03/01 21:59:51 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] TLS Enabled
+Password: ordererpw
++ fabric-ca-client register --id.name org0-admin --id.secret org0adminpw --id.type admin --url https://org0-ca --mspdir /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp --id.attrs 'hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert'
+2022/03/01 21:59:51 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] TLS Enabled
+Password: org0adminpw
++ fabric-ca-client enroll --url https://org0-orderer1:ordererpw@org0-ca --csr.hosts org0-orderer1 --mspdir /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:51 [INFO] encoded CSR
+2022/03/01 21:59:51 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:51 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/cacerts/org0-ca.pem
+2022/03/01 21:59:51 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:51 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org0-orderer2:ordererpw@org0-ca --csr.hosts org0-orderer2 --mspdir /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:51 [INFO] encoded CSR
+2022/03/01 21:59:51 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:51 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp/cacerts/org0-ca.pem
+2022/03/01 21:59:51 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:51 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org0-orderer3:ordererpw@org0-ca --csr.hosts org0-orderer3 --mspdir /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp
+2022/03/01 21:59:51 [INFO] TLS Enabled
+2022/03/01 21:59:51 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:51 [INFO] encoded CSR
+2022/03/01 21:59:52 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:52 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp/cacerts/org0-ca.pem
+2022/03/01 21:59:52 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:52 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org0-admin:org0adminpw@org0-ca --mspdir /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/users/Admin@org0.example.com/msp
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:52 [INFO] encoded CSR
+2022/03/01 21:59:52 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/users/Admin@org0.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:52 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/users/Admin@org0.example.com/msp/cacerts/org0-ca.pem
+2022/03/01 21:59:52 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/users/Admin@org0.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:52 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/users/Admin@org0.example.com/msp/IssuerRevocationPublicKey
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: orderer'
++ cp /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/msp/config.yaml
++ cp /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/msp/config.yaml
++ export 'FABRIC_CA_CLIENT_HOME=/var/hyperledger/fabric-ca-client'
++ export 'FABRIC_CA_CLIENT_TLS_CERTFILES=/var/hyperledger/fabric/config/tls/ca.crt'
++ fabric-ca-client register --id.name org1-peer1 --id.secret peerpw --id.type peer --url https://org1-ca --mspdir /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp
+2022/03/01 21:59:52 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] TLS Enabled
+Password: peerpw
++ fabric-ca-client register --id.name org1-peer2 --id.secret peerpw --id.type peer --url https://org1-ca --mspdir /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp
+2022/03/01 21:59:52 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] TLS Enabled
+Password: peerpw
++ fabric-ca-client register --id.name org1-admin --id.secret org1adminpw --id.type admin --url https://org1-ca --mspdir /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp --id.attrs 'hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert'
+2022/03/01 21:59:52 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] TLS Enabled
+Password: org1adminpw
++ fabric-ca-client enroll --url https://org1-peer1:peerpw@org1-ca --csr.hosts localhost,org1-peer1,org1-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:52 [INFO] encoded CSR
+2022/03/01 21:59:52 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:52 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/cacerts/org1-ca.pem
+2022/03/01 21:59:52 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:52 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org1-peer2:peerpw@org1-ca --csr.hosts localhost,org1-peer2,org1-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:52 [INFO] encoded CSR
+2022/03/01 21:59:52 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:52 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp/cacerts/org1-ca.pem
+2022/03/01 21:59:52 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:52 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org1-admin:org1adminpw@org1-ca --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp
+2022/03/01 21:59:52 [INFO] TLS Enabled
+2022/03/01 21:59:52 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:52 [INFO] encoded CSR
+2022/03/01 21:59:53 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:53 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/cacerts/org1-ca.pem
+2022/03/01 21:59:53 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:53 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/IssuerRevocationPublicKey
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/8f9b57b6357832a40c7462fe6aba8f60c6296a76ba35fd4175ec6a5df1e91544_sk /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/keystore/server.key
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: orderer'
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer2.org1.example.com/msp/config.yaml
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/peers/org1-peer1.org1.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/users/Admin@org1.example.com/msp/config.yaml
++ export 'FABRIC_CA_CLIENT_HOME=/var/hyperledger/fabric-ca-client'
++ export 'FABRIC_CA_CLIENT_TLS_CERTFILES=/var/hyperledger/fabric/config/tls/ca.crt'
++ fabric-ca-client register --id.name org2-peer1 --id.secret peerpw --id.type peer --url https://org2-ca --mspdir /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp
+2022/03/01 21:59:53 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] TLS Enabled
+Password: peerpw
++ fabric-ca-client register --id.name org2-peer2 --id.secret peerpw --id.type peer --url https://org2-ca --mspdir /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp
+2022/03/01 21:59:53 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] TLS Enabled
+Password: peerpw
++ fabric-ca-client register --id.name org2-admin --id.secret org2adminpw --id.type admin --url https://org2-ca --mspdir /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp --id.attrs 'hf.Registrar.Roles=client,hf.Registrar.Attributes=*,hf.Revoker=true,hf.GenCRL=true,admin=true:ecert,abac.init=true:ecert'
+2022/03/01 21:59:53 [INFO] Configuration file location: /var/hyperledger/fabric-ca-client/fabric-ca-client-config.yaml
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] TLS Enabled
+Password: org2adminpw
++ fabric-ca-client enroll --url https://org2-peer1:peerpw@org2-ca --csr.hosts localhost,org2-peer1,org2-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:53 [INFO] encoded CSR
+2022/03/01 21:59:53 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:53 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/cacerts/org2-ca.pem
+2022/03/01 21:59:53 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:53 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org2-peer2:peerpw@org2-ca --csr.hosts localhost,org2-peer2,org2-peer-gateway-svc --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:53 [INFO] encoded CSR
+2022/03/01 21:59:53 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:53 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp/cacerts/org2-ca.pem
+2022/03/01 21:59:53 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:53 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp/IssuerRevocationPublicKey
++ fabric-ca-client enroll --url https://org2-admin:org2adminpw@org2-ca --mspdir /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp
+2022/03/01 21:59:53 [INFO] TLS Enabled
+2022/03/01 21:59:53 [INFO] generating key: &{A:ecdsa S:256}
+2022/03/01 21:59:53 [INFO] encoded CSR
+2022/03/01 21:59:53 [INFO] Stored client certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/signcerts/cert.pem
+2022/03/01 21:59:53 [INFO] Stored root CA certificate at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/cacerts/org2-ca.pem
+2022/03/01 21:59:53 [INFO] Stored Issuer public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/IssuerPublicKey
+2022/03/01 21:59:53 [INFO] Stored Issuer revocation public key at /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/IssuerRevocationPublicKey
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/11f43261a6adb88c6bf2c2104ddf0100cdab410ed83fd863cd2f3848be47c6cf_sk /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/keystore/server.key
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: orderer'
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer2.org2.example.com/msp/config.yaml
++ cp /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/peers/org2-peer1.org2.example.com/msp/config.yaml /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/users/Admin@org2.example.com/msp/config.yaml
+Launching 3 orderer(s) for each of 3 org(s)
+certificate.cert-manager.io/org0-orderer1-tls-cert created
+configmap/org0-orderer1-env created
+deployment.apps/org0-orderer1 created
+service/org0-orderer1 created
+Waiting for deployment "org0-orderer1" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org0-orderer1" successfully rolled out
+certificate.cert-manager.io/org0-orderer2-tls-cert created
+configmap/org0-orderer2-env created
+deployment.apps/org0-orderer2 created
+service/org0-orderer2 created
+Waiting for deployment "org0-orderer2" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org0-orderer2" successfully rolled out
+certificate.cert-manager.io/org0-orderer3-tls-cert created
+configmap/org0-orderer3-env created
+deployment.apps/org0-orderer3 created
+service/org0-orderer3 created
+Waiting for deployment "org0-orderer3" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org0-orderer3" successfully rolled out
+Launching 2 peer(s) for each of 3 non-root org(s)
+Creating config for Org 1 Peer 1 as /tmp/msp/kube/org1/org1-peer1.yaml
+certificate.cert-manager.io/org1-peer1-tls-cert created
+configmap/org1-peer1-config created
+deployment.apps/org1-peer1 created
+service/org1-peer1 created
+service/org1-peer-gateway-svc created
+Creating config for Org 1 Peer 1
+Waiting for deployment "org1-peer1" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org1-peer1" successfully rolled out
+Creating config for Org 1 Peer 2 as /tmp/msp/kube/org1/org1-peer2.yaml
+certificate.cert-manager.io/org1-peer2-tls-cert created
+configmap/org1-peer2-config created
+deployment.apps/org1-peer2 created
+service/org1-peer2 created
+service/org1-peer-gateway-svc unchanged
+Creating config for Org 1 Peer 2
+Waiting for deployment "org1-peer2" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org1-peer2" successfully rolled out
+service/org1-peer-gateway-svc unchanged
+Creating config for Org 2 Peer 1 as /tmp/msp/kube/org2/org2-peer1.yaml
+certificate.cert-manager.io/org2-peer1-tls-cert created
+configmap/org2-peer1-config created
+deployment.apps/org2-peer1 created
+service/org2-peer1 created
+service/org2-peer-gateway-svc created
+Creating config for Org 2 Peer 1
+Waiting for deployment "org2-peer1" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org2-peer1" successfully rolled out
+Creating config for Org 2 Peer 2 as /tmp/msp/kube/org2/org2-peer2.yaml
+certificate.cert-manager.io/org2-peer2-tls-cert created
+configmap/org2-peer2-config created
+deployment.apps/org2-peer2 created
+service/org2-peer2 created
+service/org2-peer-gateway-svc unchanged
+Creating config for Org 2 Peer 2
+Waiting for deployment "org2-peer2" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org2-peer2" successfully rolled out
+service/org2-peer-gateway-svc unchanged
+Extracting orderer TLS certs to local MSP folder
++ mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/
++ cp var/hyperledger/fabric/config/tls/tls.crt /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
++ mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/
++ cp var/hyperledger/fabric/config/tls/tls.crt /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
++ mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/
++ cp var/hyperledger/fabric/config/tls/tls.crt /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+~/git/ChaordicLedger
+🏁 - MSP for "chaordiccluster" is ready.
+~/git/ChaordicLedger/hyperledger/scripts ~/git/ChaordicLedger
++ mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/cacerts
++ cp /var/hyperledger/fabric-ca-client/org0-ca/rcaadmin/msp/cacerts/org0-ca.pem /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/cacerts
++ mkdir -p /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts
++ cp /var/hyperledger/fabric/config/tls/ca.crt /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org0-ca.pem
+      OrganizationalUnitIdentifier: orderer '
++ mkdir -p /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp/cacerts
++ cp /var/hyperledger/fabric-ca-client/org1-ca/rcaadmin/msp/cacerts/org1-ca.pem /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp/cacerts
++ mkdir -p /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp/tlscacerts
++ cp /var/hyperledger/fabric/config/tls/ca.crt /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp/tlscacerts/org1-tls-ca.pem
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org1-ca.pem
+      OrganizationalUnitIdentifier: orderer '
++ mkdir -p /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp/cacerts
++ cp /var/hyperledger/fabric-ca-client/org2-ca/rcaadmin/msp/cacerts/org2-ca.pem /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp/cacerts
++ mkdir -p /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp/tlscacerts
++ cp /var/hyperledger/fabric/config/tls/ca.crt /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp/tlscacerts/org2-tls-ca.pem
++ echo 'NodeOUs:
+    Enable: true
+    ClientOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: client
+    PeerOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: peer
+    AdminOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: admin
+    OrdererOUIdentifier:
+      Certificate: cacerts/org2-ca.pem
+      OrganizationalUnitIdentifier: orderer '
+Aggregating channel MSP
+organizations/ordererOrganizations/org0.example.com/msp/
+organizations/ordererOrganizations/org0.example.com/msp/cacerts/
+organizations/ordererOrganizations/org0.example.com/msp/cacerts/org0-ca.pem
+organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/
+organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+organizations/ordererOrganizations/org0.example.com/msp/config.yaml
+organizations/peerOrganizations/org1.example.com/msp/
+organizations/peerOrganizations/org1.example.com/msp/cacerts/
+organizations/peerOrganizations/org1.example.com/msp/cacerts/org1-ca.pem
+organizations/peerOrganizations/org1.example.com/msp/tlscacerts/
+organizations/peerOrganizations/org1.example.com/msp/tlscacerts/org1-tls-ca.pem
+organizations/peerOrganizations/org1.example.com/msp/config.yaml
+organizations/peerOrganizations/org2.example.com/msp/
+organizations/peerOrganizations/org2.example.com/msp/cacerts/
+organizations/peerOrganizations/org2.example.com/msp/cacerts/org2-ca.pem
+organizations/peerOrganizations/org2.example.com/msp/tlscacerts/
+organizations/peerOrganizations/org2.example.com/msp/tlscacerts/org2-tls-ca.pem
+organizations/peerOrganizations/org2.example.com/msp/config.yaml
+configmap/msp-config created
+Launching admin CLIs
+deployment.apps/org0-admin-cli created
+Waiting for deployment "org0-admin-cli" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org0-admin-cli" successfully rolled out
+deployment.apps/org1-admin-cli created
+Waiting for deployment "org1-admin-cli" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org1-admin-cli" successfully rolled out
+deployment.apps/org2-admin-cli created
+Waiting for deployment "org2-admin-cli" rollout to finish: 0 of 1 updated replicas are available...
+deployment "org2-admin-cli" successfully rolled out
+Creating channel "cl"
+Defaulted container "main" out of: main, msp-unfurl (init)
++ configtxgen -profile TwoOrgsApplicationGenesis -channelID cl -outputBlock genesis_block.pb
+[34m2022-03-01 22:00:22.232 UTC 0001 INFO[0m [common.tools.configtxgen] [34;1mmain[0m -> Loading configuration
+[34m2022-03-01 22:00:22.256 UTC 0002 INFO[0m [common.tools.configtxgen.localconfig] [34;1mcompleteInitialization[0m -> orderer type: etcdraft
+[34m2022-03-01 22:00:22.256 UTC 0003 INFO[0m [common.tools.configtxgen.localconfig] [34;1mLoad[0m -> Loaded configuration: /var/hyperledger/fabric/config/configtx.yaml
+[34m2022-03-01 22:00:22.259 UTC 0004 INFO[0m [common.tools.configtxgen] [34;1mdoOutputBlock[0m -> Generating genesis block
+[34m2022-03-01 22:00:22.259 UTC 0005 INFO[0m [common.tools.configtxgen] [34;1mdoOutputBlock[0m -> Creating application channel genesis block
+[34m2022-03-01 22:00:22.259 UTC 0006 INFO[0m [common.tools.configtxgen] [34;1mdoOutputBlock[0m -> Writing genesis block
++ osnadmin channel join --orderer-address org0-orderer1:9443 --channelID cl --config-block genesis_block.pb
+Status: 201
+{
+	"name": "cl",
+	"url": "/participation/v1/channels/cl",
+	"consensusRelation": "consenter",
+	"status": "active",
+	"height": 1
+}
+
++ osnadmin channel join --orderer-address org0-orderer2:9443 --channelID cl --config-block genesis_block.pb
+Status: 201
+{
+	"name": "cl",
+	"url": "/participation/v1/channels/cl",
+	"consensusRelation": "consenter",
+	"status": "active",
+	"height": 1
+}
+
++ osnadmin channel join --orderer-address org0-orderer3:9443 --channelID cl --config-block genesis_block.pb
+Status: 201
+{
+	"name": "cl",
+	"url": "/participation/v1/channels/cl",
+	"consensusRelation": "consenter",
+	"status": "active",
+	"height": 1
+}
+
+~/git/ChaordicLedger
+🏁 - Channel "cl" for "chaordiccluster" is ready.
+~/git/ChaordicLedger/hyperledger/scripts ~/git/ChaordicLedger
+Joining peers in org1 to channel "cl"
+Defaulted container "main" out of: main, msp-unfurl (init)
++ peer channel fetch oldest genesis_block.pb -c cl -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+[34m2022-03-01 22:00:32.657 UTC 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+[34m2022-03-01 22:00:32.660 UTC 0002 INFO[0m [cli.common] [34;1mreadBlock[0m -> Received block: 0
++ export CORE_PEER_ADDRESS=org1-peer1:7051
++ CORE_PEER_ADDRESS=org1-peer1:7051
++ peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+[34m2022-03-01 22:00:32.712 UTC 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+[34m2022-03-01 22:00:32.754 UTC 0002 INFO[0m [channelCmd] [34;1mexecuteJoin[0m -> Successfully submitted proposal to join channel
++ export CORE_PEER_ADDRESS=org1-peer2:7051
++ CORE_PEER_ADDRESS=org1-peer2:7051
++ peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+[34m2022-03-01 22:00:32.815 UTC 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+[34m2022-03-01 22:00:32.852 UTC 0002 INFO[0m [channelCmd] [34;1mexecuteJoin[0m -> Successfully submitted proposal to join channel
+Joining peers in org2 to channel "cl"
+Defaulted container "main" out of: main, msp-unfurl (init)
++ peer channel fetch oldest genesis_block.pb -c cl -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+[34m2022-03-01 22:00:33.025 UTC 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+[34m2022-03-01 22:00:33.027 UTC 0002 INFO[0m [cli.common] [34;1mreadBlock[0m -> Expect block, but got status: &{FORBIDDEN}
+Error: can't read the block: &{FORBIDDEN}
++ export CORE_PEER_ADDRESS=org2-peer1:7051
++ CORE_PEER_ADDRESS=org2-peer1:7051
++ peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+[34m2022-03-01 22:00:33.082 UTC 0001 INFO[0m [channelCmd] [34;1mInitCmdFactory[0m -> Endorser and orderer connections initialized
+Error: genesis block file not found open genesis_block.pb: no such file or directory
++ export CORE_PEER_ADDRESS=org2-peer2:7051
++ CORE_PEER_ADDRESS=org2-peer2:7051
++ peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+Error: error getting endorser client for channel: endorser client failed to connect to org2-peer2:7051: failed to create new connection: context deadline exceeded
+command terminated with exit code 1

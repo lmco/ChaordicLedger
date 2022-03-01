@@ -12,4 +12,5 @@ clear &&
 ./network init &&
 clear &&
 ./network msp 3 3 2 &&
-./network channel 2
+./network channel 2 &&
+./network peer
