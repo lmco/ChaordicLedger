@@ -107,19 +107,24 @@ function join_org_peers()
 {
   local org=$1
   local peer=$2
-  echo "Joining peers in ${org} to channel \"${CHANNEL_NAME}\""
+  echo "Fetching genesis block for admin CLI for ${org} from channel \"${CHANNEL_NAME}\""
 
-  # TODO: Refactor to not assume two peers per org
   echo 'set -x
   # Fetch the genesis block from an orderer
   peer channel fetch oldest genesis_block.pb -c '${CHANNEL_NAME}' -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+  ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -i -- /bin/bash
 
-  # Join peer1 to the channel.
-  export CORE_PEER_ADDRESS='${org}'-peer1:7051
+  # TODO: Refactor to not assume two peers per org
+  echo "Joining peers in ${org} to channel \"${CHANNEL_NAME}\""
+  echo 'set -x
+  # Join peer2 to the channel.
+  echo "Joining '${org}' peer 2 to channel '${CHANNEL_NAME}'"
+  export CORE_PEER_ADDRESS='${org}'-peer2:7051
   peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
 
-  # Join peer2 to the channel.
-  export CORE_PEER_ADDRESS='${org}'-peer2:7051
+  # Join peer1 to the channel.
+  echo "Joining '${org}' peer 1 to channel '${CHANNEL_NAME}'"
+  export CORE_PEER_ADDRESS='${org}'-peer1:7051
   peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
 
   ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -i -- /bin/bash
@@ -140,5 +145,11 @@ function channel_init()
 function channel_join()
 {
   join_org_peers org1
-  join_org_peers org2
+
+  # TODO: Currently org1-peer1 and org1-peer2 connect and get the genesis block, but org2-peer* fail because org2-admin-cli cannot get the genesis block.
+  #   peer channel fetch oldest genesis_block.pb -c cl -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+  #   2022-03-01 22:03:06.520 UTC 0001 INFO [channelCmd] InitCmdFactory -> Endorser and orderer connections initialized
+  #   2022-03-01 22:03:06.524 UTC 0002 INFO [cli.common] readBlock -> Expect block, but got status: &{FORBIDDEN}
+  #   Error: can't read the block: &{FORBIDDEN}
+  #join_org_peers org2
 }

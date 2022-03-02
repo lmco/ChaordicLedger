@@ -15,6 +15,9 @@ CLUSTER_NAME="chaordiccluster"
 NS=${NETWORK_NAME}
 CHANNEL_NAME="cl"
 
+CHAINCODE_NAME=asset-transfer-basic
+CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
+
 LOCAL_REGISTRY_NAME="kind-registry"
 LOCAL_REGISTRY_PORT="5000"
 
@@ -30,7 +33,7 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 . hyperledger/scripts/cluster.sh
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
-#. hyperledger/scripts/fabric_config.sh
+. hyperledger/scripts/create_chaincode.sh
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
@@ -71,6 +74,24 @@ elif [ "${MODE}" == "peer" ]; then
   popd
 
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
+elif [ "${MODE}" == "chaincode" ]; then
+  pushd hyperledger/scripts
+  deploy_chaincode
+  popd
+
+  echo "🏁 - Chaincode deployed."
+elif [ "${MODE}" == "invoke" ]; then
+  pushd hyperledger/scripts
+  invoke_chaincode $@
+  popd
+
+  echo "🏁 - Chaincode invoked."
+elif [ "${MODE}" == "query" ]; then
+  pushd hyperledger/scripts
+  query_chaincode $@
+  popd
+
+  echo "🏁 - Chaincode queried."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
