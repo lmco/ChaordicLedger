@@ -32,6 +32,7 @@ RCAADMIN_AUTH=rcaadmin:rcaadminpw
 # Used for applying additional CA trusts (e.g. CAs for corporate proxy servers)
 ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 
+. hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
 . hyperledger/scripts/create_msp.sh

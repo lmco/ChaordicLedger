@@ -1,5 +1,8 @@
 #!/bin/sh
 
+CLUSTER_TMP=/tmp/cluster
+mkdir -p $CLUSTER_TMP
+
 function cluster_init() {
   cluster_create
   apply_proxy_certs
@@ -12,18 +15,10 @@ function cluster_init() {
 
 function cluster_create() {
   echo "Creating cluster \"${CLUSTER_NAME}\""
-
-  local cluster_config=/tmp/cluster_config.yaml
-
-  cat ../config/cluster-template.yaml | 
-    sed "s|\${ingress_http_port}|${NGINX_HTTP_PORT}|g" |
-    sed "s|\${ingress_https_port}|${NGINX_HTTPS_PORT}|g" |
-    sed "s|\${reg_name}|${LOCAL_REGISTRY_NAME}|g" |
-    sed "s|\${reg_port}|${LOCAL_REGISTRY_PORT}|g" > ${cluster_config}
-
-  kind create cluster --name $CLUSTER_NAME --config=${cluster_config}
-
-  rm ${cluster_config}
+  
+  populateTemplate ../config/cluster-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_cluster_config.yaml
+  kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate}
+  unset populatedTemplate
 }
 
 function apply_proxy_certs() {
@@ -37,6 +32,7 @@ function apply_proxy_certs() {
 
 function apply_nginx_ingress() {
   echo "Launching NGINX ingress controller"
+  
   kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
 }
 
@@ -55,40 +51,34 @@ function install_cert_manager() {
 function launch_docker_registry() {
   echo "Launching container registry \"${LOCAL_REGISTRY_NAME}\" at localhost:${LOCAL_REGISTRY_PORT}"
 
-  # create registry container unless it already exists
-  local reg_name=${LOCAL_REGISTRY_NAME}
-  local reg_port=${LOCAL_REGISTRY_PORT}
+  local bridgeNetworkName="kind"
+  local containerPortNumber="5000"
 
-  running="$(docker inspect -f '{{.State.Running}}' "${reg_name}" 2>/dev/null || true)"
+  # create registry container unless it already exists
+  running="$(docker inspect -f '{{.State.Running}}' "${LOCAL_REGISTRY_NAME}" 2>/dev/null || true)"
   if [ "${running}" != 'true' ]; then
-    echo "Starting registry \"${reg_name}\""
+    echo "Starting registry \"${LOCAL_REGISTRY_NAME}\""
     docker run \
-      -d --restart=always -p "127.0.0.1:${reg_port}:5000" --name "${reg_name}" \
+      -d --restart=always -p "127.0.0.1:${LOCAL_REGISTRY_PORT}:${containerPortNumber}" --name "${LOCAL_REGISTRY_NAME}" \
       registry:2
   else
-    echo "Registry \"${reg_name}\" is already running."
+    echo "Registry \"${LOCAL_REGISTRY_NAME}\" is already running."
   fi
 
-  connectedItem=$(docker network inspect "kind" -f '{{json .Containers}}' | jq '.[].Name' | grep ${reg_name} | sed "s|\"||g")
-  if [ "${reg_name}" != "${connectedItem}"]; then
+  connectedItem=$(docker network inspect "${bridgeNetworkName}" -f '{{json .Containers}}' | jq '.[].Name' | grep ${LOCAL_REGISTRY_NAME} | sed "s|\"||g")
+  if [ "${LOCAL_REGISTRY_NAME}" != "${connectedItem}"]; then
     # connect the registry to the cluster network
-    # (the network may already be connected)
-    echo "Connecting registry \"${reg_name}\""
-    docker network connect "kind" "${reg_name}" || true
+    echo "Connecting registry \"${LOCAL_REGISTRY_NAME}\""
+    docker network connect "${bridgeNetworkName}" "${LOCAL_REGISTRY_NAME}" || true
   else
-    echo "Registry \"${reg_name}\" is already connected."
+    echo "Registry \"${LOCAL_REGISTRY_NAME}\" is already connected."
   fi
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
-  local reg_config=/tmp/local-registry.yaml
-
-  cat ../config/local-registry-template.yaml | 
-    sed "s|\${reg_port}|${LOCAL_REGISTRY_PORT}|g" > ${reg_config}
-
-  kubectl apply -f ${reg_config}
-
-  rm ${reg_config}
+  echo "Template variable is set to: ${populatedTemplate}"
+  applyPopulatedTemplate ../config/local-registry-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_registry_config.yaml
+  echo "Template variable is set to: ${populatedTemplate}"
 }
 
 function pull_docker_images() {

@@ -1,5 +1,6 @@
 #/bin/sh
 
+rm -rf /tmp/cluster
 rm -rf /tmp/msp
 rm -rf /tmp/channel
 rm -rf /tmp/chaincode
@@ -16,5 +17,5 @@ clear &&
 ./network channel 2 &&
 ./network peer &&
 ./network chaincode &&
-./network invoke '{"Args":["CreateAsset","3","blue","35","tom","1000"]}'
+./network invoke '{"Args":["CreateAsset","3","blue","35","tom","1000"]}' &&
 ./network query '{"Args":["ReadAsset","3"]}'
