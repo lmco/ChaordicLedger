@@ -162,7 +162,26 @@ function create_local_MSPs()
 
   echo "Creating an MSP for each of ${orgcount} org(s)"
 
-  for ((i=0; i<${orgcount}; i++))
+  local i=0
+
+  local msp_dir=$MSP_TMP_DIR/org${i}
+  mkdir -p $msp_dir
+  local config_file=${msp_dir}/enroll_root_msp_with_ca_client.sh
+
+  cat ../config/toBeRefactored/org0/enroll_msp_with_ca_client_template.sh |
+  sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
+
+  cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
+
+  local config_file=${msp_dir}/enroll_admin_msp_with_ca_client.sh
+  cat ../config/enroll_admin_with_ca_client_template.sh |
+    sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" |
+    sed "s|{{ORG_NUMBER}}|${0}|g" |
+      > ${config_file}
+
+  cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
+
+  for ((i=1; i<${orgcount}; i++))
   do
     local msp_dir=$MSP_TMP_DIR/org${i}
     mkdir -p $msp_dir
@@ -213,7 +232,8 @@ function launch_orderers() {
 function launch_peers() {
   local orgcount=$1
   local peercount=$2
-  echo "Launching ${peercount} peer(s) for each of ${orgcount} non-root org(s)"
+  local nonroot=$((${orgcount}-1))
+  echo "Launching ${peercount} peer(s) for each of ${nonroot} non-root org(s)"
 
   # Launch no peers for Org 0
   for ((i=1; i<${orgcount}; i++))

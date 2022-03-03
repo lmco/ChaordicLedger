@@ -15,6 +15,6 @@ clear &&
 ./network msp 3 3 2 &&
 ./network channel 2 &&
 ./network peer &&
-./network deploy &&
+./network chaincode &&
 ./network invoke '{"Args":["CreateAsset","3","blue","35","tom","1000"]}'
-#./network query '{"Args":["ReadAsset","1"]}'
+./network query '{"Args":["ReadAsset","3"]}'

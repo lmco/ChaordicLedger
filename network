@@ -18,6 +18,9 @@ CHANNEL_NAME="cl"
 CHAINCODE_NAME=asset-transfer-basic
 CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 
+#CHAINCODE_NAME=chainstate
+#CHAINCODE_IMAGE= localhost:5000:/chainstate:latest
+
 LOCAL_REGISTRY_NAME="kind-registry"
 LOCAL_REGISTRY_PORT="5000"
 
