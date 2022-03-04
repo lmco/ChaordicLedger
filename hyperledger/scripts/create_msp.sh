@@ -21,12 +21,8 @@ function provision_persistent_volume()
 
   if [ "$ORG_NUMBER" == "0" ]; then
     populateTemplate ../config/org/msp-root-pv-template.yaml ${pv_config}
-    # cat ../config/org/msp-root-pv-template.yaml |
-    #   sed "s|${ORG_NUMBER}|${orgnumber}|" > ${pv_config}
   else
     populateTemplate ../config/org/msp-org-pv-template.yaml ${pv_config}
-    # cat ../config/org/msp-org-pv-template.yaml |
-    #   sed "s|${ORG_NUMBER}|${orgnumber}|" > ${pv_config}
   fi
 
   kubectl create -f ${pv_config} || true
@@ -41,8 +37,6 @@ function claim_persistant_volume()
   echo "Claiming volume for Org ${ORG_NUMBER}"
 
   populateTemplate ../config/org/msp-pvc-template.yaml ${pvc_config}
-  # cat ../config/org/msp-pvc-template.yaml |
-  #   sed "s|${ORG_NUMBER}|${orgnumber}|" > ${pvc_config}
 
   kubectl -n $NS create -f ${pvc_config} || true
 }
@@ -72,9 +66,6 @@ function load_org_config() {
     echo "Creating fabric CA server config for org ${i}"
     export ORG_NUMBER=${i}
     populateTemplate ../config/org/fabric-ca-server-config-template.yaml ${caconfig}
-    # cat ../config/org/fabric-ca-server-config-template.yaml |
-    #   sed "s|${ORG_NUMBER}|${i}|" |
-    #   sed "s|${NETWORK_NAME}|${NETWORK_NAME}|" > ${caconfig}
     
     # TODO: Perform this refactoring after this is confirmed working.
     cp ../config/toBeRefactored/org${i}/*.yaml ${dir}
@@ -104,8 +95,6 @@ function init_tls_cert_issuers()
     echo "Creating org ${i} TLS cert issuer"
     export ORG_NUMBER=${i}
     populateTemplate ../config/org/tls-cert-issuer-template.yaml ${issuer_config}
-    # cat ../config/org/tls-cert-issuer-template.yaml |
-    #   sed "s|${ORG_NUMBER}|${i}|" > ${issuer_config}
 
     # Use the self-signing issuer to generate three Issuers, one for each org.
     kubectl -n $NS apply -f ${issuer_config}
@@ -125,12 +114,6 @@ function launch_CA() {
 
   export ORG_NUMBER=${number}
   populateTemplate ${yaml} ${ca_config_file}
-  # cat ${yaml} \
-  #   | sed 's,${NETWORK_NAME},'${NETWORK_NAME}',g' \
-  #   | sed 's,${ORG_NUMBER},'${number}',g' \
-  #   | sed 's,${FABRIC_CONTAINER_REGISTRY},'${FABRIC_CONTAINER_REGISTRY}',g' \
-  #   | sed 's,${FABRIC_CA_VERSION},'${FABRIC_CA_VERSION}',g' > ${ca_config_file}
-
   cat ${ca_config_file} | kubectl -n $NS apply -f -
 }
 
@@ -186,18 +169,12 @@ function create_local_MSPs()
 
   export ORG_NUMBER="0"
   populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
-  # cat ../config/enroll_admin_with_ca_client_template.sh |
-  #   sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" |
-  #   sed "s|${ORG_NUMBER}|${0}|g" |
-  #     > ${config_file}
 
   cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
 
   local config_file=${msp_dir}/enroll_root_msp_with_ca_client.sh
 
   populateTemplate ../config/toBeRefactored/org0/enroll_msp_with_ca_client_template.sh ${config_file}
-  # cat ../config/toBeRefactored/org0/enroll_msp_with_ca_client_template.sh |
-  # sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
 
   cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
 
@@ -210,8 +187,6 @@ function create_local_MSPs()
 
     export ORG_NUMBER=${i}
     populateTemplate ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh ${config_file}
-    # cat ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh |
-    #   sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
 
     cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
   done
@@ -228,13 +203,6 @@ function launch() {
   export ORG_NUMBER=${orgnumber}
   export ORDERER_NUMBER=${orderernumber}
   populateTemplate ${yaml} ${orderer_config_file}
-
-  # cat ${yaml} \
-  #   | sed 's,${NETWORK_NAME},'${NETWORK_NAME}',g' \
-  #   | sed 's,${ORG_NUMBER},'${orgnumber}',g' \
-  #   | sed 's,${ORDERER_NUMBER},'${orderernumber}',g' \
-  #   | sed 's,${FABRIC_CONTAINER_REGISTRY},'${FABRIC_CONTAINER_REGISTRY}',g' \
-  #   | sed 's,${FABRIC_VERSION},'${FABRIC_VERSION}',g' > ${orderer_config_file}
 
   cat ${orderer_config_file} | kubectl -n $NS apply -f -
 }
@@ -276,12 +244,6 @@ function launch_peers() {
       export ORG_NUMBER=${i}
       export PEER_NUMBER=${j}
       populateTemplate ../config/org/peer-template.yaml ${peer_config_file}
-      # cat ../config/org/peer-template.yaml \
-      #   | sed 's,${PEER_NUMBER},'${j}',g' \
-      #   | sed 's,${NETWORK_NAME},'${NETWORK_NAME}',g' \
-      #   | sed 's,${ORG_NUMBER},'${i}',g' \
-      #   | sed 's,${FABRIC_CONTAINER_REGISTRY},'${FABRIC_CONTAINER_REGISTRY}',g' \
-      #   | sed 's,${FABRIC_VERSION},'${FABRIC_VERSION}',g' > ${peer_config_file}
 
       cat ${peer_config_file} | kubectl -n $NS apply -f -
       
@@ -296,8 +258,6 @@ function launch_peers() {
 
     export ORG_NUMBER=${i}
     populateTemplate ../config/org/peer-gateway-service-template.yaml ${peer_gateway_config_file}
-    # cat ../config/org/peer-gateway-service-template.yaml \
-    #   | sed 's,${ORG_NUMBER},'${i}',g' > ${peer_gateway_config_file}
 
     cat ${peer_gateway_config_file} | kubectl -n $NS apply -f -
   done

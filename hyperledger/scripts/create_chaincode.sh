@@ -4,16 +4,6 @@ CHAINCODE_TMP_DIR=${TEMP_DIR}/chaincode
 mkdir -p $CHAINCODE_TMP_DIR
 
 function package_chaincode_for() {
-  # local org=$1
-  # local cc_folder="../../chaincode/${CHAINCODE_NAME}"
-  # local build_folder="${CHAINCODE_TMP_DIR}/build"
-  # local cc_archive="${build_folder}/${CHAINCODE_NAME}.tgz"
-  # echo "Packaging chaincode folder ${cc_folder}"
-
-  # mkdir -p ${build_folder}
-
-  # tar -C ${cc_folder} -zcf ${cc_folder}/code.tar.gz connection.json
-  # tar -C ${cc_folder} -zcf ${cc_archive} code.tar.gz metadata.json
   local org=$1
   local cc_folder="../../chaincode/${CHAINCODE_NAME}"
   local build_folder="build/chaincode"
@@ -30,14 +20,6 @@ function package_chaincode_for() {
 
 # Copy the chaincode archive from the local host to the org admin
 function transfer_chaincode_archive_for() {
-  # local org=$1
-  # local cc_archive="${CHAINCODE_TMP_DIR}/build/${CHAINCODE_NAME}.tgz"
-  # echo "Transferring chaincode archive to ${org}"
-  # pushd ${CHAINCODE_TMP_DIR}/build
-  # # Like kubectl cp, but targeted to a deployment rather than an individual pod.
-  # tar cf - ${CHAINCODE_NAME}.tgz | kubectl -n $NS exec -i deploy/${org}-admin-cli -c main -- tar xvf -
-  # popd
-
   local org=$1
   local cc_archive="build/chaincode/${CHAINCODE_NAME}.tgz"
   echo "Transferring chaincode archive to ${org}"
@@ -56,22 +38,6 @@ function install_chaincode_for() {
   export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
   peer lifecycle chaincode install build/chaincode/'${CHAINCODE_NAME}'.tgz
   ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
-
-  # local org=$1
-  # local peer=$2
-  # echo "Installing chaincode for org ${org} peer ${peer}"
-
-  # # Install the chaincode
-  # echo 'set -x
-  # export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
-  # peer lifecycle chaincode install '${CHAINCODE_NAME}'.tgz
-  # ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
-
-  # # # Install the chaincode
-  # # echo 'set -x
-  # # export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
-  # # peer lifecycle chaincode install '${CHAINCODE_TMP_DIR}'/build/'${CHAINCODE_NAME}'.tgz
-  # # ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
 }
 
 
