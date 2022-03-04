@@ -11,6 +11,10 @@ function launch_admin_clis() {
   local admin_cli_config=$CHANNEL_TMP_DIR/org${i}-admin-cli.template.yaml
 
   export ORG_NUMBER=${i}
+
+  # Setting this to the string literal '$FABRIC_CA_CLIENT_HOME' so that the variable remains
+  # in the resulting scripts after env var replacement is complete.
+  export msp="\$msp"
   populateTemplate ../config/org/root-admin-cli-template.yaml ${admin_cli_config}
 
   # cat ../config/org/root-admin-cli-template.yaml \

@@ -10,9 +10,9 @@ clear &&
 ./network purge &&
 ./network init &&
 clear &&
-./network msp 3 3 2 #&&
-# ./network channel 2 &&
-# ./network peer &&
-# ./network chaincode &&
-# ./network invoke '{"Args":["CreateAsset","3","blue","35","tom","1000"]}' &&
-# ./network query '{"Args":["ReadAsset","3"]}'
+./network msp 3 3 2 &&
+./network channel 2 &&
+./network peer &&
+./network chaincode
+./network invoke '{"Args":["CreateAsset","1","blue","35","tom","1000"]}'
+./network query '{"Args":["ReadAsset","1"]}'

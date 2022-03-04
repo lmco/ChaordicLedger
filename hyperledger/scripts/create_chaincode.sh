@@ -49,7 +49,7 @@ function transfer_chaincode_archive_for() {
 function install_chaincode_for() {
   local org=$1
   local peer=$2
-  echo "Installing chaincode for org ${org}  peer ${peer}"
+  echo "Installing chaincode for ${org} ${peer}"
 
   # Install the chaincode
   echo 'set -x
@@ -95,7 +95,7 @@ function set_chaincode_id() {
 
   label=$( jq -r '.label' ../../chaincode/${CHAINCODE_NAME}/metadata.json)
 
-  CHAINCODE_ID=${label}:${cc_sha256}
+  export CHAINCODE_ID=${label}:${cc_sha256}
 }
 
 function launch_chaincode_service() {
@@ -105,6 +105,7 @@ function launch_chaincode_service() {
   # The chaincode endpoint needs to have the generated chaincode ID available in the environment.
   # This could be from a config map, a secret, or by directly editing the deployment spec.  Here we'll keep
   # things simple by using sed to substitute script variables into a yaml template.
+  export ORG_NUMBER=
   export PEER_NAME=$2
   applyPopulatedTemplate ../config/${org}-cc-template.yaml $CHAINCODE_TMP_DIR/${org}-cc.yaml $NS
   kubectl -n $NS rollout status deploy/${org}${PEER_NAME}-cc-${CHAINCODE_NAME}
@@ -158,13 +159,13 @@ function deploy_chaincode() {
 }
 
 function invoke_chaincode() {
-  parameters=$1
+  #parameters=$1
 
   # local execscript=${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
 
-  # TODO: Pass through template function
   # TODO: Reduce to using $@
-  populatedTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
+  export parameters=$1
+  populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
   # cat invoke_chaincode_template.sh |
   #   sed "s|{{parameters}}|$params|g" > ${execscript}
   

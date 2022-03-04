@@ -110,5 +110,3 @@ spec:
       protocol: TCP
   selector:
     app: org${ORG_NUMBER}-peer${PEER_NUMBER}
-
-${ORG_NUMBER}${ORG_NUMBER}

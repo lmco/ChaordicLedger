@@ -15,6 +15,7 @@ function populateTemplate() {
 
   echo "Processing template \"${templateFile}\" to create \"${outputPath}\""
 
+  # Note: envsubst only works with exported variables or variables set and then chained into an invocation.
   envsubst < ${templateFile} > ${outputPath}
 
   # Setting a variable as a 'return' value, for convenience.

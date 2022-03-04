@@ -179,6 +179,11 @@ function create_local_MSPs()
   mkdir -p $msp_dir
 
   local config_file=${msp_dir}/enroll_admin_msp_with_ca_client.sh
+
+  # Setting this to the string literal '$FABRIC_CA_CLIENT_HOME' so that the variable remains
+  # in the resulting scripts after env var replacement is complete.
+  export FABRIC_CA_CLIENT_HOME="\$FABRIC_CA_CLIENT_HOME"
+
   export ORG_NUMBER="0"
   populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
   # cat ../config/enroll_admin_with_ca_client_template.sh |
