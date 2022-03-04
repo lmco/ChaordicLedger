@@ -64,7 +64,7 @@ function launch_docker_registry() {
   fi
 
   connectedItem=$(docker network inspect "${bridgeNetworkName}" -f '{{json .Containers}}' | jq '.[].Name' | grep ${LOCAL_REGISTRY_NAME} | sed "s|\"||g")
-  if [ "${LOCAL_REGISTRY_NAME}" != "${connectedItem}"]; then
+  if [ "${LOCAL_REGISTRY_NAME}" != "${connectedItem}" ]; then
     # connect the registry to the cluster network
     echo "Connecting registry \"${LOCAL_REGISTRY_NAME}\""
     docker network connect "${bridgeNetworkName}" "${LOCAL_REGISTRY_NAME}" || true

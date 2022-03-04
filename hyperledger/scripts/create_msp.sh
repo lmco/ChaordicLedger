@@ -170,6 +170,8 @@ function enroll_bootstrap_ECert_CA_users() {
 function create_local_MSPs()
 {
   local orgcount=$1
+  local orderercount=$2
+  local peercount=$3
 
   echo "Creating an MSP for each of ${orgcount} org(s)"
 
@@ -186,33 +188,47 @@ function create_local_MSPs()
 
   export ORG_NUMBER="0"
   populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
-  # cat ../config/enroll_admin_with_ca_client_template.sh |
-  #   sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" |
-  #   sed "s|${ORG_NUMBER}|${0}|g" |
-  #     > ${config_file}
 
   cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
 
   local config_file=${msp_dir}/enroll_root_msp_with_ca_client.sh
 
-  populateTemplate ../config/toBeRefactored/org0/enroll_msp_with_ca_client_template.sh ${config_file}
-  # cat ../config/toBeRefactored/org0/enroll_msp_with_ca_client_template.sh |
-  # sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
-
-  cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
+  for ((j=1; j<=${orderercount}; j++))
+  do
+    export ORDERER_NUMBER=${j}
+    echo "Registering and Enrolling Org ${i} Orderer ${j}"
+    local config_file=${msp_dir}/enroll_msp_org${i}_orderer${j}_with_ca_client.sh
+    populateTemplate ../config/enroll_msp_orderer_with_ca_client_template.sh ${config_file}
+    cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
+  done
 
   for ((i=1; i<${orgcount}; i++))
   do
     echo "Creating MSP for Org ${i}"
     local msp_dir=$MSP_TMP_DIR/org${i}
     mkdir -p $msp_dir
-    local config_file=${msp_dir}/enroll_org${i}_msp_with_ca_client.sh
+    
+    # export ORG_NUMBER=${i}
+    # local config_file=${msp_dir}/enroll_msp_org${i}_peer${j}_with_ca_client.sh
+    # export PEER_NUMBER=${j}
+    # populateTemplate ../config/enroll_msp_peer_with_ca_client_template.sh ${config_file}
 
     export ORG_NUMBER=${i}
+    local config_file=${msp_dir}/enroll_msp_org${i}_peer${j}_with_ca_client.sh
+    export PEER_NUMBER=${j}
     populateTemplate ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh ${config_file}
-    # cat ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh |
-    #   sed "s|{{FABRIC_CA_CLIENT_HOME}}|${FABRIC_CA_CLIENT_HOME}|g" > ${config_file}
 
+    # for ((j=1; j<=${peercount}; j++))
+    # do
+    #   local config_file=${msp_dir}/enroll_msp_org${i}_peer${j}_with_ca_client.sh
+    #   export PEER_NUMBER=${j}
+    #   populateTemplate ../config/enroll_msp_peer_with_ca_client_template.sh ${config_file}
+    # done
+
+    cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
+
+    local config_file=${msp_dir}/enroll_org${i}_admin_msp_with_ca_client.sh
+    populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
     cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
   done
 }
@@ -344,7 +360,7 @@ function create_msp() {
   init_tls_cert_issuers $orgcount
   launch_ECert_CAs $orgcount
   enroll_bootstrap_ECert_CA_users $orgcount
-  create_local_MSPs $orgcount $orderercount
+  create_local_MSPs $orgcount $orderercount $peercount
   launch_orderers $orgcount $orderercount
   launch_peers $orgcount $peercount
 
