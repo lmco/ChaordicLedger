@@ -108,7 +108,7 @@ function launch_chaincode_service() {
   export ORG_NUMBER=
   export PEER_NAME=$2
   applyPopulatedTemplate ../config/${org}-cc-template.yaml $CHAINCODE_TMP_DIR/${org}-cc.yaml $NS
-  kubectl -n $NS rollout status deploy/${org}${PEER_NAME}-cc-${CHAINCODE_NAME}
+  kubectl -n $NS rollout status deploy/${org}-${PEER_NAME}-cc-${CHAINCODE_NAME}
 }
 
 # Activate the installed chaincode but do not package/install a new archive.

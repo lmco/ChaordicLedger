@@ -44,7 +44,7 @@ data:
   CORE_OPERATIONS_LISTENADDRESS: 0.0.0.0:9443
   CORE_PEER_FILESYSTEMPATH: /var/hyperledger/fabric/data/org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com
   CORE_LEDGER_SNAPSHOTS_ROOTDIR: /var/hyperledger/fabric/data/org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com/snapshots
-  CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG: "{\"peername\":\"org${ORG_NUMBER}peer${PEER_NUMBER}\"}"
+  CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG: "{\"peername\":\"org${ORG_NUMBER}-peer${PEER_NUMBER}\"}"
 
 ---
 apiVersion: apps/v1
