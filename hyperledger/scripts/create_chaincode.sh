@@ -159,26 +159,13 @@ function deploy_chaincode() {
 }
 
 function invoke_chaincode() {
-  #parameters=$1
-
-  # local execscript=${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
-
-  # TODO: Reduce to using $@
   export parameters=$1
   populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
-  # cat invoke_chaincode_template.sh |
-  #   sed "s|{{parameters}}|$params|g" > ${execscript}
-  
-  cat ${execscript} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
-
-  sleep 2
+  cat ${populatedTemplate} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
 }
 
 function query_chaincode() {
-  set -x
-  # todo: mangle additional $@ parameters with bash escape quotations
-  echo '
-  export CORE_PEER_ADDRESS=org1-peer1:7051
-  peer chaincode query -n '${CHAINCODE_NAME}' -C '${CHANNEL_NAME}' -c '"'$@'"'
-  ' | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
+  export parameters=$1
+  populateTemplate query_chaincode_template.sh ${CHANNEL_TMP_DIR}/query_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
+  cat ${populatedTemplate} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
 }
