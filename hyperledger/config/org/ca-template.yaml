@@ -1,7 +1,7 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: org{{ORG_NUMBER}}-ca-tls-cert
+  name: org${ORG_NUMBER}-ca-tls-cert
 spec:
   isCA: false
   privateKey:
@@ -9,36 +9,36 @@ spec:
     size: 256
   dnsNames:
     - localhost
-    - org{{ORG_NUMBER}}-ca
-    - org{{ORG_NUMBER}}-ca.{{NETWORK_NAME}}.svc.cluster.local
+    - org${ORG_NUMBER}-ca
+    - org${ORG_NUMBER}-ca.${NETWORK_NAME}.svc.cluster.local
   ipAddresses:
     - 127.0.0.1
-  secretName: org{{ORG_NUMBER}}-ca-tls-cert
+  secretName: org${ORG_NUMBER}-ca-tls-cert
   issuerRef:
-    name: org{{ORG_NUMBER}}-tls-cert-issuer
+    name: org${ORG_NUMBER}-tls-cert-issuer
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: org{{ORG_NUMBER}}-ca
+  name: org${ORG_NUMBER}-ca
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: org{{ORG_NUMBER}}-ca
+      app: org${ORG_NUMBER}-ca
   template:
     metadata:
       labels:
-        app: org{{ORG_NUMBER}}-ca
+        app: org${ORG_NUMBER}-ca
     spec:
       containers:
         - name: main
-          image: {{FABRIC_CONTAINER_REGISTRY}}/fabric-ca:{{FABRIC_CA_VERSION}}
+          image: ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:${FABRIC_CA_VERSION}
           imagePullPolicy: IfNotPresent
           env:
             - name: FABRIC_CA_SERVER_CA_NAME
-              value: "org{{ORG_NUMBER}}-ca"
+              value: "org${ORG_NUMBER}-ca"
             - name: FABRIC_CA_SERVER_DEBUG
               value: "false"
             - name: FABRIC_CA_SERVER_HOME
@@ -68,23 +68,23 @@ spec:
       volumes:
         - name: fabric-volume
           persistentVolumeClaim:
-            claimName: fabric-org{{ORG_NUMBER}}
+            claimName: fabric-org${ORG_NUMBER}
         - name: fabric-config
           configMap:
-            name: org{{ORG_NUMBER}}-config
+            name: org${ORG_NUMBER}-config
         - name: tls-cert-volume
           secret:
-            secretName: org{{ORG_NUMBER}}-ca-tls-cert
+            secretName: org${ORG_NUMBER}-ca-tls-cert
 
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: org{{ORG_NUMBER}}-ca
+  name: org${ORG_NUMBER}-ca
 spec:
   ports:
     - name: tls
       port: 443
       protocol: TCP
   selector:
-    app: org{{ORG_NUMBER}}-ca
+    app: org${ORG_NUMBER}-ca

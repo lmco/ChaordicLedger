@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: org{{ORG_NUMBER}}-admin-cli
+  name: org${ORG_NUMBER}-admin-cli
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: org{{ORG_NUMBER}}-admin-cli
+      app: org${ORG_NUMBER}-admin-cli
   template:
     metadata:
       labels:
-        app: org{{ORG_NUMBER}}-admin-cli
+        app: org${ORG_NUMBER}-admin-cli
     spec:
       containers:
         - name: main
-          image: {{FABRIC_CONTAINER_REGISTRY}}/fabric-tools:{{FABRIC_VERSION}}
+          image: ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:${FABRIC_VERSION}
           imagePullPolicy: IfNotPresent
           env:
             - name: FABRIC_CFG_PATH
@@ -46,10 +46,10 @@ spec:
       volumes:
         - name: fabric-volume
           persistentVolumeClaim:
-            claimName: fabric-org{{ORG_NUMBER}}
+            claimName: fabric-org${ORG_NUMBER}
         - name: fabric-config
           configMap:
-            name: org{{ORG_NUMBER}}-config
+            name: org${ORG_NUMBER}-config
         - name: msp-config
           configMap:
             name: msp-config

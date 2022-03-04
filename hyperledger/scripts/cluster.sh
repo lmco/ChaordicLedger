@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CLUSTER_TMP=/tmp/cluster
+CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 
 function cluster_init() {
@@ -14,11 +14,9 @@ function cluster_init() {
 }
 
 function cluster_create() {
-  echo "Creating cluster \"${CLUSTER_NAME}\""
-  
+  echo "Creating cluster \"${CLUSTER_NAME}\" with ${NGINX_HTTPS_PORT}"
   populateTemplate ../config/cluster-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_cluster_config.yaml
   kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate}
-  unset populatedTemplate
 }
 
 function apply_proxy_certs() {
@@ -76,9 +74,7 @@ function launch_docker_registry() {
 
   # Document the local registry
   # https://github.com/kubernetes/enhancements/tree/master/keps/sig-cluster-lifecycle/generic/1755-communicating-a-local-registry
-  echo "Template variable is set to: ${populatedTemplate}"
   applyPopulatedTemplate ../config/local-registry-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_registry_config.yaml
-  echo "Template variable is set to: ${populatedTemplate}"
 }
 
 function pull_docker_images() {

@@ -1,6 +1,6 @@
 #!/bin/sh
 
-CHAINCODE_TMP_DIR=/tmp/chaincode
+CHAINCODE_TMP_DIR=${TEMP_DIR}/chaincode
 mkdir -p $CHAINCODE_TMP_DIR
 
 function package_chaincode_for() {
@@ -99,30 +99,15 @@ function set_chaincode_id() {
 }
 
 function launch_chaincode_service() {
-  # local org=$1
-  # echo "Launching chaincode container \"${CHAINCODE_IMAGE}\""
-
-  # # The chaincode endpoint needs to have the generated chaincode ID available in the environment.
-  # # This could be from a config map, a secret, or by directly editing the deployment spec.  Here we'll keep
-  # # things simple by using sed to substitute script variables into a yaml template.
-  # export PEER_NAME=$2
-  # applyPopulatedTemplate ../config/${org}-cc-template.yaml $CHAINCODE_TMP_DIR/${org}-cc.yaml $NS
-  # kubectl -n $NS rollout status deploy/${org}${PEER_NAME}-cc-${CHAINCODE_NAME}
-
   local org=$1
-  local cc_id=${CHAINCODE_ID}
-  local cc_image=${CHAINCODE_IMAGE}
-  local peer=$2
-  echo "Launching chaincode container \"${cc_image}\""
+  echo "Launching chaincode container \"${CHAINCODE_IMAGE}\""
 
-  cat ../config/${org}-cc-template.yaml \
-    | sed 's,{{CHAINCODE_NAME}},'${CHAINCODE_NAME}',g' \
-    | sed 's,{{CHAINCODE_ID}},'${cc_id}',g' \
-    | sed 's,{{CHAINCODE_IMAGE}},'${cc_image}',g' \
-    | sed 's,{{PEER_NAME}},'${peer}',g' \
-    | exec kubectl -n $NS apply -f -
-
-  kubectl -n $NS rollout status deploy/${org}${peer}-cc-${CHAINCODE_NAME}
+  # The chaincode endpoint needs to have the generated chaincode ID available in the environment.
+  # This could be from a config map, a secret, or by directly editing the deployment spec.  Here we'll keep
+  # things simple by using sed to substitute script variables into a yaml template.
+  export PEER_NAME=$2
+  applyPopulatedTemplate ../config/${org}-cc-template.yaml $CHAINCODE_TMP_DIR/${org}-cc.yaml $NS
+  kubectl -n $NS rollout status deploy/${org}${PEER_NAME}-cc-${CHAINCODE_NAME}
 }
 
 # Activate the installed chaincode but do not package/install a new archive.
@@ -173,15 +158,15 @@ function deploy_chaincode() {
 }
 
 function invoke_chaincode() {
-  params=$1
-  mkdir -p $CHANNEL_TMP_DIR
+  parameters=$1
 
-  local execscript=${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
+  # local execscript=${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
 
-  cat invoke_chaincode_template.sh |
-    sed "s|{{CHAINCODE_NAME}}|${CHAINCODE_NAME}|g" |
-    sed "s|{{CHANNEL_NAME}}|${CHANNEL_NAME}|g" |
-    sed "s|{{parameters}}|$params|g" > ${execscript}
+  # TODO: Pass through template function
+  # TODO: Reduce to using $@
+  populatedTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/invoke_chaincode_${CHAINCODE_NAME}_${CHANNEL_NAME}.sh
+  # cat invoke_chaincode_template.sh |
+  #   sed "s|{{parameters}}|$params|g" > ${execscript}
   
   cat ${execscript} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
 

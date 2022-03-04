@@ -5,20 +5,19 @@ function populateTemplate() {
   local templateFile=$1
   local outputPath=$2
 
+  if [ -z "${templateFile}" ]; then
+    echo "ERROR: Failed to populate template. Template File is empty."
+    return 1
+  elif [ -z "${outputPath}" ]; then
+    echo "ERROR: Failed to populate template. Output Path is empty."
+    return 1
+  fi
+
   echo "Processing template \"${templateFile}\" to create \"${outputPath}\""
 
-  # TODO: loop through env and substitute known variables.
+  envsubst < ${templateFile} > ${outputPath}
 
-  cat ${templateFile} | 
-    sed "s|{{ingress_http_port}}|${NGINX_HTTP_PORT}|g" |
-    sed "s|{{ingress_https_port}}|${NGINX_HTTPS_PORT}|g" |
-    sed "s|{{reg_name}}|${LOCAL_REGISTRY_NAME}|g" |
-    sed "s|{{reg_port}}|${LOCAL_REGISTRY_PORT}|g" |
-    sed "s|{{CHAINCODE_NAME}}|${CHAINCODE_NAME}|g" |
-    sed "s|{{CHAINCODE_ID}}|${CHAINCODE_ID}|g" |
-    sed "s|{{CHAINCODE_IMAGE}}|${CHAINCODE_IMAGE}|g" |
-    sed "s|{{PEER_NAME}}|${PEER_NAME}|g" > ${outputPath}
-
+  # Setting a variable as a 'return' value, for convenience.
   populatedTemplate=${outputPath}
 }
 

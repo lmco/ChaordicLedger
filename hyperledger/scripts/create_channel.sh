@@ -1,6 +1,7 @@
 #!/bin/sh
 
-CHANNEL_TMP_DIR=/tmp/channel
+CHANNEL_TMP_DIR=${TEMP_DIR}/channel
+mkdir -p ${CHANNEL_TMP_DIR}
 
 function launch_admin_clis() {
   echo "Launching admin CLIs"
@@ -9,10 +10,13 @@ function launch_admin_clis() {
 
   local admin_cli_config=$CHANNEL_TMP_DIR/org${i}-admin-cli.template.yaml
 
-  cat ../config/org/root-admin-cli-template.yaml \
-  | sed 's,{{ORG_NUMBER}},'${i}',g' \
-  | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
-  | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > ${admin_cli_config}
+  export ORG_NUMBER=${i}
+  populateTemplate ../config/org/root-admin-cli-template.yaml ${admin_cli_config}
+
+  # cat ../config/org/root-admin-cli-template.yaml \
+  # | sed 's,${ORG_NUMBER},'${i}',g' \
+  # | sed 's,${FABRIC_CONTAINER_REGISTRY},'${FABRIC_CONTAINER_REGISTRY}',g' \
+  # | sed 's,${FABRIC_VERSION},'${FABRIC_VERSION}',g' > ${admin_cli_config}
 
   cat ${admin_cli_config} | kubectl -n $NS apply -f -
 
@@ -22,10 +26,12 @@ function launch_admin_clis() {
   do
     local admin_cli_config=$CHANNEL_TMP_DIR/org${i}-admin-cli.template.yaml
 
-    cat ../config/org/org-admin-cli-template.yaml \
-    | sed 's,{{ORG_NUMBER}},'${i}',g' \
-    | sed 's,{{FABRIC_CONTAINER_REGISTRY}},'${FABRIC_CONTAINER_REGISTRY}',g' \
-    | sed 's,{{FABRIC_VERSION}},'${FABRIC_VERSION}',g' > ${admin_cli_config}
+    export ORG_NUMBER=${i}
+    populateTemplate ../config/org/org-admin-cli-template.yaml ${admin_cli_config}
+    # cat ../config/org/org-admin-cli-template.yaml \
+    # | sed 's,${ORG_NUMBER},'${i}',g' \
+    # | sed 's,${FABRIC_CONTAINER_REGISTRY},'${FABRIC_CONTAINER_REGISTRY}',g' \
+    # | sed 's,${FABRIC_VERSION},'${FABRIC_VERSION}',g' > ${admin_cli_config}
 
     cat ${admin_cli_config} | kubectl -n $NS apply -f -
 

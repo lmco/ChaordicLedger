@@ -2,35 +2,8 @@
 
 set -o errexit
 
-CLUSTER_NAME="chaordicledger"
-
-NGINX_HTTP_PORT=${TEST_NETWORK_INGRESS_HTTP_PORT:-80}
-NGINX_HTTPS_PORT=${TEST_NETWORK_INGRESS_HTTPS_PORT:-443}
-
-FABRIC_CA_VERSION=1.5.2
-FABRIC_VERSION=2.4.1
-FABRIC_CONTAINER_REGISTRY="hyperledger"
-NETWORK_NAME="chaordicledger"
-CLUSTER_NAME="chaordiccluster"
-NS=${NETWORK_NAME}
-CHANNEL_NAME="cl"
-
-CHAINCODE_NAME=asset-transfer-basic
-CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
-
-#CHAINCODE_NAME=chainstate
-#CHAINCODE_IMAGE= localhost:5000:/chainstate:latest
-
-LOCAL_REGISTRY_NAME="kind-registry"
-LOCAL_REGISTRY_PORT="5000"
-
-RCAADMIN_AUTH=rcaadmin:rcaadminpw
-
-# LOG_FILE=${TEST_NETWORK_LOG_FILE:-network.log}
-# DEBUG_FILE=${TEST_NETWORK_DEBUG_FILE:-network-debug.log}
-
-# Used for applying additional CA trusts (e.g. CAs for corporate proxy servers)
-ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
+export CLUSTER_NAME="chaordicledger"
+TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
@@ -38,6 +11,34 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
+
+export NGINX_HTTP_PORT=${TEST_NETWORK_INGRESS_HTTP_PORT:-80}
+export NGINX_HTTPS_PORT=${TEST_NETWORK_INGRESS_HTTPS_PORT:-443}
+
+export FABRIC_CA_VERSION=1.5.2
+export FABRIC_VERSION=2.4.1
+export FABRIC_CONTAINER_REGISTRY="hyperledger"
+export NETWORK_NAME="chaordicledger"
+export CLUSTER_NAME="chaordiccluster"
+export NS=${NETWORK_NAME}
+export CHANNEL_NAME="cl"
+
+export CHAINCODE_NAME=asset-transfer-basic
+export CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
+
+#CHAINCODE_NAME=chainstate
+#CHAINCODE_IMAGE= localhost:5000:/chainstate:latest
+
+export LOCAL_REGISTRY_NAME="kind-registry"
+export LOCAL_REGISTRY_PORT="5000"
+
+export RCAADMIN_AUTH=rcaadmin:rcaadminpw
+
+# LOG_FILE=${TEST_NETWORK_LOG_FILE:-network.log}
+# DEBUG_FILE=${TEST_NETWORK_DEBUG_FILE:-network-debug.log}
+
+# Used for applying additional CA trusts (e.g. CAs for corporate proxy servers)
+ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then

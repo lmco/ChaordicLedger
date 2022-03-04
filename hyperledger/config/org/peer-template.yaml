@@ -1,8 +1,8 @@
 apiVersion: cert-manager.io/v1
 kind: Certificate
 metadata:
-  name: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}-tls-cert
-  namespace: {{NETWORK_NAME}}
+  name: org${ORG_NUMBER}-peer${PEER_NUMBER}-tls-cert
+  namespace: ${NETWORK_NAME}
 spec:
   isCA: false
   privateKey:
@@ -10,20 +10,20 @@ spec:
     size: 256
   dnsNames:
     - localhost
-    - org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
-    - org{{ORG_NUMBER}}-peer-gateway-svc
-    - org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}.{{NETWORK_NAME}}.svc.cluster.local
+    - org${ORG_NUMBER}-peer${PEER_NUMBER}
+    - org${ORG_NUMBER}-peer-gateway-svc
+    - org${ORG_NUMBER}-peer${PEER_NUMBER}.${NETWORK_NAME}.svc.cluster.local
   ipAddresses:
     - 127.0.0.1
-  secretName: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}-tls-cert
+  secretName: org${ORG_NUMBER}-peer${PEER_NUMBER}-tls-cert
   issuerRef:
-    name: org{{ORG_NUMBER}}-tls-cert-issuer
+    name: org${ORG_NUMBER}-tls-cert-issuer
 
 ---
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}-config
+  name: org${ORG_NUMBER}-peer${PEER_NUMBER}-config
 data:
   FABRIC_CFG_PATH: /var/hyperledger/fabric/config
   FABRIC_LOGGING_SPEC: "debug:cauthdsl,policies,msp,grpc,peer.gossip.mcs,gossip,leveldbhelper=info"
@@ -31,45 +31,45 @@ data:
   CORE_PEER_TLS_CERT_FILE: /var/hyperledger/fabric/config/tls/tls.crt
   CORE_PEER_TLS_KEY_FILE: /var/hyperledger/fabric/config/tls/tls.key
   CORE_PEER_TLS_ROOTCERT_FILE: /var/hyperledger/fabric/config/tls/ca.crt
-  CORE_PEER_ID: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}.org{{ORG_NUMBER}}.example.com
-  CORE_PEER_ADDRESS: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}:7051
+  CORE_PEER_ID: org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com
+  CORE_PEER_ADDRESS: org${ORG_NUMBER}-peer${PEER_NUMBER}:7051
   CORE_PEER_LISTENADDRESS: 0.0.0.0:7051
-  CORE_PEER_CHAINCODEADDRESS: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}:7052
+  CORE_PEER_CHAINCODEADDRESS: org${ORG_NUMBER}-peer${PEER_NUMBER}:7052
   CORE_PEER_CHAINCODELISTENADDRESS: 0.0.0.0:7052
   # bootstrap peer is the other peer in the same org
-  CORE_PEER_GOSSIP_BOOTSTRAP: org{{ORG_NUMBER}}-peer2:7051
-  CORE_PEER_GOSSIP_EXTERNALENDPOINT: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}:7051
-  CORE_PEER_LOCALMSPID: Org{{ORG_NUMBER}}MSP
-  CORE_PEER_MSPCONFIGPATH: /var/hyperledger/fabric/organizations/peerOrganizations/org{{ORG_NUMBER}}.example.com/peers/org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}.org{{ORG_NUMBER}}.example.com/msp
+  CORE_PEER_GOSSIP_BOOTSTRAP: org${ORG_NUMBER}-peer2:7051
+  CORE_PEER_GOSSIP_EXTERNALENDPOINT: org${ORG_NUMBER}-peer${PEER_NUMBER}:7051
+  CORE_PEER_LOCALMSPID: Org${ORG_NUMBER}MSP
+  CORE_PEER_MSPCONFIGPATH: /var/hyperledger/fabric/organizations/peerOrganizations/org${ORG_NUMBER}.example.com/peers/org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com/msp
   CORE_OPERATIONS_LISTENADDRESS: 0.0.0.0:9443
-  CORE_PEER_FILESYSTEMPATH: /var/hyperledger/fabric/data/org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}.org{{ORG_NUMBER}}.example.com
-  CORE_LEDGER_SNAPSHOTS_ROOTDIR: /var/hyperledger/fabric/data/org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}.org{{ORG_NUMBER}}.example.com/snapshots
-  CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG: "{\"peername\":\"org{{ORG_NUMBER}}peer{{PEER_NUMBER}}\"}"
+  CORE_PEER_FILESYSTEMPATH: /var/hyperledger/fabric/data/org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com
+  CORE_LEDGER_SNAPSHOTS_ROOTDIR: /var/hyperledger/fabric/data/org${ORG_NUMBER}-peer${PEER_NUMBER}.org${ORG_NUMBER}.example.com/snapshots
+  CHAINCODE_AS_A_SERVICE_BUILDER_CONFIG: "{\"peername\":\"org${ORG_NUMBER}peer${PEER_NUMBER}\"}"
 
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
+  name: org${ORG_NUMBER}-peer${PEER_NUMBER}
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
+      app: org${ORG_NUMBER}-peer${PEER_NUMBER}
   template:
     metadata:
       labels:
-        app: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
-        org: org{{ORG_NUMBER}}
+        app: org${ORG_NUMBER}-peer${PEER_NUMBER}
+        org: org${ORG_NUMBER}
     spec:
       containers:
         - name: main
-          image: {{FABRIC_CONTAINER_REGISTRY}}/fabric-peer:{{FABRIC_VERSION}}
+          image: ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:${FABRIC_VERSION}
           #image: localhost:5000/test/mypeer:latest
           imagePullPolicy: IfNotPresent
           envFrom:
             - configMapRef:
-                name: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}-config
+                name: org${ORG_NUMBER}-peer${PEER_NUMBER}-config
           ports:
             - containerPort: 7051
             - containerPort: 7052
@@ -85,18 +85,18 @@ spec:
       volumes:
         - name: fabric-volume
           persistentVolumeClaim:
-            claimName: fabric-org{{ORG_NUMBER}}
+            claimName: fabric-org${ORG_NUMBER}
         - name: fabric-config
           configMap:
-            name: org{{ORG_NUMBER}}-config
+            name: org${ORG_NUMBER}-config
         - name: tls-cert-volume
           secret:
-            secretName: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}-tls-cert
+            secretName: org${ORG_NUMBER}-peer${PEER_NUMBER}-tls-cert
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
+  name: org${ORG_NUMBER}-peer${PEER_NUMBER}
 spec:
   ports:
     - name: gossip
@@ -109,16 +109,6 @@ spec:
       port: 9443
       protocol: TCP
   selector:
-    app: org{{ORG_NUMBER}}-peer{{PEER_NUMBER}}
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: org{{ORG_NUMBER}}-peer-gateway-svc
-spec:
-  ports:
-    - name: gossip
-      port: 7051
-      protocol: TCP
-  selector:
-    org: org{{ORG_NUMBER}}
+    app: org${ORG_NUMBER}-peer${PEER_NUMBER}
+
+${ORG_NUMBER}${ORG_NUMBER}
