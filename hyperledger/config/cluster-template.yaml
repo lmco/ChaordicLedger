@@ -1,0 +1,25 @@
+kind: Cluster
+apiVersion: kind.x-k8s.io/v1alpha4
+nodes:
+  - role: control-plane
+    kubeadmConfigPatches:
+      - |
+        kind: InitConfiguration
+        nodeRegistration:
+          kubeletExtraArgs:
+            node-labels: "ingress-ready=true"
+    extraPortMappings:
+      - containerPort: 80
+        hostPort: ${NGINX_HTTP_PORT}
+        protocol: TCP
+      - containerPort: 443
+        hostPort: ${NGINX_HTTPS_PORT}
+        protocol: TCP
+networking:
+  kubeProxyMode: "ipvs"
+
+# create a cluster with the local registry enabled in containerd
+containerdConfigPatches:
+- |-
+  [plugins."io.containerd.grpc.v1.cri".registry.mirrors."localhost:${LOCAL_REGISTRY_PORT}"]
+    endpoint = ["http://${LOCAL_REGISTRY_NAME}:${LOCAL_REGISTRY_PORT}"]

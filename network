@@ -1,0 +1,120 @@
+#!/bin/bash
+
+set -o errexit
+
+export CLUSTER_NAME="chaordicledger"
+TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
+
+. hyperledger/scripts/utilities.sh
+. hyperledger/scripts/check_prerequisites.sh
+. hyperledger/scripts/cluster.sh
+. hyperledger/scripts/create_msp.sh
+. hyperledger/scripts/create_channel.sh
+. hyperledger/scripts/create_chaincode.sh
+
+export NGINX_HTTP_PORT=${TEST_NETWORK_INGRESS_HTTP_PORT:-80}
+export NGINX_HTTPS_PORT=${TEST_NETWORK_INGRESS_HTTPS_PORT:-443}
+
+export FABRIC_CA_VERSION=1.5.2
+export FABRIC_VERSION=2.4.1
+export FABRIC_CONTAINER_REGISTRY="hyperledger"
+export NETWORK_NAME="chaordicledger"
+export CLUSTER_NAME="chaordiccluster"
+export NS=${NETWORK_NAME}
+export CHANNEL_NAME="cl"
+
+export CHAINCODE_NAME=asset-transfer-basic
+export CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
+
+#CHAINCODE_NAME=chainstate
+#CHAINCODE_IMAGE= localhost:5000:/chainstate:latest
+
+export LOCAL_REGISTRY_NAME="kind-registry"
+export LOCAL_REGISTRY_PORT="5000"
+
+export RCAADMIN_AUTH=rcaadmin:rcaadminpw
+
+# LOG_FILE=${TEST_NETWORK_LOG_FILE:-network.log}
+# DEBUG_FILE=${TEST_NETWORK_DEBUG_FILE:-network-debug.log}
+
+# Used for applying additional CA trusts (e.g. CAs for corporate proxy servers)
+ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
+
+## Parse mode
+if [[ $# -lt 1 ]] ; then
+  print_help
+  exit 0
+else
+  MODE=$1
+  shift
+fi
+
+
+# TODO: Segregate the creation of MSPs, Orders, and Peers
+# TODO: Use kubectl to go into each peer and issue a 'peer' command.
+# TODO: Need ability to launch and join an existing network.
+# TODO: Look into creating a Windows variant.
+
+if [ "${MODE}" == "init" ]; then
+  echo "Initializing cluster \"${CLUSTER_NAME}\":"
+  pushd hyperledger/scripts
+  cluster_init
+  popd
+  echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "msp" ]; then
+  pushd hyperledger/scripts
+  create_msp $@
+  popd
+  
+  echo "🏁 - MSP for \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "channel" ]; then
+  pushd hyperledger/scripts
+  channel_init $@
+  popd
+
+  echo "🏁 - Channel \"${CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "peer" ]; then
+  pushd hyperledger/scripts
+  channel_join $@
+  popd
+
+  echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
+elif [ "${MODE}" == "chaincode" ]; then
+  pushd hyperledger/scripts
+  deploy_chaincode
+  popd
+
+  echo "🏁 - Chaincode deployed."
+elif [ "${MODE}" == "invoke" ]; then
+  pushd hyperledger/scripts
+  invoke_chaincode $@
+  popd
+
+  echo "🏁 - Chaincode invoked."
+elif [ "${MODE}" == "query" ]; then
+  pushd hyperledger/scripts
+  query_chaincode $@
+  popd
+
+  echo "🏁 - Chaincode queried."
+elif [ "${MODE}" == "term" ]; then
+  echo "Terminating cluster \"${CLUSTER_NAME}\":"
+  
+  pushd cleanup/agnostic
+  ./cleanup_hyperledger.sh
+  popd
+  
+  echo "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
+elif [ "${MODE}" == "purge" ]; then
+  echo "Purging cluster \"${CLUSTER_NAME}\":"
+  
+  pushd cleanup/agnostic
+  ./purge_hyperledger.sh
+  popd
+  
+  echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
+fi
+
+function print_help() {
+  echo "TODO"
+}
