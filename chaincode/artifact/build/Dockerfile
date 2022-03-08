@@ -3,7 +3,6 @@
 ARG GO_VER=1.14.4
 ARG ALPINE_VER=3.15
 ARG CORE_CHAINCODE_ID_NAME=artifactmetadata
-ARG CORE_PEER_ADDRESS=0.0.0.0:30303
 
 #FROM golang:${GO_VER}-alpine${ALPINE_VER}
 FROM golang:alpine3.15
@@ -19,7 +18,8 @@ RUN update-ca-certificates
 #RUN apk add --update --no-cache ca-certificates
 RUN go get -d -v ./...
 RUN go install -v ./...
-RUN go build -o /artifactmetadata
+RUN go build -o artifactmetadata
+RUN ls -al
 
 EXPOSE 9999
-CMD ["/artifactmetadata", "-h"]
+CMD ["./artifactmetadata", "-peer.address", "10.244.0.17:7051"]
