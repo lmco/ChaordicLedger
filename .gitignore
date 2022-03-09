@@ -3,4 +3,4 @@ tmp
 cachain.zip
 log.txt
 *.tgz
-chaincode/artifact/build/cachain
+chaincode/**/cachain

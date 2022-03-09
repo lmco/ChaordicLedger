@@ -4,18 +4,8 @@ CHAINCODE_TMP_DIR=${TEMP_DIR}/chaincode
 mkdir -p $CHAINCODE_TMP_DIR
 
 function package_chaincode_for() {
-  # local org=$1
-  # local cc_folder="../../chaincode/${CHAINCODE_NAME}"
-  # local build_folder="${CHAINCODE_TMP_DIR}/build"
-  # local cc_archive="${build_folder}/${CHAINCODE_NAME}.tgz"
-  # echo "Packaging chaincode folder ${cc_folder}"
-
-  # mkdir -p ${build_folder}
-
-  # tar -C ${cc_folder} -zcf ${cc_folder}/code.tar.gz connection.json
-  # tar -C ${cc_folder} -zcf ${cc_archive} code.tar.gz metadata.json
   local org=$1
-  local cc_folder="../../chaincode/${CHAINCODE_NAME}"
+  local cc_folder="../../chaincode/${CHAINCODE_NAME}/ledger"
   local build_folder="build/chaincode"
   local cc_archive="${build_folder}/${CHAINCODE_NAME}.tgz"
   echo "Packaging chaincode folder ${cc_folder}"
@@ -93,7 +83,7 @@ function set_chaincode_id() {
   local cc_package=build/chaincode/${CHAINCODE_NAME}.tgz
   cc_sha256=$(shasum -a 256 ${cc_package} | tr -s ' ' | cut -d ' ' -f 1)
 
-  label=$( jq -r '.label' ../../chaincode/${CHAINCODE_NAME}/metadata.json)
+  label=$( jq -r '.label' ../../chaincode/${CHAINCODE_NAME}/ledger/metadata.json)
 
   export CHAINCODE_ID=${label}:${cc_sha256}
 }
