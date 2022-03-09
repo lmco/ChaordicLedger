@@ -1,9 +1,3 @@
-#
-# Copyright IBM Corp. All Rights Reserved.
-#
-# SPDX-License-Identifier: Apache-2.0
-#
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -22,12 +16,16 @@ spec:
         - name: main
           image: ${CHAINCODE_IMAGE}
           env:
+            - name: CORE_CHAINCODE_ID_NAME
+              value: "${CHAINCODE_NAME}"
+            - name: CORE_PEER_TLS_ENABLED
+              value: "${PEER_TLS_ENABLED}"
             - name: CHAINCODE_SERVER_ADDRESS
-              value: 0.0.0.0:9999
-
-            # todo: load with an envFrom and a dynamic config map with the ID.
+              value: "0.0.0.0:9999"
+            - name: CORE_PEER_ADDRESS
+              value: "0.0.0.0:7051"
             - name: CHAINCODE_ID
-              value: ${CHAINCODE_ID}
+              value: "${CHAINCODE_ID}"
           ports:
             - containerPort: 9999
 

@@ -26,6 +26,7 @@ export CHANNEL_NAME="cl"
 #export CHAINCODE_NAME=asset-transfer-basic
 #export CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 
+export PEER_TLS_ENABLED=false
 export CHAINCODE_NAME=artifact-metadata
 export CHAINCODE_IMAGE=chaordicledger/metadata-chaincode:0.0.1
 

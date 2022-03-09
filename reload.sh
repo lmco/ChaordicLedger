@@ -13,6 +13,24 @@ clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
-./network chaincode &&
-./network invoke '{"Args":["CreateAsset","1","blue","35","tom","1000"]}' &&
-./network query '{"Args":["ReadAsset","1"]}'
+./network chaincode
+
+# Used the following commands to generate the values:
+#    head -c 1KiB /dev/urandom > randomArtifact0.bin
+#    sha512sum randomfile1.txt
+#    uuidgen
+# 
+#    tr -dc '[:alnum:] \n' < /dev/urandom | head -c 394 > randomArtifact1.txt
+
+./network query '{"Args":["GetAllMetadata"]}'
+
+LfileArray=("randomArtifact0.bin" "randomArtifact1.txt")
+timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+for item in ${LfileArray[*]}; do
+  echo "Adding $item to the ledger."
+  itemhash=$(sha512sum ${item} | awk '{print $1;}')
+  itemsize=$(du -b ${item} | awk '{print $1;}')
+  ./network invoke '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
+done
+
+./network query '{"Args":["GetAllMetadata"]}'

@@ -1,5 +1,5 @@
 {
-  "address": "{{.peername}}-cc-chainstate:9999",
+  "address": "{{.peername}}-cc-artifact-metadata:9999",
   "dial_timeout": "10s",
   "tls_required": false
 }
