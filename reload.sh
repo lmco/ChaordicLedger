@@ -31,6 +31,22 @@ for item in ${LfileArray[*]}; do
   itemhash=$(sha512sum ${item} | awk '{print $1;}')
   itemsize=$(du -b ${item} | awk '{print $1;}')
   ./network invoke '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
+  ./network invoke '{"Args":["MetadataExists","'${item}'"]}'
 done
 
 ./network query '{"Args":["GetAllMetadata"]}'
+
+timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+for item in ${LfileArray[*]}; do
+  echo "Adding $item to the ledger."
+  itemhash=$(sha256sum ${item} | awk '{print $1;}')
+  itemsize=$(du -b ${item} | awk '{print $1;}')
+  ./network invoke '{"Args":["UpdateMetadata","'${timestamp}'","'${itemhash}'","SHA256","'${item}'","'${itemsize}'"]}'
+done
+
+./network query '{"Args":["GetAllMetadata"]}'
+
+for item in ${LfileArray[*]}; do
+  ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
+  ./network query '{"Args":["GetAllMetadata"]}'
+done

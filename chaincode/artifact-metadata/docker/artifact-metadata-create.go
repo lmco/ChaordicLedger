@@ -43,7 +43,7 @@ func (s *SmartContract) CreateMetadata(ctx contractapi.TransactionContextInterfa
 		return err
 	}
 	if exists {
-		return fmt.Errorf("the metadata %s already exists", id)
+		return fmt.Errorf("Metadata %s already exists", id)
 	}
 
 	metadata := Metadata{
@@ -53,6 +53,7 @@ func (s *SmartContract) CreateMetadata(ctx contractapi.TransactionContextInterfa
 		ID:                id,
 		SizeInBytes:       sizeInBytes,
 	}
+
 	metadataJSON, err := json.Marshal(metadata)
 	if err != nil {
 		return err
