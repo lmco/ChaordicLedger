@@ -4,6 +4,8 @@ on: [push]
 
 env:
   WORKING_DIR: $PWD
+  ID_USER: $(id -u)
+  ID_GROUP: $(id -g)
 
 jobs:
   build:
@@ -54,7 +56,7 @@ jobs:
       with:
         registry: gcr.io
         image: maven:3-jdk-8
-        options: -w /gen -e GEN_DIR=/gen -e MAVEN_CONFIG=/var/maven/.m2 -u "$(id -u):$(id -g)" -v "/tmp/codegen/mygenerator:/gen" -v "./.m2/repository:/var/maven/.m2/repository"
+        options: -w /gen -e GEN_DIR=/gen -e MAVEN_CONFIG=/var/maven/.m2 -u "${{ env.ID_USER }}:${{ env.ID_GROUP }}" -v "/tmp/codegen/mygenerator:/gen" -v "./.m2/repository:/var/maven/.m2/repository"
         run: |
           ls -al /
           ls -al /gen
