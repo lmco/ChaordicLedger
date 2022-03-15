@@ -9,20 +9,51 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    - name: API Generation Setup
-      run: |
-        # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
-        wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-        java -jar swagger-codegen-cli.jar meta -o output/myLibrary -n myClientCodegen -p com.my.company.codegen
+      - name: API Generation Setup
+        run: |
+          # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
+          wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
+          wget https://petstore.swagger.io/v2/swagger.json -O swagger.json
+      - name: API Generation - GO
+        run: |
+          OUT_GO=out/go
+          mkdir -p ${OUT_GO}
+          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_GO}
+      - name: API Generation - Java
+        run: |
+          OUT_JAVA=out/java
+          mkdir -p ${OUT_JAVA}
+          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_GO}
 
-        ls -al output/myLibrary
+      # - name: API Generation 1
+      #   uses: actions/checkout@v2
+      # - name: API Generation 2
+      #   uses: addnab/docker-run-action@v3
+      #   with:
+      #     registry: gcr.io
+      #     image: openjdk:8-jre-alpine
+      #     options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
+      #     run: |
+      #       ls -al /
+      #       ls -al /gen
+      #       /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
 
-        java -cp output/myLibrary/target/myClientCodegen-swagger-codegen-1.0.0.jar:modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
-          io.swagger.codegen.SwaggerCodegen \
-          generate \
-          -l myClientCodegen \
-          -i https://petstore.swagger.io/v2/swagger.json \
-          -o myClient
+    # - name: API Generation Setup
+    #   run: |
+    #     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
+    #     wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
+    #     java -jar swagger-codegen-cli.jar meta -o output/myLibrary -n myClientCodegen -p com.my.company.codegen
+
+    #     cat /home/runner/work/ChaordicLedger/ChaordicLedger/output/myLibrary/src/main/java/com/my/company/codegen/MyclientcodegenGenerator.java
+
+    #     ls -al output/myLibrary
+
+    #     java -cp output/myLibrary/target/myClientCodegen-swagger-codegen-1.0.0.jar:modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
+    #       io.swagger.codegen.SwaggerCodegen \
+    #       generate \
+    #       -l myClientCodegen \
+    #       -i https://petstore.swagger.io/v2/swagger.json \
+    #       -o myClient
 
         # # project dir
         # TARGET_DIR=/tmp/codegen/mygenerator
