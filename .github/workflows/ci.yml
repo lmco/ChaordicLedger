@@ -23,7 +23,7 @@ jobs:
         run: |
           OUT_JAVA=out/java
           mkdir -p ${OUT_JAVA}
-          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_GO}
+          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_JAVA}
 
       # - name: API Generation 1
       #   uses: actions/checkout@v2
