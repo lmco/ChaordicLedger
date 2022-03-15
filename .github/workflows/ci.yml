@@ -4,8 +4,6 @@ on: [push]
 
 env:
   WORKING_DIR: $PWD
-  ID_USER: $(id -u)
-  ID_GROUP: $(id -g)
 
 jobs:
   build:
@@ -60,6 +58,8 @@ jobs:
         run: |
           ls -al /
           ls -al /gen
+          echo $(id -u)
+          echo $(id -g)
           /gen/docker-entrypoint.sh -p io.swagger.codegen.custom -n custom
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
