@@ -35,6 +35,7 @@ jobs:
         chmod +x *.sh
         #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
         ls -al
+        pwd
     - name: API Generation 1
       uses: actions/checkout@v2
     - name: API Generation 2
