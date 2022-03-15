@@ -38,7 +38,7 @@ jobs:
       with:
         registry: gcr.io
         image: openjdk:8-jre-alpine
-        options: -w /gen -e GEN_DIR=/gen -v ".:/gen" --entrypoint /gen/docker-stub.sh
+        options: -w /gen -e GEN_DIR=/gen -v .:/gen --entrypoint /gen/docker-stub.sh
         run: |
           -p io.swagger.codegen.custom -n custom
   
