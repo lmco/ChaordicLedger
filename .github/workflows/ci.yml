@@ -118,68 +118,68 @@ jobs:
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
-  # prerequisites:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     AGNOSTIC_SETUP_DIR: setup/agnostic
-  #     AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
-  #     UBUNTU_SETUP_DIR: setup/ubuntu
-  #     RHEL_SETUP_DIR: setup/rhel
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Setup local
-  #     run: |
-  #       source ${AGNOSTIC_SETUP_DIR}/local_source
-  #       ${AGNOSTIC_SETUP_DIR}/local_setup.sh
-  #   - name: Get kubectl
-  #     run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
-  #   - name: Get kind
-  #     run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
-  #   - name: Get jq
-  #     run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
-  #   - name: Update package manager
-  #     run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
-  #   - name: Get prerequisite tools
-  #     run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
-  #   - name: Get Docker
-  #     run: ${UBUNTU_SETUP_DIR}/get_docker.sh
-  #   - name: Setup Docker
-  #     run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
-  #   - name: Setup Test Network for Hyperledger
-  #     run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
-  #   - name: Cleanup
-  #     run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
+  prerequisites:
+    runs-on: ubuntu-latest
+    env:
+      AGNOSTIC_SETUP_DIR: setup/agnostic
+      AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
+      UBUNTU_SETUP_DIR: setup/ubuntu
+      RHEL_SETUP_DIR: setup/rhel
+    steps:
+    - uses: actions/checkout@v2
+    - name: Setup local
+      run: |
+        source ${AGNOSTIC_SETUP_DIR}/local_source
+        ${AGNOSTIC_SETUP_DIR}/local_setup.sh
+    - name: Get kubectl
+      run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
+    - name: Get kind
+      run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
+    - name: Get jq
+      run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
+    - name: Update package manager
+      run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
+    - name: Get prerequisite tools
+      run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
+    - name: Get Docker
+      run: ${UBUNTU_SETUP_DIR}/get_docker.sh
+    - name: Setup Docker
+      run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
+    - name: Setup Test Network for Hyperledger
+      run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
+    - name: Cleanup
+      run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
 
-  # test:
-  #   runs-on: ubuntu-latest
-  #   needs: build
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Install shellspec
-  #     run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
-  #   - name: Execute shellspec
-  #     run: shellspec
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - uses: actions/checkout@v2
+    - name: Install shellspec
+      run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
+    - name: Execute shellspec
+      run: shellspec
 
-  # PrerequisiteRootCA:
-  #   runs-on: ubuntu-latest
-  #   needs: test
-  #   steps:
-  #   - uses: actions/checkout@v2
-  #   - name: Create Root Certificate Authority (CA)
-  #     env:
-  #       ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
-  #     run: |
-  #       ROOT_RESULTS_FILE_NAME="rootCAResults.json"
-  #       COUNTRY_CODE="AU"
-  #       STATE="WA"
-  #       LOCATION="Northbridge"
-  #       ORGANIZATION="Hotels"
-  #       ORGANIZATIONAL_UNIT="Fancy"
-  #       ROOT_COMMON_NAME="Yet another root cert authority"
-  #       OUTPUT_DIR="."
+  PrerequisiteRootCA:
+    runs-on: ubuntu-latest
+    needs: test
+    steps:
+    - uses: actions/checkout@v2
+    - name: Create Root Certificate Authority (CA)
+      env:
+        ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
+      run: |
+        ROOT_RESULTS_FILE_NAME="rootCAResults.json"
+        COUNTRY_CODE="AU"
+        STATE="WA"
+        LOCATION="Northbridge"
+        ORGANIZATION="Hotels"
+        ORGANIZATIONAL_UNIT="Fancy"
+        ROOT_COMMON_NAME="Yet another root cert authority"
+        OUTPUT_DIR="."
         
-  #       ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
-  #       openssl x509 -text -noout -in rootCACert.pem
+        ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+        openssl x509 -text -noout -in rootCACert.pem
 
   # docker:
   #   #needs: PrerequisiteRootCA
