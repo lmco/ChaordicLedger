@@ -37,10 +37,10 @@ jobs:
       uses: addnab/docker-run-action@v3
       with:
         registry: gcr.io
-        image: private-image:latest
-        options: -v ${{ github.workspace }}:/work -e ABC=123
+        image: openjdk:8-jre-alpine
+        options: -w /gen -e GEN_DIR=/gen -v "${PWD}:/gen" --entrypoint /gen/docker-stub.sh
         run: |
-          ./generator-stub-docker.sh -p io.swagger.codegen.custom -n custom
+          -p io.swagger.codegen.custom -n custom
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
