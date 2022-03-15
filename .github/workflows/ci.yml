@@ -34,7 +34,7 @@ jobs:
     - name: API Generation 1
       uses: actions/checkout@v2
     - name: API Generation 2
-    - uses: addnab/docker-run-action@v3
+      uses: addnab/docker-run-action@v3
       with:
         registry: gcr.io
         image: private-image:latest
