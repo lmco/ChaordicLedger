@@ -43,7 +43,7 @@ jobs:
         image: openjdk:8-jre-alpine
         options: -w /gen -e GEN_DIR=/gen -v ${{ env.GITHUB_WORKSPACE }}:/gen
         run: |
-          ls -al
+          ls -al /gen
           #./docker-stub.sh -p io.swagger.codegen.custom -n custom
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
@@ -80,36 +80,36 @@ jobs:
     - name: Cleanup
       run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install shellspec
-      run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
-    - name: Execute shellspec
-      run: shellspec
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Install shellspec
+  #     run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
+  #   - name: Execute shellspec
+  #     run: shellspec
 
-  PrerequisiteRootCA:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-    - uses: actions/checkout@v2
-    - name: Create Root Certificate Authority (CA)
-      env:
-        ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
-      run: |
-        ROOT_RESULTS_FILE_NAME="rootCAResults.json"
-        COUNTRY_CODE="AU"
-        STATE="WA"
-        LOCATION="Northbridge"
-        ORGANIZATION="Hotels"
-        ORGANIZATIONAL_UNIT="Fancy"
-        ROOT_COMMON_NAME="Yet another root cert authority"
-        OUTPUT_DIR="."
+  # PrerequisiteRootCA:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Create Root Certificate Authority (CA)
+  #     env:
+  #       ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
+  #     run: |
+  #       ROOT_RESULTS_FILE_NAME="rootCAResults.json"
+  #       COUNTRY_CODE="AU"
+  #       STATE="WA"
+  #       LOCATION="Northbridge"
+  #       ORGANIZATION="Hotels"
+  #       ORGANIZATIONAL_UNIT="Fancy"
+  #       ROOT_COMMON_NAME="Yet another root cert authority"
+  #       OUTPUT_DIR="."
         
-        ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
-        openssl x509 -text -noout -in rootCACert.pem
+  #       ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+  #       openssl x509 -text -noout -in rootCACert.pem
 
   # docker:
   #   #needs: PrerequisiteRootCA
