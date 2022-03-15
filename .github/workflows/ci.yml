@@ -60,7 +60,8 @@ jobs:
         run: |
           ls -al /
           ls -al /gen
-          /gen/docker-entrypoint.sh -p io.swagger.codegen.custom -n custom
+          GENERATED_CODE_DIR=generated
+          /gen/docker-entrypoint.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
