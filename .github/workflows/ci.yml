@@ -15,55 +15,64 @@ jobs:
         wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
         java -jar swagger-codegen-cli.jar meta -o output/myLibrary -n myClientCodegen -p com.my.company.codegen
 
-        # project dir
-        TARGET_DIR=/tmp/codegen/mygenerator
-        mkdir -p $TARGET_DIR
-        cd $TARGET_DIR
-        # generated code location
-        GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
-        mkdir -p $GENERATED_CODE_DIR
-        # download desired version
-        wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-        wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-stub.sh -O docker-stub.sh
-        wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/generator-stub-docker.sh -O generator-stub-docker.sh
-        chmod +x *.sh
-        # generated initial stub: -p <root package> -n <generator name>
-        #./generator-stub-docker.sh -p io.swagger.codegen.custom -n custom
-        wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/test/resources/2_0/petstore.yaml -O petstore.yaml
-        wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/run-in-docker.sh -O run-in-docker.sh
-        wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-entrypoint.sh -O docker-entrypoint.sh
-        chmod +x *.sh
-        #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
-        mkdir -p m2/repository
-        ls -al
-        id -u
-        id -g
-        pwd
-    - name: API Generation 1
-      uses: actions/checkout@v2
-    - name: API Generation 2
-      uses: addnab/docker-run-action@v3
-      with:
-        registry: gcr.io
-        image: openjdk:8-jre-alpine
-        options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
-        run: |
-          ls -al /
-          ls -al /gen
-          /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
-    - name: API Generation 3
-      uses: addnab/docker-run-action@v3
-      with:
-        registry: gcr.io
-        image: maven:3-jdk-8
-        options: -w /gen -e GEN_DIR=/gen -e MAVEN_CONFIG=/var/maven/.m2 -u 1001:121 -v /tmp/codegen/mygenerator:/gen -v /tmp/codegen/mygenerator/m2/repository:/var/maven/.m2/repository
-        run: |
-          ls -al /
-          ls -al /gen
-          ls -al /gen/$GENERATED_CODE_DIR
-          ls -al /var/maven/.m2/repository
-          GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
-          /gen/docker-entrypoint.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
+        ls -al output/myLibrary
+
+        java -cp output/myLibrary/target/myClientCodegen-swagger-codegen-1.0.0.jar:modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
+          io.swagger.codegen.SwaggerCodegen \
+          generate \
+          -l myClientCodegen \
+          -i https://petstore.swagger.io/v2/swagger.json \
+          -o myClient
+
+        # # project dir
+        # TARGET_DIR=/tmp/codegen/mygenerator
+        # mkdir -p $TARGET_DIR
+        # cd $TARGET_DIR
+        # # generated code location
+        # GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
+        # mkdir -p $GENERATED_CODE_DIR
+        # # download desired version
+        # wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
+        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-stub.sh -O docker-stub.sh
+        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/generator-stub-docker.sh -O generator-stub-docker.sh
+        # chmod +x *.sh
+        # # generated initial stub: -p <root package> -n <generator name>
+        # #./generator-stub-docker.sh -p io.swagger.codegen.custom -n custom
+        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/test/resources/2_0/petstore.yaml -O petstore.yaml
+        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/run-in-docker.sh -O run-in-docker.sh
+        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-entrypoint.sh -O docker-entrypoint.sh
+        # chmod +x *.sh
+        # #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
+        # mkdir -p m2/repository
+        # ls -al
+        # id -u
+        # id -g
+        # pwd
+    # - name: API Generation 1
+    #   uses: actions/checkout@v2
+    # - name: API Generation 2
+    #   uses: addnab/docker-run-action@v3
+    #   with:
+    #     registry: gcr.io
+    #     image: openjdk:8-jre-alpine
+    #     options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
+    #     run: |
+    #       ls -al /
+    #       ls -al /gen
+    #       /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
+    # - name: API Generation 3
+    #   uses: addnab/docker-run-action@v3
+    #   with:
+    #     registry: gcr.io
+    #     image: maven:3-jdk-8
+    #     options: -w /gen -e GEN_DIR=/gen -e MAVEN_CONFIG=/var/maven/.m2 -u 1001:121 -v /tmp/codegen/mygenerator:/gen -v /tmp/codegen/mygenerator/m2/repository:/var/maven/.m2/repository
+    #     run: |
+    #       ls -al /
+    #       ls -al /gen
+    #       ls -al /gen/$GENERATED_CODE_DIR
+    #       ls -al /var/maven/.m2/repository
+    #       GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
+    #       /gen/docker-entrypoint.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
