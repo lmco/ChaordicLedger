@@ -4,29 +4,28 @@ on: [push]
 
 env:
   GENERATED_CODE_DIR: generated
-
+  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar
+  SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
+  SWAGGER_API_FILE: api/swagger.json
 jobs:
   build:
+    # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - name: API Generation Setup
         run: |
-          ls -al
-          # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
-          wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-          #wget https://petstore.swagger.io/v2/swagger.json -O swagger.json
-          cp api/swagger.json .          
+          wget ${{ env.SWAGGER_CODEGEN_CLI_SOURCE_JAR }} -O ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }}
       - name: API Generation - GO
         run: |
           OUT_GO=out/go
           mkdir -p ${OUT_GO}
-          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_GO}
+          java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l go -o ${OUT_GO}
       - name: API Generation - Java
         run: |
           OUT_JAVA=out/java
           mkdir -p ${OUT_JAVA}
-          java -jar swagger-codegen-cli.jar generate -i ./swagger.json -l go -o ${OUT_JAVA}
+          java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l go -o ${OUT_JAVA}
 
       # - name: API Generation 1
       #   uses: actions/checkout@v2
