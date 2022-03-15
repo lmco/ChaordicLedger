@@ -43,42 +43,43 @@ jobs:
         image: openjdk:8-jre-alpine
         options: -w /gen -e GEN_DIR=/gen -v ${{ env.GITHUB_WORKSPACE }}:/gen
         run: |
+          ls -al /
           ls -al /gen
           #./docker-stub.sh -p io.swagger.codegen.custom -n custom
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
-  prerequisites:
-    runs-on: ubuntu-latest
-    env:
-      AGNOSTIC_SETUP_DIR: setup/agnostic
-      AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
-      UBUNTU_SETUP_DIR: setup/ubuntu
-      RHEL_SETUP_DIR: setup/rhel
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup local
-      run: |
-        source ${AGNOSTIC_SETUP_DIR}/local_source
-        ${AGNOSTIC_SETUP_DIR}/local_setup.sh
-    - name: Get kubectl
-      run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
-    - name: Get kind
-      run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
-    - name: Get jq
-      run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
-    - name: Update package manager
-      run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
-    - name: Get prerequisite tools
-      run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
-    - name: Get Docker
-      run: ${UBUNTU_SETUP_DIR}/get_docker.sh
-    - name: Setup Docker
-      run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
-    - name: Setup Test Network for Hyperledger
-      run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
-    - name: Cleanup
-      run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
+  # prerequisites:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     AGNOSTIC_SETUP_DIR: setup/agnostic
+  #     AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
+  #     UBUNTU_SETUP_DIR: setup/ubuntu
+  #     RHEL_SETUP_DIR: setup/rhel
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Setup local
+  #     run: |
+  #       source ${AGNOSTIC_SETUP_DIR}/local_source
+  #       ${AGNOSTIC_SETUP_DIR}/local_setup.sh
+  #   - name: Get kubectl
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
+  #   - name: Get kind
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
+  #   - name: Get jq
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
+  #   - name: Update package manager
+  #     run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
+  #   - name: Get prerequisite tools
+  #     run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
+  #   - name: Get Docker
+  #     run: ${UBUNTU_SETUP_DIR}/get_docker.sh
+  #   - name: Setup Docker
+  #     run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
+  #   - name: Setup Test Network for Hyperledger
+  #     run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
+  #   - name: Cleanup
+  #     run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
 
   # test:
   #   runs-on: ubuntu-latest
