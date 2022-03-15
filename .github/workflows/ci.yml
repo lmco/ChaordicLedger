@@ -34,7 +34,7 @@ jobs:
         wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-entrypoint.sh -O docker-entrypoint.sh
         chmod +x *.sh
         #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
-        mkdir ./.m2/repository
+        mkdir -p ./.m2/repository
         ls -al
         pwd
     - name: API Generation 1
