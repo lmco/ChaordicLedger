@@ -36,9 +36,9 @@ jobs:
         #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
         mkdir -p m2/repository
         ls -al
+        id -u
+        id -g
         pwd
-        echo $(id -u)
-        echo $(id -g)
     - name: API Generation 1
       uses: actions/checkout@v2
     - name: API Generation 2
