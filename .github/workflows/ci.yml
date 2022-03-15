@@ -13,7 +13,8 @@ jobs:
         run: |
           # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
           wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-          wget https://petstore.swagger.io/v2/swagger.json -O swagger.json
+          #wget https://petstore.swagger.io/v2/swagger.json -O swagger.json
+          cp ../../api/swagger.json .          
       - name: API Generation - GO
         run: |
           OUT_GO=out/go
