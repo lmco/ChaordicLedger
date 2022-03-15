@@ -43,6 +43,7 @@ jobs:
         image: openjdk:8-jre-alpine
         options: -w /gen -e GEN_DIR=/gen -v ${{ env.GITHUB_WORKSPACE }}:/gen
         run: |
+          env
           ls -al /
           ls -al /gen
           #./docker-stub.sh -p io.swagger.codegen.custom -n custom
