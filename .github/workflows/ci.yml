@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  WORKING_DIR: $PWD
+  GENERATED_CODE_DIR: generated
 
 jobs:
   build:
@@ -20,7 +20,7 @@ jobs:
         mkdir -p $TARGET_DIR
         cd $TARGET_DIR
         # generated code location
-        GENERATED_CODE_DIR=generated
+        GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
         mkdir -p $GENERATED_CODE_DIR
         # download desired version
         wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
@@ -60,7 +60,9 @@ jobs:
         run: |
           ls -al /
           ls -al /gen
-          GENERATED_CODE_DIR=generated
+          ls -al /gen/$GENERATED_CODE_DIR
+          ls -al /var/maven/.m2/repository
+          GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
           /gen/docker-entrypoint.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
