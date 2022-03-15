@@ -46,6 +46,8 @@ jobs:
         image: openjdk:8-jre-alpine
         options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
         run: |
+          echo $(id -u)
+          echo $(id -g)
           ls -al /
           ls -al /gen
           /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
@@ -58,8 +60,6 @@ jobs:
         run: |
           ls -al /
           ls -al /gen
-          echo $(id -u)
-          echo $(id -g)
           /gen/docker-entrypoint.sh -p io.swagger.codegen.custom -n custom
   
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
