@@ -67,7 +67,7 @@ jobs:
           # echo VERSION=$VERSION
           # docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
           #docker push $IMAGE_ID:$VERSION
-          docker push ghcr.io/chaordicledger/swagger-ui:0.0.1
+          docker push ghcr.io/lmco/chaordicledger/swagger-ui:0.0.1
     # steps:
     #   -
     #     name: Set up QEMU
