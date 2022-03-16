@@ -8,7 +8,7 @@ FROM golang:${GO_VER}-alpine${ALPINE_VER}
 LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
 LABEL org.opencontainers.image.description="Chaincode package for interacting with artifact metadata within a ChaordicLedger channel."
 LABEL org.opencontainers.image.revision="0.0.1"
-LABEL org.opencontainers.image.source="https://github.com/lmco/ChaordicLedger/tree/main/chaincode/artifact-metadata/docker"
+LABEL org.opencontainers.image.source="https://github.com/lmco/ChaordicLedger"
 LABEL org.opencontainers.image.title="artifact-metadata Chaincode for ChaordicLedger"
 LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
