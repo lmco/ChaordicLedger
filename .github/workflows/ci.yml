@@ -36,150 +36,94 @@ jobs:
         with:
           name: java-api
           path: ${{ env.OUT_JAVA }}
-      # - name: API Generation 1
-      #   uses: actions/checkout@v2
-      # - name: API Generation 2
-      #   uses: addnab/docker-run-action@v3
-      #   with:
-      #     registry: gcr.io
-      #     image: openjdk:8-jre-alpine
-      #     options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
-      #     run: |
-      #       ls -al /
-      #       ls -al /gen
-      #       /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
 
-    # - name: API Generation Setup
-    #   run: |
-    #     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
-    #     wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-    #     java -jar swagger-codegen-cli.jar meta -o output/myLibrary -n myClientCodegen -p com.my.company.codegen
+  docker-API-UI:
+    runs-on: ubuntu-latest
+    steps:
+      -
+        name: Set up QEMU
+        uses: docker/setup-qemu-action@v1
+      -
+        name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v1
+      -
+        name: Login to DockerHub
+        uses: docker/login-action@v1 
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      -
+        name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: "{{defaultContext}}:api"
+          push: false
+          tags: chaordicledger/swagger-ui:0.0.1
 
-    #     cat /home/runner/work/ChaordicLedger/ChaordicLedger/output/myLibrary/src/main/java/com/my/company/codegen/MyclientcodegenGenerator.java
-
-    #     ls -al output/myLibrary
-
-    #     java -cp output/myLibrary/target/myClientCodegen-swagger-codegen-1.0.0.jar:modules/swagger-codegen-cli/target/swagger-codegen-cli.jar \
-    #       io.swagger.codegen.SwaggerCodegen \
-    #       generate \
-    #       -l myClientCodegen \
-    #       -i https://petstore.swagger.io/v2/swagger.json \
-    #       -o myClient
-
-        # # project dir
-        # TARGET_DIR=/tmp/codegen/mygenerator
-        # mkdir -p $TARGET_DIR
-        # cd $TARGET_DIR
-        # # generated code location
-        # GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
-        # mkdir -p $GENERATED_CODE_DIR
-        # # download desired version
-        # wget https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar -O swagger-codegen-cli.jar
-        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-stub.sh -O docker-stub.sh
-        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/generator-stub-docker.sh -O generator-stub-docker.sh
-        # chmod +x *.sh
-        # # generated initial stub: -p <root package> -n <generator name>
-        # #./generator-stub-docker.sh -p io.swagger.codegen.custom -n custom
-        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/modules/swagger-codegen/src/test/resources/2_0/petstore.yaml -O petstore.yaml
-        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/run-in-docker.sh -O run-in-docker.sh
-        # wget https://raw.githubusercontent.com/swagger-api/swagger-codegen/master/standalone-gen-dev/docker-entrypoint.sh -O docker-entrypoint.sh
-        # chmod +x *.sh
-        # #./run-in-docker.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
-        # mkdir -p m2/repository
-        # ls -al
-        # id -u
-        # id -g
-        # pwd
-    # - name: API Generation 1
-    #   uses: actions/checkout@v2
-    # - name: API Generation 2
-    #   uses: addnab/docker-run-action@v3
-    #   with:
-    #     registry: gcr.io
-    #     image: openjdk:8-jre-alpine
-    #     options: -w /gen -e GEN_DIR=/gen -v /tmp/codegen/mygenerator:/gen
-    #     run: |
-    #       ls -al /
-    #       ls -al /gen
-    #       /gen/docker-stub.sh -p io.swagger.codegen.custom -n custom
-    # - name: API Generation 3
-    #   uses: addnab/docker-run-action@v3
-    #   with:
-    #     registry: gcr.io
-    #     image: maven:3-jdk-8
-    #     options: -w /gen -e GEN_DIR=/gen -e MAVEN_CONFIG=/var/maven/.m2 -u 1001:121 -v /tmp/codegen/mygenerator:/gen -v /tmp/codegen/mygenerator/m2/repository:/var/maven/.m2/repository
-    #     run: |
-    #       ls -al /
-    #       ls -al /gen
-    #       ls -al /gen/$GENERATED_CODE_DIR
-    #       ls -al /var/maven/.m2/repository
-    #       GENERATED_CODE_DIR=${{ env.GENERATED_CODE_DIR }}
-    #       /gen/docker-entrypoint.sh generate -i petstore.yaml -l custom -o /gen/$GENERATED_CODE_DIR
-  
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
-  prerequisites:
-    runs-on: ubuntu-latest
-    env:
-      AGNOSTIC_SETUP_DIR: setup/agnostic
-      AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
-      UBUNTU_SETUP_DIR: setup/ubuntu
-      RHEL_SETUP_DIR: setup/rhel
-    steps:
-    - uses: actions/checkout@v2
-    - name: Setup local
-      run: |
-        source ${AGNOSTIC_SETUP_DIR}/local_source
-        ${AGNOSTIC_SETUP_DIR}/local_setup.sh
-    - name: Get kubectl
-      run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
-    - name: Get kind
-      run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
-    - name: Get jq
-      run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
-    - name: Update package manager
-      run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
-    - name: Get prerequisite tools
-      run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
-    - name: Get Docker
-      run: ${UBUNTU_SETUP_DIR}/get_docker.sh
-    - name: Setup Docker
-      run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
-    - name: Setup Test Network for Hyperledger
-      run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
-    - name: Cleanup
-      run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
+  # prerequisites:
+  #   runs-on: ubuntu-latest
+  #   env:
+  #     AGNOSTIC_SETUP_DIR: setup/agnostic
+  #     AGNOSTIC_CLEANUP_DIR: cleanup/agnostic
+  #     UBUNTU_SETUP_DIR: setup/ubuntu
+  #     RHEL_SETUP_DIR: setup/rhel
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Setup local
+  #     run: |
+  #       source ${AGNOSTIC_SETUP_DIR}/local_source
+  #       ${AGNOSTIC_SETUP_DIR}/local_setup.sh
+  #   - name: Get kubectl
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_kubectl.sh
+  #   - name: Get kind
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_kind.sh
+  #   - name: Get jq
+  #     run: ${AGNOSTIC_SETUP_DIR}/get_jq.sh
+  #   - name: Update package manager
+  #     run: ${UBUNTU_SETUP_DIR}/update_package_manager.sh
+  #   - name: Get prerequisite tools
+  #     run: ${UBUNTU_SETUP_DIR}/get_prerequisite_tools.sh
+  #   - name: Get Docker
+  #     run: ${UBUNTU_SETUP_DIR}/get_docker.sh
+  #   - name: Setup Docker
+  #     run: ${AGNOSTIC_SETUP_DIR}/setup_docker.sh
+  #   - name: Setup Test Network for Hyperledger
+  #     run: ${AGNOSTIC_SETUP_DIR}/setup_hyperledger.sh
+  #   - name: Cleanup
+  #     run: ${AGNOSTIC_CLEANUP_DIR}/cleanup_hyperledger.sh
 
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
-    - uses: actions/checkout@v2
-    - name: Install shellspec
-      run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
-    - name: Execute shellspec
-      run: shellspec
+  # test:
+  #   runs-on: ubuntu-latest
+  #   needs: build
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Install shellspec
+  #     run: curl -fsSL https://git.io/shellspec | sh -s 0.28.1 --yes
+  #   - name: Execute shellspec
+  #     run: shellspec
 
-  PrerequisiteRootCA:
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-    - uses: actions/checkout@v2
-    - name: Create Root Certificate Authority (CA)
-      env:
-        ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
-      run: |
-        ROOT_RESULTS_FILE_NAME="rootCAResults.json"
-        COUNTRY_CODE="AU"
-        STATE="WA"
-        LOCATION="Northbridge"
-        ORGANIZATION="Hotels"
-        ORGANIZATIONAL_UNIT="Fancy"
-        ROOT_COMMON_NAME="Yet another root cert authority"
-        OUTPUT_DIR="."
+  # PrerequisiteRootCA:
+  #   runs-on: ubuntu-latest
+  #   needs: test
+  #   steps:
+  #   - uses: actions/checkout@v2
+  #   - name: Create Root Certificate Authority (CA)
+  #     env:
+  #       ROOT_PASSPHRASE: ${{ secrets.ROOT_PASSPHRASE }}
+  #     run: |
+  #       ROOT_RESULTS_FILE_NAME="rootCAResults.json"
+  #       COUNTRY_CODE="AU"
+  #       STATE="WA"
+  #       LOCATION="Northbridge"
+  #       ORGANIZATION="Hotels"
+  #       ORGANIZATIONAL_UNIT="Fancy"
+  #       ROOT_COMMON_NAME="Yet another root cert authority"
+  #       OUTPUT_DIR="."
         
-        ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
-        openssl x509 -text -noout -in rootCACert.pem
+  #       ./certificates/generateRootCA/bin/generateRootCA.sh -f "$ROOT_RESULTS_FILE_NAME" -p "$ROOT_PASSPHRASE" -o "$OUTPUT_DIR" -c "$COUNTRY_CODE" -s "$STATE" -l "$LOCATION" -r "$ORGANIZATION" -u "$ORGANIZATIONAL_UNIT" -n "$ROOT_COMMON_NAME"
+  #       openssl x509 -text -noout -in rootCACert.pem
 
   # docker:
   #   #needs: PrerequisiteRootCA
