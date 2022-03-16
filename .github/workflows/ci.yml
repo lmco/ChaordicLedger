@@ -59,7 +59,7 @@ jobs:
         with:
           context: "{{defaultContext}}:api"
           push: true
-          tags: name/app:latest,chaordicledger/swagger-ui:0.0.1
+          tags: ghcr.io/chaordicledger/swagger-ui:latest,ghcr.io/chaordicledger/swagger-ui:0.0.1
           secrets: |
             GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
