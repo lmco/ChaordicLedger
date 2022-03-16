@@ -40,7 +40,8 @@ jobs:
   docker-API-UI:
     runs-on: ubuntu-latest
     permissions:
-      packages: write 
+      packages: write
+      contents: read
     steps:
       -
         name: Set up QEMU
