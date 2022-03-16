@@ -58,7 +58,7 @@ jobs:
         uses: docker/build-push-action@v2
         with:
           context: "{{defaultContext}}:api"
-          push: false
+          push: true
           tags: chaordicledger/swagger-ui:0.0.1
 
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
