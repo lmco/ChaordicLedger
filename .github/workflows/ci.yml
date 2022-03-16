@@ -59,7 +59,9 @@ jobs:
         with:
           context: "{{defaultContext}}:api"
           push: true
-          tags: chaordicledger/swagger-ui:0.0.1
+          tags: name/app:latest,chaordicledger/swagger-ui:0.0.1
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.GITHUB_TOKEN }}
 
   # References: https://hyperledger-fabric.readthedocs.io/en/latest/getting_started.html
   #             https://github.com/hyperledger/fabric-samples/tree/main/test-network-k8s
