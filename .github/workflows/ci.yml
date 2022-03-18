@@ -2,11 +2,9 @@ name: CI
 
 on: [push]
 
-variables:
+env:
   DOCKER_REGIRSTY_HOST: ghcr.io
   DOCKER_REGISTRY: $DOCKER_REGIRSTY_HOST/lmco/chaordicledger
-
-env:
   GENERATED_CODE_DIR: generated
   SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar
   SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
@@ -43,7 +41,7 @@ jobs:
 
   docker-API-UI:
     runs-on: ubuntu-latest
-    variables:
+    env:
       IMAGE_NAME: swagger-ui
       IMAGE_VERSION: 0.0.1
       TAG: $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_VERSION
@@ -65,7 +63,7 @@ jobs:
 
   docker-metadata-chaincode:
     runs-on: ubuntu-latest
-    variables:
+    env:
       IMAGE_NAME: metadata-chaincode
       IMAGE_VERSION: v0.0.0
       TAG: $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_VERSION
