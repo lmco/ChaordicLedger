@@ -3,4 +3,5 @@ tmp
 cachain.zip
 log.txt
 *.tgz
-**/cachain
+**/cachain/*.crt
+**/cachain/*.cer
