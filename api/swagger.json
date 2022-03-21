@@ -1,0 +1,90 @@
+{
+  "swagger": "2.0",
+  "info": {
+    "description": "This is the API for ChaordicLedger.",
+    "version": "1.0.0",
+    "title": "ChaordicLedger API",
+    "license": {
+      "name": "MIT License",
+      "url": "https://opensource.org/licenses/MIT"
+    }
+  },
+  "host": "localhost",
+  "basePath": "/v1",
+  "servers": [
+    {
+      "url": "http://127.0.0.1/v1"
+    }
+  ],
+  "tags": [
+    {
+      "name": "artifacts",
+      "description": "Operations regarding artifacts."
+    },
+    {
+      "name": "concurrence",
+      "description": "Operations regarding concurrence with changes."
+    },
+    {
+      "name": "relationships",
+      "description": "Operations regarding relationships between artifacts."
+    },
+    {
+      "name": "users",
+      "description": "Operations regarding users."
+    }
+  ],
+  "schemes": [
+    "https",
+    "http"
+  ],
+  "paths": {
+    "/artifact/metadata": {
+      "get": {
+        "summary": "Retrieves all known metadata.",
+        "description": "Retrieves all known metadata.",
+        "operationId": "getAllArtifactMetadata",
+        "tags": [
+          "artifacts"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON array of artifact metadata",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ArtifactMetadata"
+                }
+              }
+            }
+          },
+          "default": {
+            "description": "Unexpected Error"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "ArtifactMetadata": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "changeConsensusCount": {
+            "type": "integer",
+            "format": "int32",
+            "minimum": 0
+          }
+        }
+      }
+    }
+  }
+}

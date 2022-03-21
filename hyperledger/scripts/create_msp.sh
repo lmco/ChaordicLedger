@@ -214,6 +214,11 @@ function create_local_MSPs()
     # populateTemplate ../config/enroll_msp_peer_with_ca_client_template.sh ${config_file}
 
     export ORG_NUMBER=${i}
+
+    # local config_file=${msp_dir}/enroll_org${i}_admin_msp_with_ca_client.sh
+    # populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
+    # cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
+
     local config_file=${msp_dir}/enroll_msp_org${i}_peer${j}_with_ca_client.sh
     export PEER_NUMBER=${j}
     populateTemplate ../config/toBeRefactored/org${i}/enroll_msp_with_ca_client_template.sh ${config_file}
@@ -227,9 +232,6 @@ function create_local_MSPs()
 
     cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
 
-    local config_file=${msp_dir}/enroll_org${i}_admin_msp_with_ca_client.sh
-    populateTemplate ../config/enroll_admin_with_ca_client_template.sh ${config_file}
-    cat ${config_file} | exec kubectl -n $NS exec deploy/org${i}-ca -i -- /bin/sh
   done
 }
 
