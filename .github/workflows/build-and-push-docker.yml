@@ -1,0 +1,50 @@
+name: Build-and-Push Docker Image
+
+on:
+  workflow_call:
+    inputs:
+      registry:
+        required: true
+        type: string
+      registryhost:
+        required: true
+        type: string
+      imagename:
+        required: true
+        type: string
+      imageversion:
+        required: true
+        type: string
+
+jobs:
+  docker:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: swagger-ui
+      IMAGE_VERSION: 0.0.1
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build --tag ${{ inputs.registry }}/${{ inputs.imagename }}:${{ inputs.imageversion }} api/
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ inputs.registryhost }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ inputs.registry }}/${{ inputs.imagename }}:${{ inputs.imageversion }}
+
+jobs:
+  example_job:
+    name: Pass input and secrets to my-action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: ./.github/workflows/my-action
+        with:
+          username: ${{ inputs.username }}
+          token: ${{ secrets.token }}
