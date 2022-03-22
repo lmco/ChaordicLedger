@@ -63,12 +63,11 @@ jobs:
 
   docker-metadata-chaincode:
     uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
-    with:
-      registry: ${{ DOCKER_REGISTRY }}
-      registry_host: ${{ DOCKER_REGIRSTY_HOST }}
-      image_name: ${{ IMAGE_NAME }}
-      image_version: ${{ IMAGE_VERSION }}
     secrets:
+      registry: ${{ env.DOCKER_REGISTRY }}
+      registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
+      image_name: ${{ env.IMAGE_NAME }}
+      image_version: ${{ env.IMAGE_VERSION }}
       user: ${{ github.actor }}
       token: ${{ secrets.GITHUB_TOKEN }}
 
