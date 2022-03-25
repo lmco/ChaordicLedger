@@ -46,11 +46,6 @@ jobs:
           name: java-api
           path: ${{ env.OUT_JAVA }}
 
-      - uses: actions/upload-artifact@v3
-        with:
-          name: javasrc
-          path: ${{ env.OUT_JAVA }}/
-
   docker-API-Builder:
     runs-on: ubuntu-latest
     env:
@@ -80,8 +75,14 @@ jobs:
     steps:
       - uses: actions/download-artifact@v3
 
-      - name: List Directory Contents
-        run: ls -rotl
+      - name: List java-api Directory Contents
+        run: ls -rotl java-api
+
+      - name: Build Java API
+        run:
+          cd java-api
+          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project customgradle gradle build test
+          ls -rotl
 
   docker-API-UI:
     runs-on: ubuntu-latest
