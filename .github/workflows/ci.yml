@@ -41,6 +41,10 @@ jobs:
           mkdir -p ${OUT_JAVA}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l java -o ${{ env.OUT_JAVA }}
           
+          # May need to override the generated manifest file to specify the internal classpath and specify the main class.
+          ls -rotl ${OUT_JAVA}/build/tmp/jar
+          cat ${OUT_JAVA}/build/tmp/jar/MANIFEST.MF
+
           cp api/ArtifactsApiExample.java ${OUT_JAVA}/src/main/java/
           
           ls -rotl ${OUT_JAVA}
