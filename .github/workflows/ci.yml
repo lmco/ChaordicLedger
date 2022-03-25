@@ -82,7 +82,7 @@ jobs:
           name: javasrc
 
       - name: List Directory Contents
-        run: ls -rotl ${{ env.OUT_JAVA }}
+        run: ls -rotl
 
   docker-API-UI:
     runs-on: ubuntu-latest
