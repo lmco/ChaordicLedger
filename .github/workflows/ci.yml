@@ -47,6 +47,8 @@ jobs:
 
           mainClassName=ArtifactApiExample
 
+          ls -rotl
+          ls -rotl api/
           cp api/${mainClassName}.java ${OUT_JAVA}/src/main/java/
 
           # Update the pom file to include the manifest          
