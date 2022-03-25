@@ -103,6 +103,7 @@ jobs:
           docker run --rm -u root --name my-maven-project -v "$PWD":/usr/src/mymaven -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean package
           ls -rotl
           echo $PWD
+          ls -rotl ${PWD}/target
           echo "targetRoot=${PWD}/target" >> $GITHUB_ENV
 
       - name: Publish packaged Java client jar
