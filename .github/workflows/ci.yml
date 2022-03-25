@@ -99,7 +99,7 @@ jobs:
 
       - name: Package Java API
         run: |
-          ls -rotl
+          cd java-api
           docker run --rm -u root --name my-maven-project -v "$PWD":/usr/src/mymaven -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean package
           ls -rotl
 
