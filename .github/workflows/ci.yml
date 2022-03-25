@@ -68,6 +68,7 @@ jobs:
       - name: Push image
         run: |
           docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          echo "customBuilderImage=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}" >> $GITHUB_ENV
 
   build-api:
     runs-on: ubuntu-latest
@@ -78,10 +79,13 @@ jobs:
       - name: List java-api Directory Contents
         run: ls -rotl java-api
 
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
       - name: Build Java API
         run: |
           cd java-api
-          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project customgradle gradle build test
+          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.customBuilderImage }} gradle build test
           ls -rotl
 
   docker-API-UI:
