@@ -89,12 +89,13 @@ jobs:
           cd java-api
           docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build test
           ls -rotl
+          echo "buildRoot=${PWD}" >> $GITHUB_ENV
 
       - name: Publish Java client jar
         uses: actions/upload-artifact@v3
         with:
           name: java-client
-          path: build/libs/*.jar
+          path: ${{ env.buildRoot }}/build/libs/*.jar
 
   docker-API-UI:
     runs-on: ubuntu-latest
