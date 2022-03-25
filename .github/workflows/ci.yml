@@ -102,12 +102,14 @@ jobs:
           cd java-api
           docker run --rm -u root --name my-maven-project -v "$PWD":/usr/src/mymaven -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean package
           ls -rotl
+          echo $PWD
+          echo "targetRoot=${PWD}/target" >> $GITHUB_ENV
 
       - name: Publish packaged Java client jar
         uses: actions/upload-artifact@v3
         with:
-          name: java-client
-          path: ${{ env.buildRoot }}/build/target/*.jar
+          name: java-client-package
+          path: ${{ env.targetRoot }}/*.jar
 
   docker-API-UI:
     runs-on: ubuntu-latest
