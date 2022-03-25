@@ -45,8 +45,15 @@ jobs:
           # ls -rotl ${OUT_JAVA}/build/tmp/jar
           # cat ${OUT_JAVA}/build/tmp/jar/MANIFEST.MF
 
-          # cp api/ArtifactsApiExample.java ${OUT_JAVA}/src/main/java/
+          mainClassName=ArtifactApiExample
+
+          cp api/${mainClassName}.java ${OUT_JAVA}/src/main/java/
+
+          # Update the pom file to include the manifest          
+          mv ${OUT_JAVA}/pom.xml ${OUT_JAVA}/pom.xml.orig
           
+          cat pom.xml.orig | tr -d '\n' | sed "s|\(<artifactId>maven-jar-plugin</artifactId>.*<executions>.*<execution>.*<goals>.*<goal>jar</goal>.*<goal>test-jar</goal>.*</goals>.*</execution>.*</executions>\).*<configuration>.*</configuration>|\1<configuration><archive><manifest><mainClass>${mainClassName}</mainClass></manifest></archive></configuration>|" > ${OUT_JAVA}/pom.xml
+
           ls -rotl ${OUT_JAVA}
 
       - name: Archive generated JAVA code
