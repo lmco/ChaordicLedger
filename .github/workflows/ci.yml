@@ -45,7 +45,7 @@ jobs:
           # ls -rotl ${OUT_JAVA}/build/tmp/jar
           # cat ${OUT_JAVA}/build/tmp/jar/MANIFEST.MF
 
-          mainClassName=ArtifactApiExample
+          mainClassName=ArtifactsApiExample
 
           ls -rotl
           ls -rotl api/
