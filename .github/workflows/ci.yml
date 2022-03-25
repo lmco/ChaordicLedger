@@ -61,37 +61,38 @@ jobs:
         run: |
           docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
 
-  docker-metadata-chaincode:
-    uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
-    secrets:
-      registry: ${{ env.DOCKER_REGISTRY }}
-      registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
-      image_name: ${{ env.IMAGE_NAME }}
-      image_version: ${{ env.IMAGE_VERSION }}
-      user: ${{ github.actor }}
-      token: ${{ secrets.GITHUB_TOKEN }}
-
   # docker-metadata-chaincode:
-  #   runs-on: ubuntu-latest
-  #   env:
-  #     IMAGE_NAME: metadata-chaincode
-  #     IMAGE_VERSION: v0.0.0
-  #     # TAG: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.IMAGE_VERSION }}
-  #   permissions:
-  #     packages: write
-  #     contents: read
-  #   steps:
-  #     - uses: actions/checkout@v2
+  #   uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
+  #   secrets:
+  #     registry: ${{ env.DOCKER_REGISTRY }}
+  #     registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
+  #     image_name: ${{ env.IMAGE_NAME }}
+  #     image_version: ${{ env.IMAGE_VERSION }}
+  #   secrets:
+  #     user: ${{ github.actor }}
+  #     token: ${{ secrets.GITHUB_TOKEN }}
 
-  #     - name: Build image
-  #       run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} chaincode/artifact-metadata/docker/
+  docker-metadata-chaincode:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: metadata-chaincode
+      IMAGE_VERSION: v0.0.0
+      # TAG: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.IMAGE_VERSION }}
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
 
-  #     - name: Log in to registry
-  #       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+      - name: Build image
+        run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} chaincode/artifact-metadata/docker/
 
-  #     - name: Push image
-  #       run: |
-  #         docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
     # steps:
     #   -
     #     name: Set up QEMU
