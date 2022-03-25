@@ -41,7 +41,7 @@ jobs:
           mkdir -p ${OUT_JAVA}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l java -o ${{ env.OUT_JAVA }}
           
-          cp api/ArtifactsApiExample.java src/main/java/
+          cp api/ArtifactsApiExample.java ${OUT_JAVA}/src/main/java/
           
           ls -rotl ${OUT_JAVA}
 
