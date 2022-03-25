@@ -34,11 +34,11 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build --tag ${{ secrets.registry }}/${{ secrets.image_name }}:${{ secrets.image_version }} api/
+        run: docker build --tag ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }} api/
 
       - name: Log in to registry
-        run: echo "${{ secrets.token }}" | docker login ${{ secrets.registry_host }} -u ${{ secrets.user }} --password-stdin
+        run: echo "${{ secrets.token }}" | docker login ${{ inputs.registry_host }} -u ${{ secrets.user }} --password-stdin
 
       - name: Push image
         run: |
-          docker push ${{ secrets.registry }}/${{ secrets.image_name }}:${{ secrets.image_version }}
+          docker push ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }}

@@ -51,8 +51,11 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Copy API Definition
+        run: cp api/swagger.json api/ui/
+
       - name: Build image
-        run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} api/
+        run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} api/ui
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
