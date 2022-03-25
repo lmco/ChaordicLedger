@@ -79,7 +79,7 @@ jobs:
         run: ls -rotl java-api
 
       - name: Build Java API
-        run:
+        run: |
           cd java-api
           docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project customgradle gradle build test
           ls -rotl
