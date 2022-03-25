@@ -110,7 +110,9 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: java-client-package
-          path: ${{ env.targetRoot }}/*.jar
+          path: |
+            ${{ env.targetRoot }}/*.jar
+            ${{ env.targetRoot }}/lib/*.jar
 
   docker-API-UI:
     runs-on: ubuntu-latest
