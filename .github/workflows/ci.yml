@@ -13,7 +13,7 @@ env:
   OUT_JAVA: out/java
 
 jobs:
-  build:
+  generate-api-code:
     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
     runs-on: ubuntu-latest
     steps:
@@ -67,6 +67,14 @@ jobs:
       - name: Push image
         run: |
           docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+
+  build-api:
+    runs-on: ubuntu-latest
+    needs: [generate-api-code, docker-API-Builder]
+    steps:
+      -name: List Directory Contents
+       run: |
+        ls -rotl ${{ env.OUT_JAVA }}
 
   docker-API-UI:
     runs-on: ubuntu-latest
