@@ -72,9 +72,8 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-api-code, docker-API-Builder]
     steps:
-      -name: List Directory Contents
-       run: |
-        ls -rotl ${{ env.OUT_JAVA }}
+      - name: List Directory Contents
+        run: ls -rotl ${{ env.OUT_JAVA }}
 
   docker-API-UI:
     runs-on: ubuntu-latest
