@@ -45,6 +45,11 @@ jobs:
           name: java-api
           path: ${{ env.OUT_JAVA }}
 
+      - uses: actions/upload-artifact@v2
+        with:
+          name: javasrc
+          path: ${{ env.OUT_JAVA }}
+
   docker-API-Builder:
     runs-on: ubuntu-latest
     env:
@@ -72,6 +77,10 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-api-code, docker-API-Builder]
     steps:
+      - uses: actions/download-artifact@v2
+        with:
+          name: javasrc
+
       - name: List Directory Contents
         run: ls -rotl ${{ env.OUT_JAVA }}
 
