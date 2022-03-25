@@ -12,17 +12,19 @@ LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
 # Updating the certs and keystore is necessary for building behind corporate firewalls.
+ARG cacertDir=/usr/local/share/ca-certificates/
+
 RUN mkdir -p ./cachain
-COPY cachain/* /usr/local/share/ca-certificates/
+COPY cachain/* ${cacertDir}
 
 RUN rm -rf /var/cache/apk/* && \
   rm -rf /tmp/* && \
   update-ca-certificates
 
-RUN count=$(ls /usr/local/share/ca-certificates/ | grep .crt | wc -l) && \
+RUN count=$(ls ${cacertDir} | grep .crt | wc -l) && \
   echo "Certificate count: ${count}" && \
   i=0 && \
-  cd /usr/local/share/ca-certificates/ && \
+  cd ${cacertDir} && \
   for file in *.crt; do i=$((i+1));echo "Adding \"$file\" to keystore" && keytool -keystore $JAVA_HOME/jre/lib/security/cacerts -storepass changeit -noprompt -trustcacerts -importcert -alias root${i} -file "$file"; done || true
 
 # Note: the use of '-keystore $JAVA_HOME/jre/lib/security/cacerts' is aliased to the flag '-cacerts' in later versions of keytool.
