@@ -54,7 +54,7 @@ jobs:
           # Update the pom file to include the manifest          
           cp ${OUT_JAVA}/pom.xml ${OUT_JAVA}/pom.xml.orig
           
-          cat ${OUT_JAVA}/pom.xml.orig | tr -d '\n' | sed "s|\(<artifactId>maven-jar-plugin</artifactId>.*<executions>.*<execution>.*<goals>.*<goal>jar</goal>.*<goal>test-jar</goal>.*</goals>.*</execution>.*</executions>.*<configuration>\).*\(</configuration>\)|\1<archive><manifest><mainClass>${mainClassName}</mainClass></manifest></archive>\2|" > ${OUT_JAVA}/pom.xml
+          cat ${OUT_JAVA}/pom.xml.save | tr '\n' '|' | sed "s|\(<artifactId>maven-jar-plugin</artifactId>.*<executions>.*<configuration>\).*\(</configuration>\)[^<]*</plugin>|\1\|<archive><manifest><mainClass>${mainClassName}</mainClass></manifest></archive>\|\2|" | tr '|' '\n' > ${OUT_JAVA}/pom.xml
 
           cat ${OUT_JAVA}/pom.xml
 
