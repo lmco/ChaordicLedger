@@ -13,6 +13,7 @@ env:
   SWAGGER_API_FILE: api/swagger.json
   OUT_GO: out/go
   OUT_JAVA: out/java
+  OUT_NODEJS: out/nodejs
 
 jobs:
   generate-api-code:
@@ -71,6 +72,17 @@ jobs:
         with:
           name: java-api
           path: ${{ env.OUT_JAVA }}
+
+      - name: API Server Generation - NodeJS
+        run: |
+          mkdir -p ${{ env.OUT_NODEJS }}
+          java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l nodejs-server -o ${{ env.OUT_NODEJS }}
+
+      - name: Archive generated NodeJS code
+        uses: actions/upload-artifact@v3
+        with:
+          name: nodejs-server
+          path: ${{ env.OUT_NODEJS }}
 
   docker-API-Builder:
     runs-on: ubuntu-latest
