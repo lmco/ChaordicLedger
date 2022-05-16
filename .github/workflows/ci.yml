@@ -10,7 +10,7 @@ env:
   GENERATED_CODE_DIR: generated
   SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.34/swagger-codegen-cli-3.0.34.jar
   SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
-  SWAGGER_API_FILE: api/ui/swagger.json
+  SWAGGER_API_FILE: api/swagger.json
   OUT_GO: out/go
   OUT_JAVA: out/java
 
@@ -80,7 +80,7 @@ jobs:
       - name: Build image
         run: |
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }}
-          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} --no-cache
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
