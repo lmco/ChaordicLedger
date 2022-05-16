@@ -8,9 +8,9 @@ env:
   CUSTOM_BUILDER_IMAGE_NAME: customgradlebuilder
   CUSTOM_BUILDER_IMAGE_VERSION: 0.0.1
   GENERATED_CODE_DIR: generated
-  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar
+  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.34/swagger-codegen-cli-3.0.34.jar
   SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
-  SWAGGER_API_FILE: api/swagger.json
+  SWAGGER_API_FILE: api/ui/swagger.json
   OUT_GO: out/go
   OUT_JAVA: out/java
 

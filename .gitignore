@@ -5,3 +5,4 @@ log.txt
 *.tgz
 **/cachain/*.crt
 **/cachain/*.cer
+docker_registry_proxy_details.sh
