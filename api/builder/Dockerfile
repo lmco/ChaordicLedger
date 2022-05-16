@@ -1,6 +1,7 @@
 # Reference: https://stackoverflow.com/questions/58626842/illegal-option-cacerts-for-keytool-in-gitlab-ci-with-gradlejdk8
 
-FROM gradle:7.4.2
+#FROM gradle:7.4.2
+FROM gradle:6.8.2
 
 LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
 LABEL org.opencontainers.image.description="Custom Gradle image for building behind a corporate firewall."
