@@ -41,7 +41,11 @@ jobs:
           mkdir -p ${OUT_JAVA}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l java -o ${{ env.OUT_JAVA }}
           
+          # As of 2022-Mar-31, jcenter no longer exists.
           sed -i "s|jcenter|mavenCentral|g" ${{ env.OUT_JAVA }}/build.gradle
+
+          # In Gradle 7.x: The maven plugin has been removed; need to use the maven-publish plugin instead.
+          sed -i "s|apply plugin: 'maven'|apply plugin: 'maven-publish'|g" ${{ env.OUT_JAVA }}/build.gradle
 
           # # May need to override the generated manifest file to specify the internal classpath and specify the main class.
           # ls -rotl ${OUT_JAVA}/build/tmp/jar
