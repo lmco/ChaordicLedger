@@ -31,9 +31,10 @@ The development of this platform is in pursuit of the author's PhD research obje
 
 ## References
 * All indexed publications by author: [https://orcid.org/0000-0001-5594-9756](https://orcid.org/0000-0001-5594-9756)
-* Markdown Editor: [https://jbt.github.io/markdown-editor/](https://jbt.github.io/markdown-editor/)
-* kind: [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)
-* Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
-* Kubernetes Cheat Sheet [https://kubernetes.io/docs/reference/kubectl/cheatsheet/](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
+* Markdown Editor: [https://jbt.github.io/markdown-editor/](https://jbt.github.io/markdown-editor/)
 * K9s - Kubernetes CLI To Manage Your Clusters In Style!: [https://github.com/derailed/k9s](https://github.com/derailed/k9s)
+* kind: [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)
+* Kubernetes Cheat Sheet: [https://kubernetes.io/docs/reference/kubectl/cheatsheet/](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
+* Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
+* Swagger Editor: [https://editor.swagger.io/](https://editor.swagger.io/)
