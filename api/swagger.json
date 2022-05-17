@@ -37,6 +37,36 @@
   ],
   "paths": {
     "/artifact/metadata": {
+      "post": {
+        "summary": "Creates a new metadata item.",
+        "description": "Creates a new metadata item.",
+        "operationId": "createArtifactMetadata",
+        "tags": [
+          "Artifacts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Metadata object that needs to be added to the store",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/ArtifactMetadata"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
       "get": {
         "summary": "Retrieves all known metadata.",
         "description": "Retrieves all known metadata.",
@@ -65,6 +95,21 @@
     }
   },
   "definitions": {
+    "ApiResponse": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "integer",
+          "format": "int32"
+        },
+        "type": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    },
     "ArtifactMetadata": {
       "type": "object",
       "properties": {
