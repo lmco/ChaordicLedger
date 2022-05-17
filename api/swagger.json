@@ -13,7 +13,7 @@
   "basePath": "/v1",
   "tags": [
     {
-      "name": "artifacts",
+      "name": "Artifact Metadata",
       "description": "Operations regarding artifacts."
     },
     {
@@ -36,13 +36,43 @@
     "application/json"
   ],
   "paths": {
+    "/artifact/{metadataID}": {
+      "delete": {
+        "summary": "Deletes an existing metadata item.",
+        "description": "Deletes an existing metadata item.",
+        "operationId": "deleteArtifactMetadata",
+        "tags": [
+          "Artifact Metadata"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "metadataID",
+            "in": "path",
+            "description": "Artifact metadata ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact metadata not found"
+          }
+        }
+      }
+    },
     "/artifact/metadata": {
       "post": {
         "summary": "Creates a new metadata item.",
         "description": "Creates a new metadata item.",
         "operationId": "createArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Artifact Metadata"
         ],
         "consumes": [
           "application/json"
@@ -72,7 +102,7 @@
         "description": "Retrieves all known metadata.",
         "operationId": "getAllArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Artifact Metadata"
         ],
         "consumes": [
           "application/json"
@@ -120,11 +150,6 @@
         "name": {
           "type": "string",
           "minLength": 1
-        },
-        "changeConsensusCount": {
-          "type": "integer",
-          "format": "int32",
-          "minimum": 0
         }
       }
     }
