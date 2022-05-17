@@ -1,6 +1,24 @@
 #/bin/sh
+rm api/builder/cachain/*.cer
+rm api/server/cachain/*.cer
+rm chaincode/artifact-metadata/docker/cachain/*.cer
+rm hyperledger/admin-cli/cachain/*.cer
+rm test/cachain/*.cer
 
-rm -rf /tmp/chaordicledger
+unzip -o cachain.zip
+mkdir -p api/builder/cachain/
+mkdir -p api/server/cachain/
+mkdir -p chaincode/artifact-metadata/docker/cachain/
+mkdir -p hyperledger/admin-cli/cachain/
+mkdir -p test/cachain/
+
+cp LMChain/* api/builder/cachain/
+cp LMChain/* api/server/cachain/
+cp LMChain/* chaincode/artifact-metadata/docker/cachain/
+cp LMChain/* hyperledger/admin-cli/cachain/
+cp LMChain/* test/cachain/
+
+rm -rf LMChain
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
@@ -36,17 +54,21 @@ done
 
 ./network query '{"Args":["GetAllMetadata"]}'
 
-timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-for item in ${LfileArray[*]}; do
-  echo "Adding $item to the ledger."
-  itemhash=$(sha256sum ${item} | awk '{print $1;}')
-  itemsize=$(du -b ${item} | awk '{print $1;}')
-  ./network invoke '{"Args":["UpdateMetadata","'${timestamp}'","'${itemhash}'","SHA256","'${item}'","'${itemsize}'"]}'
-done
+pushd api/server/out/nodejs
+nohup npm start &
+popd
 
-./network query '{"Args":["GetAllMetadata"]}'
+# timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+# for item in ${LfileArray[*]}; do
+#   echo "Adding $item to the ledger."
+#   itemhash=$(sha256sum ${item} | awk '{print $1;}')
+#   itemsize=$(du -b ${item} | awk '{print $1;}')
+#   ./network invoke '{"Args":["UpdateMetadata","'${timestamp}'","'${itemhash}'","SHA256","'${item}'","'${itemsize}'"]}'
+# done
 
-for item in ${LfileArray[*]}; do
-  ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
-  ./network query '{"Args":["GetAllMetadata"]}'
-done
+# ./network query '{"Args":["GetAllMetadata"]}'
+
+# for item in ${LfileArray[*]}; do
+#   ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
+#   ./network query '{"Args":["GetAllMetadata"]}'
+# done

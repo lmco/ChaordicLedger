@@ -1,5 +1,7 @@
 #!/bin/sh
 
+set -o errexit
+
 CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 

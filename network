@@ -12,23 +12,39 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
 
+proxy_details_source_file=docker_registry_proxy_details.sh
+if [[ -f "$proxy_details_source_file" ]]; then
+  echo "Sourcing proxy details from $proxy_details_source_file"
+  . $proxy_details_source_file
+
+  if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
+    echo "Logging in to $DOCKER_REGISTRY_PROXY"
+    echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
+  fi
+else
+  echo "No proxy details file to source."
+fi
+
 export NGINX_HTTP_PORT=${TEST_NETWORK_INGRESS_HTTP_PORT:-80}
 export NGINX_HTTPS_PORT=${TEST_NETWORK_INGRESS_HTTPS_PORT:-443}
 
 export FABRIC_CA_VERSION=1.5.2
 export FABRIC_VERSION=2.4.1
-export FABRIC_CONTAINER_REGISTRY="hyperledger"
+export FABRIC_CONTAINER_REGISTRY="${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}hyperledger"
 export NETWORK_NAME="chaordicledger"
 export CLUSTER_NAME="chaordiccluster"
 export NS=${NETWORK_NAME}
 export CHANNEL_NAME="cl"
 
 #export CHAINCODE_NAME=asset-transfer-basic
-#export CHAINCODE_IMAGE=ghcr.io/hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
+#export CHAINCODE_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 
 export PEER_TLS_ENABLED=false
 export CHAINCODE_NAME=artifact-metadata
-export CHAINCODE_IMAGE=chaordicledger/metadata-chaincode:0.0.1
+export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
+
+echo ${FABRIC_CONTAINER_REGISTRY}
+echo ${CHAINCODE_IMAGE}
 
 export LOCAL_REGISTRY_NAME="kind-registry"
 export LOCAL_REGISTRY_PORT="5000"
