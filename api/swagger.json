@@ -11,11 +11,6 @@
   },
   "host": "localhost:8080",
   "basePath": "/v1",
-  "servers": [
-    {
-      "url": "http://127.0.0.1/v1"
-    }
-  ],
   "tags": [
     {
       "name": "artifacts",
@@ -49,15 +44,17 @@
         "tags": [
           "Artifacts"
         ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
           "200": {
             "description": "A JSON array of artifact metadata",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ArtifactMetadata"
-                }
-              }
+            "schema": {
+              "$ref": "#/definitions/ArtifactMetadata"
             }
           },
           "default": {
@@ -67,24 +64,22 @@
       }
     }
   },
-  "components": {
-    "schemas": {
-      "ArtifactMetadata": {
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "string",
-            "format": "uuid"
-          },
-          "name": {
-            "type": "string",
-            "minLength": 1
-          },
-          "changeConsensusCount": {
-            "type": "integer",
-            "format": "int32",
-            "minimum": 0
-          }
+  "definitions": {
+    "ArtifactMetadata": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "changeConsensusCount": {
+          "type": "integer",
+          "format": "int32",
+          "minimum": 0
         }
       }
     }
