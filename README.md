@@ -8,8 +8,8 @@ The development of this platform is in pursuit of the author's PhD research obje
 ## Related Publications
 |Title|Forum|URL|
 |---|---|---|
-|***Distributed Ledgers in Developing Large-Scale Integrated Systems***|[IEEE SYSCON 2021](https://2021.ieeesyscon.org)|[https://www.lens.org/lens/scholar/article/090-912-315-699-108](https://www.lens.org/lens/scholar/article/090-912-315-699-108)|
-|***ChaordicLedger: Digital Transformation and Business Intelligence via Data Provenance and Ubiquity***|[IEEE SYSCON 2022](https://2022.ieeesyscon.org)|(Pending)|
+|***Distributed Ledgers in Developing Large-Scale Integrated Systems***|[IEEE SYSCON 2021](https://2021.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9447136](https://ieeexplore.ieee.org/document/9447136)|
+|***ChaordicLedger: Digital Transformation and Business Intelligence via Data Provenance and Ubiquity***|[IEEE SYSCON 2022](https://2022.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9773812](https://ieeexplore.ieee.org/document/9773812)|
 
 ## Design Objectives
 1. The platform shall be portable.
