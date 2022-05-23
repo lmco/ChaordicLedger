@@ -1,0 +1,44 @@
+name: Build-and-Push Docker Image
+
+on:
+  workflow_call:
+    secrets:
+      registry:
+        required: true
+        type: string
+      registry_host:
+        required: true
+        type: string
+      image_name:
+        required: true
+        type: string
+      image_version:
+        required: true
+        type: string
+      user:
+        required: true
+      token:
+        required: true
+
+jobs:
+  docker-build-and-publish:
+    name: Build and Push Docker Image
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: swagger-ui
+      IMAGE_VERSION: 0.0.1
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: docker build --tag ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }} api/
+
+      - name: Log in to registry
+        run: echo "${{ secrets.token }}" | docker login ${{ inputs.registry_host }} -u ${{ secrets.user }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ inputs.registry }}/${{ inputs.image_name }}:${{ inputs.image_version }}

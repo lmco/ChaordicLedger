@@ -5,46 +5,90 @@ on: [push]
 env:
   DOCKER_REGIRSTY_HOST: ghcr.io
   DOCKER_REGISTRY: ghcr.io/lmco/chaordicledger
+  CUSTOM_BUILDER_IMAGE_NAME: customgradlebuilder
+  CUSTOM_BUILDER_IMAGE_VERSION: 0.0.1
   GENERATED_CODE_DIR: generated
-  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.19/swagger-codegen-cli-2.4.19.jar
+  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.34/swagger-codegen-cli-3.0.34.jar
   SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
   SWAGGER_API_FILE: api/swagger.json
   OUT_GO: out/go
   OUT_JAVA: out/java
+  OUT_NODEJS: out/nodejs
+
 jobs:
-  build:
+  generate-api-code:
     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
+
       - name: API Generation Setup
         run: |
           wget ${{ env.SWAGGER_CODEGEN_CLI_SOURCE_JAR }} -O ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }}
+
       - name: API Generation - GO
         run: |
           mkdir -p ${{ env.OUT_GO }}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l go -o ${{ env.OUT_GO }}
+
       - name: Archive generated GO code
         uses: actions/upload-artifact@v3
         with:
           name: go-api
           path: ${{ env.OUT_GO }}
+
       - name: API Generation - Java
         run: |
           mkdir -p ${OUT_JAVA}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l java -o ${{ env.OUT_JAVA }}
+          
+          # As of 2022-Mar-31, jcenter no longer exists.
+          sed -i "s|jcenter|mavenCentral|g" ${{ env.OUT_JAVA }}/build.gradle
+
+          # In Gradle 7.x: The maven plugin has been removed; need to use the maven-publish plugin instead.
+          #sed -i "s|apply plugin: 'maven'|apply plugin: 'maven-publish'|g" ${{ env.OUT_JAVA }}/build.gradle
+
+          # # May need to override the generated manifest file to specify the internal classpath and specify the main class.
+          # ls -rotl ${OUT_JAVA}/build/tmp/jar
+          # cat ${OUT_JAVA}/build/tmp/jar/MANIFEST.MF
+
+          mainClassName=ArtifactsApiExample
+
+          ls -rotl
+          ls -rotl api/
+          cp api/${mainClassName}.java ${OUT_JAVA}/src/main/java/
+
+          # Update the pom file to include the manifest          
+          cp ${OUT_JAVA}/pom.xml ${OUT_JAVA}/pom.xml.orig
+          
+          cat ${OUT_JAVA}/pom.xml.orig | tr '\n' '|' | sed "s|\(<artifactId>maven-jar-plugin</artifactId>.*<executions>.*<configuration>\).*\(</configuration>[^<]*</plugin>\)|\1\|<archive><manifest><mainClass>${mainClassName}</mainClass></manifest></archive>\|\2|" | tr '|' '\n' > ${OUT_JAVA}/pom.xml
+
+          cat ${OUT_JAVA}/pom.xml
+
+          ls -rotl ${OUT_JAVA}
+
       - name: Archive generated JAVA code
         uses: actions/upload-artifact@v3
         with:
           name: java-api
           path: ${{ env.OUT_JAVA }}
 
-  docker-API-UI:
+      - name: API Server Generation - NodeJS
+        run: |
+          mkdir -p ${{ env.OUT_NODEJS }}
+          java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l nodejs-server -o ${{ env.OUT_NODEJS }}
+
+      - name: Archive generated NodeJS code
+        uses: actions/upload-artifact@v3
+        with:
+          name: nodejs-server
+          path: ${{ env.OUT_NODEJS }}
+
+  docker-API-Builder:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: swagger-ui
-      IMAGE_VERSION: 0.0.1
       # TAG: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+      BUILD_DIR: api/builder
     permissions:
       packages: write
       contents: read
@@ -52,21 +96,106 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} api/
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} --no-cache
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
-          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker push ${{ env.imageTag }}
+
+  build-java-api:
+    runs-on: ubuntu-latest
+    needs: [generate-api-code, docker-API-Builder]
+    steps:
+      - uses: actions/download-artifact@v3
+
+      - name: List java-api Directory Contents
+        run: ls -rotl java-api
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Build Java API
+        run: |
+          cd java-api
+          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build test --debug
+          ls -rotl
+          echo "buildRoot=${PWD}" >> $GITHUB_ENV
+
+      - name: Publish Java client jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-client
+          path: ${{ env.buildRoot }}/build/libs/*.jar
+
+      - name: Package Java API
+        run: |
+          cd java-api
+          docker run --rm -u root --name my-maven-project -v "$PWD":/usr/src/mymaven -w /usr/src/mymaven maven:3.3-jdk-8 mvn clean package
+          ls -rotl
+          ls -rotl build/tmp/jar
+          echo $PWD
+          ls -rotl ${PWD}/target
+          echo "targetRoot=${PWD}/target" >> $GITHUB_ENV
+
+      - name: Publish packaged Java client jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: java-client-package
+          path: |
+            ${{ env.targetRoot }}/*.jar
+            ${{ env.targetRoot }}/lib/*.jar
+
+  docker-API-UI:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: swagger-ui
+      IMAGE_VERSION: 0.0.1
+      BUILD_DIR: api/ui
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Copy API Definition
+        run: cp ${{ env.SWAGGER_API_FILE }} ${{ env.BUILD_DIR }}
+
+      - name: Build image
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ env.imageTag }}
+
+  # docker-metadata-chaincode:
+  #   uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
+  #   secrets:
+  #     registry: ${{ env.DOCKER_REGISTRY }}
+  #     registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
+  #     image_name: ${{ env.IMAGE_NAME }}
+  #     image_version: ${{ env.IMAGE_VERSION }}
+  #   secrets:
+  #     user: ${{ github.actor }}
+  #     token: ${{ secrets.GITHUB_TOKEN }}
 
   docker-metadata-chaincode:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: metadata-chaincode
       IMAGE_VERSION: v0.0.0
-      # TAG: ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME}}:${{ env.IMAGE_VERSION }}
+      BUILD_DIR: chaincode/artifact-metadata/docker/
     permissions:
       packages: write
       contents: read
@@ -74,14 +203,18 @@ jobs:
       - uses: actions/checkout@v2
 
       - name: Build image
-        run: docker build --tag ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }} chaincode/artifact-metadata/docker/
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
         run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
-          docker push ${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker push ${{ env.imageTag }}
+
     # steps:
     #   -
     #     name: Set up QEMU
