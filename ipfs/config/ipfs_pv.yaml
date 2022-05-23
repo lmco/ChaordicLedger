@@ -1,0 +1,29 @@
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ipfs-data-volume
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  hostPath:
+    #path: /tmp
+    path: /tmp/ipfs-data
+
+---
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: ipfs-export-volume
+spec:
+  storageClassName: standard
+  accessModes:
+    - ReadWriteOnce
+  capacity:
+    storage: 2Gi
+  hostPath:
+    #path: /tmp
+    path: /tmp/ipfs-export

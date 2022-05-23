@@ -27,6 +27,7 @@ cd ~/git/ChaordicLedger/
 clear &&
 ./network purge &&
 ./network init &&
+./network ipfs &&
 clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&

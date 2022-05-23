@@ -19,6 +19,7 @@ if [[ -f "$proxy_details_source_file" ]]; then
 
   if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
     echo "Logging in to $DOCKER_REGISTRY_PROXY"
+    echo "echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin"
     echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
   fi
 else
@@ -78,6 +79,13 @@ if [ "${MODE}" == "init" ]; then
   cluster_init
   popd
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "ipfs" ]; then
+  pushd ipfs/scripts
+  . create_ipfs.sh
+  create_ipfs
+  popd
+  
+  echo "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "msp" ]; then
   pushd hyperledger/scripts
   create_msp $@

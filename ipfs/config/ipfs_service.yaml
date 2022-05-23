@@ -1,0 +1,71 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: chaordicledger-ipfs-env
+  namespace: chaordicledger
+data:
+  ORDERER_ADMIN_LISTENADDRESS: 0.0.0.0:9443
+
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: chaordicledger-ipfs
+  namespace: chaordicledger
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: chaordicledger-ipfs
+  template:
+    metadata:
+      labels:
+        app: chaordicledger-ipfs
+    spec:
+      containers:
+        - name: main
+          image: ipfs/go-ipfs:latest
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - configMapRef:
+                name: chaordicledger-ipfs-env
+          ports:
+            - containerPort: 4001
+            - containerPort: 8080
+            - containerPort: 5001
+          volumeMounts:
+            - name: ipfs-export
+              mountPath: /export
+            - name: ipfs-data
+              mountPath: /data/ipfs
+      volumes:
+        - name: ipfs-export
+          persistentVolumeClaim:
+            claimName: ipfs-export-volume
+        - name: ipfs-data
+          persistentVolumeClaim:
+            claimName: ipfs-data-volume
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: chaordicledger-ipfs
+  namespace: chaordicledger
+spec:
+  ports:
+    - name: general-tcp
+      port: 4001
+      protocol: TCP
+    - name: general-udp
+      port: 4001
+      protocol: UDP
+    - name: ui
+      port: 8080
+      protocol: TCP
+    - name: gossip
+      port: 5001
+      protocol: TCP
+  selector:
+    app: chaordicledger-ipfs
