@@ -1,71 +1,116 @@
-apiVersion: v1
-kind: ConfigMap
-metadata:
-  name: chaordicledger-ipfs-env
-  namespace: chaordicledger
-data:
-  ORDERER_ADMIN_LISTENADDRESS: 0.0.0.0:9443
-
----
+# Reference: https://kind.sigs.k8s.io/docs/user/ingress/
+# Reference: https://kubernetes.io/docs/concepts/services-networking/ingress/
 
 apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: chaordicledger-ipfs
-  namespace: chaordicledger
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: chaordicledger-ipfs
+      app: ipfs-app
   template:
     metadata:
       labels:
-        app: chaordicledger-ipfs
+        app: ipfs-app
     spec:
       containers:
-        - name: main
+        - name: ipfs-app
           image: ipfs/go-ipfs:latest
-          imagePullPolicy: IfNotPresent
-          envFrom:
-            - configMapRef:
-                name: chaordicledger-ipfs-env
           ports:
-            - containerPort: 4001
             - containerPort: 8080
-            - containerPort: 5001
-          volumeMounts:
-            - name: ipfs-export
-              mountPath: /export
-            - name: ipfs-data
-              mountPath: /data/ipfs
-      volumes:
-        - name: ipfs-export
-          persistentVolumeClaim:
-            claimName: ipfs-export-volume
-        - name: ipfs-data
-          persistentVolumeClaim:
-            claimName: ipfs-data-volume
-
 ---
-apiVersion: v1
-kind: Service
+apiVersion: apps/v1
+kind: Deployment
 metadata:
-  name: chaordicledger-ipfs
-  namespace: chaordicledger
+  name: chaordicledger-foo
 spec:
-  ports:
-    - name: general-tcp
-      port: 4001
-      protocol: TCP
-    - name: general-udp
-      port: 4001
-      protocol: UDP
-    - name: ui
-      port: 8080
-      protocol: TCP
-    - name: gossip
-      port: 5001
-      protocol: TCP
+  replicas: 1
   selector:
-    app: chaordicledger-ipfs
+    matchLabels:
+      app: foo-app
+  template:
+    metadata:
+      labels:
+        app: foo-app
+    spec:
+      containers:
+        - name: foo-app
+          image: hashicorp/http-echo:0.2.3
+          args:
+          - "-text=foo"
+          ports:
+            - containerPort: 5678
+
+# apiVersion: v1
+# kind: ConfigMap
+# metadata:
+#   name: chaordicledger-ipfs-env
+#   namespace: chaordicledger
+# data:
+#   ORDERER_ADMIN_LISTENADDRESS: 0.0.0.0:9443
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ipfs-service
+spec:
+  selector:
+    app: ipfs-app
+  ports:
+  # Default port used by the image is 5678
+  - port: 12345
+    targetPort: 8080
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: foo-service
+spec:
+  selector:
+    app: foo-app
+  ports:
+  # Default port used by the image is 5678
+  - port: 12345
+    targetPort: 5678
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wildcard-host
+spec:
+  rules:
+  - host: "*.ipfs.localhost"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: ipfs-service
+            port:
+              number: 12345
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ipfs-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/ipfs"
+        backend:
+          service:
+            name: ipfs-service
+            port:
+              number: 12345
+      - pathType: Prefix
+        path: "/foo"
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 12345

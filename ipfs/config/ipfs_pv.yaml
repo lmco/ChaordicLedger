@@ -3,14 +3,22 @@ kind: PersistentVolume
 metadata:
   name: ipfs-data-volume
 spec:
-  storageClassName: standard
-  accessModes:
-    - ReadWriteOnce
   capacity:
-    storage: 2Gi
-  hostPath:
-    #path: /tmp
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
     path: /tmp/ipfs-data
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - chaordiccluster-control-plane
 
 ---
 
@@ -19,11 +27,81 @@ kind: PersistentVolume
 metadata:
   name: ipfs-export-volume
 spec:
-  storageClassName: standard
-  accessModes:
-    - ReadWriteOnce
   capacity:
-    storage: 2Gi
-  hostPath:
-    #path: /tmp
+    storage: 1Gi
+  accessModes:
+  - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: local-storage
+  local:
     path: /tmp/ipfs-export
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - chaordiccluster-control-plane
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: ipfs-data-volume
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#   - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: local-storage
+#   local:
+#     path: /tmp/ipfs-data
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - chaordiccluster-control-plane
+
+# ---
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: ipfs-export-volume
+# spec:
+#   capacity:
+#     storage: 1Gi
+#   volumeMode: Filesystem
+#   accessModes:
+#   - ReadWriteOnce
+#   persistentVolumeReclaimPolicy: Retain
+#   storageClassName: local-storage
+#   local:
+#     path: /tmp/ipfs-export
+#   nodeAffinity:
+#     required:
+#       nodeSelectorTerms:
+#       - matchExpressions:
+#         - key: kubernetes.io/hostname
+#           operator: In
+#           values:
+#           - chaordiccluster-control-plane
+
+# apiVersion: v1
+# kind: PersistentVolume
+# metadata:
+#   name: ipfs-export-volume
+# spec:
+#   storageClassName: standard
+#   accessModes:
+#     - ReadWriteOnce
+#   capacity:
+#     storage: 2Gi
+#   hostPath:
+#     #path: /tmp
+#     path: /tmp/ipfs-export

@@ -15,6 +15,9 @@ nodes:
       - containerPort: 443
         hostPort: ${NGINX_HTTPS_PORT}
         protocol: TCP
+      # - containerPort: 5678
+      #   hostPort: 5678
+      #   protocol: TCP
 networking:
   kubeProxyMode: "ipvs"
 

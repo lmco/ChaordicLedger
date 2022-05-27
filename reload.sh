@@ -1,4 +1,8 @@
 #/bin/sh
+
+# Termintate nodejs Swagger UI.
+ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
+
 rm api/builder/cachain/*.cer
 rm api/server/cachain/*.cer
 rm chaincode/artifact-metadata/docker/cachain/*.cer
@@ -27,7 +31,6 @@ cd ~/git/ChaordicLedger/
 clear &&
 ./network purge &&
 ./network init &&
-./network ipfs &&
 clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
@@ -75,3 +78,5 @@ popd
 #   ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
 #   ./network query '{"Args":["GetAllMetadata"]}'
 # done
+
+./network ipfs
