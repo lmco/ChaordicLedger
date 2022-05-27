@@ -1,0 +1,61 @@
+# Reference: https://kind.sigs.k8s.io/docs/user/ingress/
+# Reference: https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress-wildcard-host
+spec:
+  rules:
+  - host: "*.ipfs.localhost"
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            name: ipfs-service
+            port:
+              number: 12345
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ipfs-ingress
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/ipfs"
+        backend:
+          service:
+            name: ipfs-service
+            port:
+              number: 12345
+      - pathType: Prefix
+        path: "/foo"
+        backend:
+          service:
+            name: foo-service
+            port:
+              number: 12345
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ipfs-ui-ingress
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /api
+spec:
+  rules:
+  - http:
+      paths:
+      - pathType: Prefix
+        path: "/api"
+        backend:
+          service:
+            name: ipfs-ui
+            port:
+              number: 12345

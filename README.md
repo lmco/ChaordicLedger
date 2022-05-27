@@ -8,8 +8,8 @@ The development of this platform is in pursuit of the author's PhD research obje
 ## Related Publications
 |Title|Forum|URL|
 |---|---|---|
-|***ChaordicLedger: Digital Transformation and Business Intelligence via Data Provenance and Ubiquity***|[IEEE SYSCON 2022](https://2022.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9773812](https://ieeexplore.ieee.org/document/9773812)|
-|***Distributed Ledgers in Developing Large-Scale Integrated Systems***|[IEEE SYSCON 2021](https://2021.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9447136](https://ieeexplore.ieee.org/document/9447136)|
+|***ChaordicLedger: Digital Transformation and Business Intelligence via Data Provenance and Ubiquity***|[Institute of Electrical and Electronics Engineers Systems Conference (IEEE SYSCON) 2022](https://2022.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9773812](https://ieeexplore.ieee.org/document/9773812)|
+|***Distributed Ledgers in Developing Large-Scale Integrated Systems***|[Institute of Electrical and Electronics Engineers Systems Conference (IEEE SYSCON) 2021](https://2021.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9447136](https://ieeexplore.ieee.org/document/9447136)|
 
 
 ## Design Objectives
@@ -24,7 +24,7 @@ The development of this platform is in pursuit of the author's PhD research obje
 |Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;|&#9745;|
 |Scripted generation of node certificate signed by generated root certificate authority.|&#9745;|&#9745;|&#9745;||
 |Creation of Hyperledger Nodes|In Progress|   |   ||
-|Creation of hybrid Hyperledger/IPFS Nodes|In Progress|   |   ||
+|Creation of hybrid Hyperledger/IPFS Cluster|&#9745;|In Progress|   ||
 |Creation of RESTful API|&#9745;|In Progress|In Progress||
 |Creation of Smart Contracts|In Progress|In Progress|   ||
 |Gathering Key Performance Indicators (KPIs)|   |   |   ||

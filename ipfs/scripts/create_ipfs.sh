@@ -32,21 +32,22 @@ function create_storage_type() {
 }
 
 function create_sample_file() {
-  sleep 10
   echo "Creating sample file"
   result=$(cat create_default_files.sh | exec kubectl -n $NS exec deploy/chaordicledger-ipfs -i -- /bin/sh)
   sleep 10
-  echo "Parsing identifier \"$result\""
-  identifier=$(echo $result | awk '{print $2;}')
-  sleep 10
-  echo "Retrieving file $identifier"
-  fileContents=$(curl localhost/ipfs/$identifier)
+  # echo "Parsing identifier \"$result\""
+  # identifier=$(echo $result | awk '{print $2;}')
+  # sleep 10
+  #echo "Retrieving file $identifier"
+  #fileContents=$(curl localhost/ipfs/$identifier)
+  fileContents=$(curl localhost/ipfs/$result)
   echo $fileContents
 }
 
 function create_ipfs() {
   init_storage_volumes
   create_service
+  echo "Waiting 10 seconds after IPFS service creation."
   create_sample_file
 }
 
