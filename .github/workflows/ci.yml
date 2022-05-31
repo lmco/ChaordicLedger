@@ -89,7 +89,8 @@ jobs:
           # Probably easiest to do this with python...
           ls -rotl
           python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts -m ./api/server/nodejs/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
-
+      # - name: Generate NPM package details
+      #   run: |
       - name: Archive generated NodeJS code
         uses: actions/upload-artifact@v3
         with:

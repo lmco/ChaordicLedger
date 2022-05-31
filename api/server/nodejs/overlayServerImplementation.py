@@ -54,6 +54,10 @@ def validateArgs():
     return (args.inputdir, config, args.outputdir, args.outputfile)
 
 
+def getReplacementExpression(arg):
+    return "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
+
+
 def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, outputfile: str):
     log.info("Overlaying server implementation")
 
@@ -72,19 +76,32 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
         f.write(f'{os.linesep}')
 
         for key in mapfile:
+            functionParams = []
+            functionExpressions = []
+            divider = ""
+            if "parameters" in mapfile[key]:
+                functionParams = mapfile[key]["parameters"]
+                for param in functionParams:
+                    functionExpressions.append(getReplacementExpression(param))
+                    divider = " | "
+
             scriptname = mapfile[key]["script"]
+            target = mapfile[key]["target"]
             inputscript = os.path.join(inputdir, scriptname)
             outputscript = os.path.join(outputdir, scriptname)
             log.info("Copying %s to %s for %s", inputscript, outputscript, key)
             shutil.copy(inputscript, outputscript)
 
-            f.write(f'exports.{key} = function (body) {openbrace}{os.linesep}')
+            f.write(
+                f'exports.{key} = function ({",".join(functionParams)}) {openbrace}{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
+            # f.write(
+            #     f'    exec({mapfile[key]["invocation"]}, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(
-                f'    exec({mapfile[key]["invocation"]}, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f'    exec(`cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n chaordicledger exec {target} -i -- /bin/sh`, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
             f.write(
