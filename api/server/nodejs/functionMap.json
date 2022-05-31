@@ -14,5 +14,9 @@
   "getArtifact": {
     "script": "getArtifact.sh",
     "invocation": "`cat ./service/getArtifact.sh | sed 's|{{artifactID}}|${body}|g' | exec kubectl -n chaordicledger exec deploy/chaordicledger-ipfs -i -- /bin/sh`"
+  },
+  "createArtifact": {
+    "script": "createArtifact.sh",
+    "invocation": "`cat ./service/createArtifact.sh | sed 's|{{artifactName}}|${body}|g' | exec kubectl -n chaordicledger exec deploy/chaordicledger-ipfs -i -- /bin/sh`"
   }
 }

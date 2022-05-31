@@ -36,7 +36,39 @@
     "application/json"
   ],
   "paths": {
-    "/artifact/{artifactID}": {
+    "/artifact/{artifactName}": {
+      "post": {
+        "operationId": "uploadArtifact",
+        "summary": "Uploads a file.",
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "tags": [
+          "Artifacts"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "upfile",
+            "type": "file",
+            "description": "The file to upload."
+          },
+          {
+            "name": "artifactName",
+            "in": "path",
+            "description": "Name of artifact",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "412": {
+            "description": "Failed uploading artifact."
+          }
+        }
+      }
+    },
+    "/artifact": {
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
@@ -50,7 +82,7 @@
         "parameters": [
           {
             "name": "artifactID",
-            "in": "path",
+            "in": "query",
             "description": "ID of artifact to get",
             "required": true,
             "type": "string"
