@@ -87,6 +87,8 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             divider = ""
             if "parameters" in mapfile[key]:
                 functionParams = mapfile[key]["parameters"]
+                log.info('Parameters for operation "%s" are "%s"',
+                         key, functionParams)
                 for param in functionParams:
                     functionExpressions.append(getReplacementExpression(param))
                     divider = " | "
@@ -98,16 +100,18 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             log.info("Copying %s to %s for %s", inputscript, outputscript, key)
             shutil.copy(inputscript, outputscript)
 
+            expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
+
+            log.info('Expression for operation "%s" is "%s"', key, expression)
+
             f.write(
                 f'exports.{key} = function ({",".join(functionParams)}) {openbrace}{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
-            # f.write(
-            #     f'    exec({mapfile[key]["invocation"]}, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(
-                f'    exec(`cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
             f.write(

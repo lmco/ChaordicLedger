@@ -21,8 +21,8 @@
     ],
     "target": "deploy/chaordicledger-ipfs"
   },
-  "createArtifact": {
-    "script": "createArtifact.sh",
+  "uploadArtifact": {
+    "script": "uploadArtifact.sh",
     "parameters": [
       "artifactName",
       "file"
