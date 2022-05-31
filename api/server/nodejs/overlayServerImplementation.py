@@ -67,7 +67,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
         openbrace = "{"
         closebrace = "}"
 
-        f.write(f"'use strict'{os.linesep}")
+        f.write(f"'use strict';{os.linesep}")
         f.write(f'{os.linesep}')
         f.write(f'{os.linesep}')
 
@@ -93,8 +93,8 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f.write(f'      {closebrace} else {openbrace}{os.linesep}')
             f.write('        resolve({ "unknown": stdout })' + f'{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
-            f.write(f'    {closebrace}){os.linesep}')
-            f.write(f'  {closebrace}){os.linesep}')
+            f.write(f'    {closebrace});{os.linesep}')
+            f.write(f'  {closebrace});{os.linesep}')
             f.write(f'{closebrace}{os.linesep}')
             f.write(f'{os.linesep}')
 
