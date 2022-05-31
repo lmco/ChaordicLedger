@@ -36,11 +36,11 @@
     "application/json"
   ],
   "paths": {
-    "/artifact/{metadataID}": {
-      "delete": {
-        "summary": "Deletes an existing metadata item.",
-        "description": "Deletes an existing metadata item.",
-        "operationId": "deleteArtifactMetadata",
+    "/artifact/{artifactID}": {
+      "get": {
+        "summary": "Gets an existing artifact.",
+        "description": "Gets an existing artifact.",
+        "operationId": "getArtifact",
         "tags": [
           "Artifacts"
         ],
@@ -49,9 +49,9 @@
         ],
         "parameters": [
           {
-            "name": "metadataID",
+            "name": "artifactID",
             "in": "path",
-            "description": "Artifact metadata ID to delete",
+            "description": "ID of artifact to get",
             "required": true,
             "type": "string"
           }
@@ -61,7 +61,7 @@
             "description": "Invalid ID supplied"
           },
           "404": {
-            "description": "Artifact metadata not found"
+            "description": "Artifact not found"
           }
         }
       }
@@ -119,6 +119,36 @@
           },
           "default": {
             "description": "Unexpected Error"
+          }
+        }
+      }
+    },
+    "/artifact/metadata/{metadataID}": {
+      "delete": {
+        "summary": "Deletes an existing metadata item.",
+        "description": "Deletes an existing metadata item.",
+        "operationId": "deleteArtifactMetadata",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "metadataID",
+            "in": "path",
+            "description": "Artifact metadata ID to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact metadata not found"
           }
         }
       }

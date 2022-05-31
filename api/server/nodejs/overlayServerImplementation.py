@@ -78,7 +78,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             log.info("Copying %s to %s for %s", inputscript, outputscript, key)
             shutil.copy(inputscript, outputscript)
 
-            f.write(f'{key} = function (body) {openbrace}{os.linesep}')
+            f.write(f'exports.{key} = function (body) {openbrace}{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
             f.write(
