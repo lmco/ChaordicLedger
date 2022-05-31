@@ -7,3 +7,5 @@ log.txt
 **/cachain/*.cer
 docker_registry_proxy_details.sh
 **/out
+nodejs-server.zip
+apiServer

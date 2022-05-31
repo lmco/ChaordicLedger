@@ -58,6 +58,13 @@ done
 
 ./network query '{"Args":["GetAllMetadata"]}'
 
+
+
+# Note: This assumes nodejs-server.zip
+rm -rf apiServer
+mkdir apiServer
+unzip nodejs-server.zip -d ./apiServer
+
 # Note: This assumes api/server/out/nodejs was pulled local.
 # TODO: Look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 pushd api/server/out/nodejs
