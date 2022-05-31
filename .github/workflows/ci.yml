@@ -88,7 +88,7 @@ jobs:
 
           # Probably easiest to do this with python...
           ls -rotl
-          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts -m ./api/server/nodejs/functionmap.json  -o ./api/server/${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
+          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts -m ./api/server/nodejs/functionMap.json  -o ./api/server/${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
 
       - name: Archive generated NodeJS code
         uses: actions/upload-artifact@v3
