@@ -1,18 +1,18 @@
 {
   "createArtifactMetadata": {
     "script": "createArtifactMetadata.sh",
-    "invocation": "cat ./service/createArtifactMetadata.sh | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -c main -i -- /bin/bash"
+    "invocation": "`cat ./service/createArtifactMetadata.sh | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -c main -i -- /bin/bash`"
   },
   "deleteArtifactMetadata": {
     "script": "deleteArtifactMetadata.sh",
-    "invocation": "cat ./service/deleteArtifactMetadata.sh | sed 's|{{metadataID}}|${metadataID}|g' | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -c main -i -- /bin/bash"
+    "invocation": "`cat ./service/deleteArtifactMetadata.sh | sed 's|{{metadataID}}|${body}|g' | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -c main -i -- /bin/bash`"
   },
   "getAllArtifactMetadata": {
     "script": "getAllArtifactMetadata.sh",
-    "invocation": "cat ./service/getArtifact.sh | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -i -- /bin/sh"
+    "invocation": "`cat ./service/getAllArtifactMetadata.sh | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -i -- /bin/sh`"
   },
   "getArtifact": {
     "script": "getArtifact.sh",
-    "invocation": "cat ./service/getArtifact.sh | sed 's|{{artifactID}}|${artifactID}|g' | exec kubectl -n chaordicledger exec deploy/chaordicledger-ipfs -i -- /bin/sh"
+    "invocation": "`cat ./service/getArtifact.sh | sed 's|{{artifactID}}|${body}|g' | exec kubectl -n chaordicledger exec deploy/chaordicledger-ipfs -i -- /bin/sh`"
   }
 }

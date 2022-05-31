@@ -24,6 +24,11 @@ cp LMChain/* test/cachain/
 
 rm -rf LMChain
 
+# Note: This assumes nodejs-server.zip has already been downloaded.
+rm -rf apiServer
+mkdir apiServer
+unzip nodejs-server.zip -d ./apiServer
+
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 cd ~/git/ChaordicLedger/
@@ -59,15 +64,9 @@ done
 ./network query '{"Args":["GetAllMetadata"]}'
 
 
-
-# Note: This assumes nodejs-server.zip
-rm -rf apiServer
-mkdir apiServer
-unzip nodejs-server.zip -d ./apiServer
-
 # Note: This assumes api/server/out/nodejs was pulled local.
 # TODO: Look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-pushd api/server/out/nodejs
+pushd apiServer
 nohup npm start &
 popd
 
