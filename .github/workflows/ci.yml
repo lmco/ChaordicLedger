@@ -87,6 +87,7 @@ jobs:
           # Need to overlay the functional implementation to the generated code.
 
           # Probably easiest to do this with python...
+          ls -rotl
           python api/server/overlayServerImplementation.py -i api/server/${{ env.OUT_NODEJS }} -m api/server/nodejs/functionmap.json  -o api/server/${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
 
       - name: Archive generated NodeJS code
