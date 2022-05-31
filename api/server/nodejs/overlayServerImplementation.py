@@ -38,6 +38,8 @@ def validateArgs():
                         help="The output directory", required=True)
     parser.add_argument("-f", "--outputfile", action="store",
                         help="The output file", required=True)
+    parser.add_argument("-n", "--namespace", action="store",
+                        help="The Kubernetes namespace", default="chaordicledger")
 
     args = parser.parse_args()
 
@@ -51,14 +53,18 @@ def validateArgs():
     if not os.path.exists(args.outputdir):
         raise Exception(f"Output dir {args.outputdir} does not exist")
 
-    return (args.inputdir, config, args.outputdir, args.outputfile)
+    namespace = args.namespace
+    if namespace is None or namespace == "":
+        namespace = "default"
+
+    return (args.inputdir, config, args.outputdir, args.outputfile, namespace)
 
 
 def getReplacementExpression(arg):
     return "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
 
 
-def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, outputfile: str):
+def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, outputfile: str, namespace: str):
     log.info("Overlaying server implementation")
 
     outputpath = os.path.join(outputdir, outputfile)
@@ -101,7 +107,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             # f.write(
             #     f'    exec({mapfile[key]["invocation"]}, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(
-                f'    exec(`cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n chaordicledger exec {target} -i -- /bin/sh`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f'    exec(`cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh`, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
             f.write(
@@ -116,32 +122,18 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f.write(f'{os.linesep}')
 
 
-# exports.createArtifactMetadata = function (body) {
-#   const exec = require("child_process").exec;
-#   return new Promise(function (resolve, reject) {
-#     exec("cat ./service/createArtifactMetadata.sh | exec kubectl -n chaordicledger exec deploy/org1-admin-cli -c main -i -- /bin/bash", (error, stdout, stderr) => {
-#       if (error) {
-#         resolve({ "error": stderr })
-#       } else if (stdout) {
-#         resolve({ "result": stdout })
-#       } else {
-#         resolve({ "unknown": stdout })
-#       }
-#     });
-#   });
-# }
-
-
 if __name__ == "__main__":
     starttime = datetime.utcnow()
 
-    (inputdir, mapfile, outputdir, outputfile) = validateArgs()
+    (inputdir, mapfile, outputdir, outputfile, namespace) = validateArgs()
     configureLogging(outputdir)
     log.info("Input directory: %s", inputdir)
     log.info("Output directory: %s", outputdir)
     log.info("Output file: %s", outputfile)
+    log.info("Namespace: %s", namespace)
 
-    overlayServerImplementation(inputdir, mapfile, outputdir, outputfile)
+    overlayServerImplementation(
+        inputdir, mapfile, outputdir, outputfile, namespace)
 
     endtime = datetime.utcnow()
     log.info(
