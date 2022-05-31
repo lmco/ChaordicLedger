@@ -34,7 +34,7 @@ function create_storage_type() {
 function create_sample_file() {
   echo "Creating sample file"
   result=$(cat create_default_files.sh | exec kubectl -n $NS exec deploy/chaordicledger-ipfs -i -- /bin/sh)
-  sleep 10
+  # sleep 10
   # echo "Parsing identifier \"$result\""
   # identifier=$(echo $result | awk '{print $2;}')
   # sleep 10
@@ -48,6 +48,7 @@ function create_ipfs() {
   init_storage_volumes
   create_service
   echo "Waiting 10 seconds after IPFS service creation."
+  sleep 10
   create_sample_file
 }
 

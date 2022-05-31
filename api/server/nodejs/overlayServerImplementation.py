@@ -84,7 +84,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
             f.write(
-                f'    exec("{mapfile[key]["invocation"]}", (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f'    exec({mapfile[key]["invocation"]}, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
             f.write(
