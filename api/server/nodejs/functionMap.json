@@ -28,8 +28,8 @@
     ],
     "target": "deploy/chaordicledger-ipfs"
   },
-  "removeArtifactAtPath": {
-    "script": "removeArtifactAtPath.sh",
+  "deleteArtifactAtPath": {
+    "script": "deleteArtifactAtPath.sh",
     "parameters": [
       "artifactPath"
     ],

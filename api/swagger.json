@@ -128,8 +128,8 @@
         }
       },
       "delete": {
-        "summary": "Deletes an existing metadata item.",
-        "description": "Deletes an existing metadata item.",
+        "summary": "Deletes an existing artifact.",
+        "description": "Deletes an existing artifact.",
         "operationId": "deleteArtifactAtPath",
         "tags": [
           "Artifacts"
