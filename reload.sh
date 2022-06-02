@@ -85,3 +85,20 @@ popd
 # done
 
 ./network ipfs
+
+# Get default file.
+defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
+echo $defaultFile
+
+# Get default file contents.
+curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Ftmp%2F$defaultFile" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+
+# Create new file via API.
+curl -X POST "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2Fpath.txt" -H "accept: */*"
+
+# List files at new path.
+fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
+echo $fileName
+
+# Get file contents.
+curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
