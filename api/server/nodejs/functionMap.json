@@ -1,307 +1,53 @@
 {
-  "swagger": "2.0",
-  "info": {
-    "description": "This is the API for ChaordicLedger.",
-    "version": "1.0.0",
-    "title": "ChaordicLedger API",
-    "license": {
-      "name": "MIT License",
-      "url": "https://opensource.org/licenses/MIT"
-    }
+  "createArtifactMetadata": {
+    "script": "createArtifactMetadata.sh",
+    "target": "deploy/org1-admin-cli"
   },
-  "host": "localhost:8080",
-  "basePath": "/v1",
-  "tags": [
-    {
-      "name": "Artifacts",
-      "description": "Operations regarding artifacts."
-    },
-    {
-      "name": "concurrence",
-      "description": "Operations regarding concurrence with changes."
-    },
-    {
-      "name": "relationships",
-      "description": "Operations regarding relationships between artifacts."
-    },
-    {
-      "name": "users",
-      "description": "Operations regarding users."
-    }
-  ],
-  "schemes": [
-    "http"
-  ],
-  "produces": [
-    "application/json"
-  ],
-  "paths": {
-    "/artifact/{artifactName}": {
-      "post": {
-        "operationId": "uploadArtifact",
-        "summary": "Uploads a file.",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "tags": [
-          "Artifacts"
-        ],
-        "parameters": [
-          {
-            "in": "formData",
-            "name": "upfile",
-            "type": "file",
-            "description": "The file to upload."
-          },
-          {
-            "name": "artifactName",
-            "in": "path",
-            "description": "Name of artifact",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "412": {
-            "description": "Failed uploading artifact."
-          }
-        }
-      }
-    },
-    "/artifactObject": {
-      "get": {
-        "summary": "Gets an existing artifact.",
-        "description": "Gets an existing artifact.",
-        "operationId": "getArtifact",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "artifactID",
-            "in": "query",
-            "description": "ID of artifact to get",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Artifact not found"
-          }
-        }
-      }
-    },
-    "/artifact": {
-      "get": {
-        "summary": "Gets an existing artifact.",
-        "description": "Gets an existing artifact.",
-        "operationId": "getArtifactAtPath",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "artifactPath",
-            "in": "query",
-            "description": "ID of artifact to get",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Artifact not found"
-          }
-        }
-      },
-      "delete": {
-        "summary": "Deletes an existing metadata item.",
-        "description": "Deletes an existing metadata item.",
-        "operationId": "deleteArtifactAtPath",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "artifactPath",
-            "in": "query",
-            "description": "Artifact path to delete",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Artifact metadata not found"
-          }
-        }
-      }
-    },
-    "/artifacts": {
-      "get": {
-        "summary": "Gets the list of artifacts at the given path.",
-        "description": "Gets the list of artifacts at the given path.",
-        "operationId": "listArtifactsAtPath",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "path",
-            "in": "query",
-            "description": "Path to list",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Path not found"
-          }
-        }
-      }
-    },
-    "/artifact/metadata": {
-      "post": {
-        "summary": "Creates a new metadata item.",
-        "description": "Creates a new metadata item.",
-        "operationId": "createArtifactMetadata",
-        "tags": [
-          "Artifacts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "body",
-            "name": "body",
-            "description": "Metadata object that needs to be added to the store",
-            "required": true,
-            "schema": {
-              "$ref": "#/definitions/ArtifactMetadata"
-            }
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        }
-      },
-      "get": {
-        "summary": "Retrieves all known metadata.",
-        "description": "Retrieves all known metadata.",
-        "operationId": "getAllArtifactMetadata",
-        "tags": [
-          "Artifacts"
-        ],
-        "consumes": [
-          "application/json"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "responses": {
-          "200": {
-            "description": "A JSON array of artifact metadata",
-            "schema": {
-              "$ref": "#/definitions/ArtifactMetadata"
-            }
-          },
-          "default": {
-            "description": "Unexpected Error"
-          }
-        }
-      }
-    },
-    "/artifact/metadata/{metadataID}": {
-      "delete": {
-        "summary": "Deletes an existing metadata item.",
-        "description": "Deletes an existing metadata item.",
-        "operationId": "deleteArtifactMetadata",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "metadataID",
-            "in": "path",
-            "description": "Artifact metadata ID to delete",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Artifact metadata not found"
-          }
-        }
-      }
-    }
+  "deleteArtifactMetadata": {
+    "script": "deleteArtifactMetadata.sh",
+    "parameters": [
+      "metadataID"
+    ],
+    "target": "deploy/org1-admin-cli"
   },
-  "definitions": {
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
-        }
-      }
-    },
-    "ArtifactMetadata": {
-      "type": "object",
-      "properties": {
-        "id": {
-          "type": "string",
-          "format": "uuid"
-        },
-        "name": {
-          "type": "string",
-          "minLength": 1
-        }
-      }
-    }
+  "getAllArtifactMetadata": {
+    "script": "getAllArtifactMetadata.sh",
+    "target": "deploy/org1-admin-cli"
+  },
+  "getArtifact": {
+    "script": "getArtifact.sh",
+    "parameters": [
+      "artifactID"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "getArtifactAtPath": {
+    "script": "getArtifactAtPath.sh",
+    "parameters": [
+      "artifactPath"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "removeArtifactAtPath": {
+    "script": "removeArtifactAtPath.sh",
+    "parameters": [
+      "artifactPath"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "uploadArtifact": {
+    "script": "uploadArtifact.sh",
+    "parameters": [
+      "artifactName",
+      "file"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "listArtifactsAtPath": {
+    "script": "listArtifactsAtPath.sh",
+    "parameters": [
+      "path"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
   }
 }
