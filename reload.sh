@@ -1,4 +1,5 @@
 #/bin/sh
+
 rm api/builder/cachain/*.cer
 rm api/server/cachain/*.cer
 rm chaincode/artifact-metadata/docker/cachain/*.cer
@@ -19,6 +20,13 @@ cp LMChain/* hyperledger/admin-cli/cachain/
 cp LMChain/* test/cachain/
 
 rm -rf LMChain
+
+# Note: This assumes nodejs-server.zip has already been downloaded.
+# Termintate nodejs Swagger UI.
+ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
+rm -rf apiServer
+mkdir apiServer
+unzip nodejs-server.zip -d ./apiServer
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
@@ -54,9 +62,10 @@ done
 
 ./network query '{"Args":["GetAllMetadata"]}'
 
+
 # Note: This assumes api/server/out/nodejs was pulled local.
 # TODO: Look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-pushd api/server/out/nodejs
+pushd apiServer
 nohup npm start &
 popd
 
@@ -74,3 +83,5 @@ popd
 #   ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
 #   ./network query '{"Args":["GetAllMetadata"]}'
 # done
+
+./network ipfs

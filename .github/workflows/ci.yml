@@ -78,6 +78,19 @@ jobs:
           mkdir -p ${{ env.OUT_NODEJS }}
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l nodejs-server -o ${{ env.OUT_NODEJS }}
 
+      - name: API Server Implementation - NodeJS
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.8 #install the python needed
+      - name: Overlay NodeJS Server Implementation
+        run: |
+          # Need to overlay the functional implementation to the generated code.
+
+          # Probably easiest to do this with python...
+          ls -rotl
+          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts -m ./api/server/nodejs/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
+      # - name: Generate NPM package details
+      #   run: |
       - name: Archive generated NodeJS code
         uses: actions/upload-artifact@v3
         with:
