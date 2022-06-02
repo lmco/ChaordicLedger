@@ -126,6 +126,34 @@
             "description": "Artifact not found"
           }
         }
+      },
+      "delete": {
+        "summary": "Deletes an existing metadata item.",
+        "description": "Deletes an existing metadata item.",
+        "operationId": "deleteArtifactAtPath",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "artifactPath",
+            "in": "query",
+            "description": "Artifact path to delete",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact metadata not found"
+          }
+        }
       }
     },
     "/artifacts": {
