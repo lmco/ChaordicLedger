@@ -82,6 +82,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
         f.write(f'{os.linesep}')
 
         for key in mapfile:
+            log.info("Processing key \"%s\"", key)
             functionParams = []
             functionExpressions = []
             divider = ""

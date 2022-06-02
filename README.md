@@ -26,7 +26,8 @@ The development of this platform is in pursuit of the author's PhD research obje
 |Creation of Hyperledger Nodes|In Progress|   |   ||
 |Creation of hybrid Hyperledger/IPFS Cluster|&#9745;|In Progress|   ||
 |Creation of RESTful API|&#9745;|In Progress|In Progress||
-|Creation of Smart Contracts|In Progress|In Progress|   ||
+|Creation of Chaincode|&#9745;|&#9745;|   ||
+|Creation of Smart Contracts|In Progress|   |   ||
 |Gathering Key Performance Indicators (KPIs)|   |   |   ||
 |Defining and Executing Simulations|   |   |   ||
 
