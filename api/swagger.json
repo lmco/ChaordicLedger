@@ -68,7 +68,7 @@
         }
       }
     },
-    "/artifact": {
+    "/artifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
@@ -82,6 +82,36 @@
         "parameters": [
           {
             "name": "artifactID",
+            "in": "query",
+            "description": "ID of artifact to get",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact not found"
+          }
+        }
+      }
+    },
+    "/artifact": {
+      "get": {
+        "summary": "Gets an existing artifact.",
+        "description": "Gets an existing artifact.",
+        "operationId": "getArtifactAtPath",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "artifactPath",
             "in": "query",
             "description": "ID of artifact to get",
             "required": true,

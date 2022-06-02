@@ -1,8 +1,5 @@
 #/bin/sh
 
-# Termintate nodejs Swagger UI.
-ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
-
 rm api/builder/cachain/*.cer
 rm api/server/cachain/*.cer
 rm chaincode/artifact-metadata/docker/cachain/*.cer
@@ -25,6 +22,8 @@ cp LMChain/* test/cachain/
 rm -rf LMChain
 
 # Note: This assumes nodejs-server.zip has already been downloaded.
+# Termintate nodejs Swagger UI.
+ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
 rm -rf apiServer
 mkdir apiServer
 unzip nodejs-server.zip -d ./apiServer
