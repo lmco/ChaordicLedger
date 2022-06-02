@@ -98,6 +98,36 @@
         }
       }
     },
+    "/artifacts": {
+      "get": {
+        "summary": "Gets the list of artifacts at the given path.",
+        "description": "Gets the list of artifacts at the given path.",
+        "operationId": "listArtifactsAtPath",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "path",
+            "in": "query",
+            "description": "Path to list",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Path not found"
+          }
+        }
+      }
+    },
     "/artifact/metadata": {
       "post": {
         "summary": "Creates a new metadata item.",
