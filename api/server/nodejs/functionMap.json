@@ -35,6 +35,13 @@
     ],
     "target": "deploy/chaordicledger-ipfs"
   },
+  "createArtifact": {
+    "script": "createArtifact.sh",
+    "parameters": [
+      "artifactPath"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
   "uploadArtifact": {
     "script": "uploadArtifact.sh",
     "parameters": [

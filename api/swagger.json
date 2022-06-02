@@ -99,6 +99,34 @@
       }
     },
     "/artifact": {
+      "post": {
+        "summary": "Creates a new artifact.",
+        "description": "Creates a new artifact.",
+        "operationId": "createArtifact",
+        "tags": [
+          "Artifacts"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "artifactPath",
+            "in": "query",
+            "description": "Path of artifact to create",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      },
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
