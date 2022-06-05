@@ -1,0 +1,30 @@
+main asset contract Artifact {
+  state Initialized;
+  state Stored {
+    string ipfsPath;
+    string upstreamArtifact;
+  }
+  
+  string uuid available in Initialized, Stored;
+  string friendlyname available in Initialized, Stored;
+
+  Artifact@Owned(string targetIpfsPath, string targetUpstreamArtifact) { // Constructor
+    ipfsPath = targetIpfsPath;
+    upstreamArtifact = targetUpstreamArtifact;
+    uuid = "someUUID";
+    friendlyname="Some Friendly Name";
+    ->Initialized; // Transistion to Initialized state
+  }
+
+  transaction store(Artifact@Initialized >> Stored this, string targetIpfsPath, string targetUpstreamArtifact)
+  {
+    -> Stored;
+    ipfsPath=targetIpfsPath;
+    upstreamArtifact=targetUpstreamArtifact;
+  }
+
+  // transaction remove(Artifact@Stored >> Initialized this)
+  // {
+  //   -> Initialized;
+  // }
+}
