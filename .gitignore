@@ -10,3 +10,5 @@ docker_registry_proxy_details.sh
 nodejs-server.zip
 apiServer
 archive
+*.rpm
+*.tar.gz
