@@ -37,15 +37,17 @@ export CLUSTER_NAME="chaordiccluster"
 export NS=${NETWORK_NAME}
 export CHANNEL_NAME="cl"
 
+export ARTIFACT_METADATA_CCNAME="artifact-metadata"
+
 #export CHAINCODE_NAME=asset-transfer-basic
 #export CHAINCODE_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 
 export PEER_TLS_ENABLED=false
-export CHAINCODE_NAME=artifact-metadata
-export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
+#export CHAINCODE_NAME=artifact-metadata
+#export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
 
 echo ${FABRIC_CONTAINER_REGISTRY}
-echo ${CHAINCODE_IMAGE}
+#echo ${CHAINCODE_IMAGE}
 
 export LOCAL_REGISTRY_NAME="kind-registry"
 export LOCAL_REGISTRY_PORT="5000"
@@ -106,19 +108,19 @@ elif [ "${MODE}" == "peer" ]; then
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
   pushd hyperledger/scripts
-  deploy_chaincode
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
   popd
 
   echo "🏁 - Chaincode deployed."
 elif [ "${MODE}" == "invoke" ]; then
   pushd hyperledger/scripts
-  invoke_chaincode $@
+  invoke_chaincode ${ARTIFACT_METADATA_CCNAME} $@
   popd
 
   echo "🏁 - Chaincode invoked."
 elif [ "${MODE}" == "query" ]; then
   pushd hyperledger/scripts
-  query_chaincode $@
+  query_chaincode ${ARTIFACT_METADATA_CCNAME} $@
   popd
 
   echo "🏁 - Chaincode queried."
