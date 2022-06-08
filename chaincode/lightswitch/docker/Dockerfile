@@ -1,0 +1,42 @@
+# Reference: https://github.com/hyperledgendary/fabric-ccaas-asset-transfer-basic
+
+# the first stage 
+FROM gradle:jdk11 AS GRADLE_BUILD
+
+LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
+LABEL org.opencontainers.image.description="Chaincode package for interacting with an Obsidian-defined lightswitch within a ChaordicLedger channel."
+LABEL org.opencontainers.image.revision="0.0.1"
+LABEL org.opencontainers.image.source="https://github.com/lmco/ChaordicLedger"
+LABEL org.opencontainers.image.title="Obsidian Lightswitch Chaincode for ChaordicLedger"
+LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
+LABEL org.opencontainers.image.version="0.0.1"
+
+# copy the build.gradle and src code to the container
+COPY src/ src/
+COPY build.gradle ./ 
+
+# Build and package our code
+#RUN gradle --no-daemon build shadowJar -x checkstyleMain -x checkstyleTest
+#RUN gradle --no-daemon -Dhttp.proxyHost=proxy-zsgov.external.lmco.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=proxy-zsgov.external.lmco.com -Dhttps.proxyPort=80 build shadowJar -x checkstyleMain -x checkstyleTest
+RUN gradle --no-daemon -Dhttp.proxyHost=proxy-zsgov.external.lmco.com -Dhttp.proxyPort=80 -Dhttps.proxyHost=proxy-zsgov.external.lmco.com -Dhttps.proxyPort=80 build shadowJar
+
+# the second stage of our build just needs the compiled files
+FROM openjdk:11-jre
+ARG CC_SERVER_PORT=9999
+
+# Setup tini to work better handle signals
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
+
+RUN addgroup --system javauser && useradd -g javauser javauser
+
+# copy only the artifacts we need from the first stage and discard the rest
+COPY --chown=javauser:javauser --from=GRADLE_BUILD /home/gradle/build/libs/chaincode.jar /chaincode.jar
+COPY --chown=javauser:javauser docker/docker-entrypoint.sh /docker-entrypoint.sh 
+
+ENV PORT $CC_SERVER_PORT
+EXPOSE $CC_SERVER_PORT
+
+USER javauser
+ENTRYPOINT [ "/tini", "--", "/docker-entrypoint.sh" ]
