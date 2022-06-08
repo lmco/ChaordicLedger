@@ -38,6 +38,7 @@ export NS=${NETWORK_NAME}
 export CHANNEL_NAME="cl"
 
 export ARTIFACT_METADATA_CCNAME="artifact-metadata"
+export LIGHTSWITCH_CCNAME="lightswitch"
 
 #export CHAINCODE_NAME=asset-transfer-basic
 #export CHAINCODE_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
@@ -108,7 +109,8 @@ elif [ "${MODE}" == "peer" ]; then
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
   pushd hyperledger/scripts
-  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  deploy_chaincode "obsidianlightswitch:0.0.1" ${LIGHTSWITCH_CCNAME}
   popd
 
   echo "🏁 - Chaincode deployed."

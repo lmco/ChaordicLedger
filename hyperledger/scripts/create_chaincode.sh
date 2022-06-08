@@ -8,16 +8,27 @@ function package_chaincode_for() {
   local ccname=$2
 
   local cc_folder="../../chaincode/${ccname}/ledger"
-  local build_folder="build/chaincode"
-  local cc_archive="${build_folder}/${ccname}.tgz"
-  echo "Packaging chaincode folder ${cc_folder}"
 
-  mkdir -p ${build_folder}
+  if [ -d "$cc_folder" ]; then
+    local build_folder="build/chaincode"
+    local cc_archive="${build_folder}/${ccname}.tgz"
+    echo "Packaging chaincode folder ${cc_folder}"
 
-  tar -C ${cc_folder} -zcf ${cc_folder}/code.tar.gz connection.json
-  tar -C ${cc_folder} -zcf ${cc_archive} code.tar.gz metadata.json
+    mkdir -p ${build_folder}
 
-  rm ${cc_folder}/code.tar.gz
+    cat ${cc_folder}/connection.json
+
+    tar -C ${cc_folder} -zcf ${cc_folder}/code.tar.gz connection.json
+
+    cat ${cc_folder}/metadata.json
+
+    tar -C ${cc_folder} -zcf ${cc_archive} code.tar.gz metadata.json
+
+    rm ${cc_folder}/code.tar.gz
+  else
+    echo "Error: ${cc_folder} not found. Can not continue."
+    exit 1
+  fi
 }
 
 # Copy the chaincode archive from the local host to the org admin
