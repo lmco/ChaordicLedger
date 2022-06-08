@@ -118,6 +118,7 @@ function launch_chaincode_service() {
   export ORG_NUMBER=
   export CHAINCODE_IMAGE=$ccimage
   export CHAINCODE_NAME=$ccname
+
   applyPopulatedTemplate ../config/${org}-cc-template.yaml $CHAINCODE_TMP_DIR/${org}-${PEER_NAME}-cc-${ccname}.yaml $NS
   kubectl -n $NS rollout status deploy/${org}-${PEER_NAME}-cc-${ccname}
 }
