@@ -231,7 +231,7 @@ jobs:
   build-obsidian-lightswitch-chaincode:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/download-artifact@v3
+      - uses: actions/checkout@v2
 
       - name: Execute Obsidian compiler
         run: |
