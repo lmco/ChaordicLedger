@@ -235,6 +235,8 @@ jobs:
 
       - name: Execute Obsidian compiler
         run: |
+          ls -rotl
+          pwd
           mkdir out
           java -jar "bin/obsidianc.jar" obsidian/contracts/simple/lightswitch.obs --output-path out/
 
