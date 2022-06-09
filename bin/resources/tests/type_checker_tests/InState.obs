@@ -1,0 +1,128 @@
+contract LightSwitch {
+    state On;
+    state Off;
+
+    LightSwitch@Off() {
+        ->Off;
+    }
+
+    transaction turnOn(LightSwitch@Off >> On this) {
+        ->On;
+    }
+
+    transaction turnOff(LightSwitch@On >> Off this) {
+        ->Off;
+    }
+}
+
+main contract InState {
+    transaction t1(LightSwitch@Shared s) {
+        if (s in On) {
+            s.turnOff();
+        }
+        if (s in Off) {
+            s.turnOn();
+        }
+
+        [s @ Shared];
+    }
+
+    transaction t2(LightSwitch@Unowned s) {
+        if (s in On) {
+                // ERROR
+                s.turnOff();
+            }
+        if (s in Off) {
+                // ERROR
+                s.turnOn();
+        }
+
+        [s @ Unowned];
+    }
+
+    transaction t3() {
+        // ERROR: can't check state of primitive
+        if (3 in On) {
+        }
+    }
+
+    transaction t4(LightSwitch@Owned s) {
+        if (s in On) {
+             s.turnOff();
+        }
+
+        [s @ Off];
+
+        if (s in Off) {
+             // redundant if in state error since s is marked as Off line 54
+             s.turnOn();
+        }
+
+        // ERROR: s is On now, we know this specifically
+        [s @ Owned];
+    }
+
+    transaction t5(LightSwitch@Off >> On s) {
+        s.turnOn();
+        if (s in On) {
+            // error here since we know it will be on, redundant code
+        }
+    }
+}
+
+contract TestFieldShared {
+     TestFieldShared@S0() {
+         ->S0;
+     }
+
+     state S0;
+     asset state S1 {
+         TestFieldShared@Shared next;
+     }
+
+     transaction foo(TestFieldShared@S1 this) {
+         if (next in S1) {
+             TestFieldShared temp = next;
+             ->S1(next = temp);
+         }
+         [next @ S1]; // Should fail.
+     }
+ }
+
+ contract TestFieldOwned {
+     TestFieldOwned@S0() {
+         ->S0;
+     }
+
+     state S0;
+     asset state S1 {
+         TestFieldOwned@Owned next;
+     }
+
+     transaction foo(TestFieldOwned@S1 this) {
+         if (next in S1) {
+             TestFieldOwned temp = next;
+             // No error in transition, since ownership of next has been given away.
+             ->S1(next = temp);
+         }
+     }
+ }
+
+ contract TestTransition {
+    state S1;
+    state S2 {
+        TestTransition@Shared x;
+    }
+
+    TestTransition@S1() {
+        ->S1;
+    }
+
+    transaction t1(TestTransition@Shared this) {
+        if (this in S2) {
+            if (x in S2) {
+                ->S1;
+            }
+        }
+    }
+}

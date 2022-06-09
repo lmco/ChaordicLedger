@@ -1,0 +1,48 @@
+main contract Test {
+    Test@S2() {
+        ->S2;
+    }
+
+    state S1 {
+        int x1;
+    }
+
+    state S2;
+
+    transaction foo(Test@S2 >> S1 this) {
+        S1::x1 = 42;
+    	->S1;
+    }
+
+    transaction bar(Test@S1 >> S2 this) {
+        ->S2;
+    }
+
+    transaction sharedOwnershipTransition(Test@Shared this) {
+        ->S2;
+        [this @ Shared];
+    }
+
+    transaction transitionThis(Test@S1 >> S2 this) {
+        bar();
+    }
+}
+
+asset contract Coin {}
+
+contract BadCoinUser {
+    asset state HasCoin {
+        Coin@Owned c;
+    }
+    state NoCoin {
+    }
+
+    BadCoinUser@NoCoin() {
+        ->NoCoin;
+    }
+
+    transaction t(BadCoinUser@HasCoin this) {
+        // ERROR: losing c
+        ->HasCoin(c = new Coin());
+    }
+}

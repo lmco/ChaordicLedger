@@ -1,0 +1,47 @@
+contract C {
+    state S1;
+    state S2;
+
+    C@S1() {
+        ->S1;
+    }
+
+    transaction toS2(C@Owned >> S2 this)
+    {
+        ->S2;
+    }
+
+    transaction toS1(C@Owned >> S1 this)
+    {
+        ->S1;
+    }
+}
+
+
+main contract FieldTypeMismatch {
+    C@S1 c;
+
+    transaction t1() {
+        c.toS2();
+        // Error: c needs to be in state S1.
+    }
+}
+
+asset contract Money {}
+
+asset contract Wallet {
+    Wallet@Empty () {
+        ->Empty;
+    }
+
+    state Empty {}
+    state Full {
+        Money@Owned money;
+    }
+
+    transaction removeMoney(Wallet@Full >> Empty this) returns Money@Owned {
+        Money m = money;
+        ->Empty;
+        return m;
+    }
+}

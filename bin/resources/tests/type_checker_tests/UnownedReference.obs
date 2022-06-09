@@ -1,0 +1,69 @@
+main contract C { }
+
+contract CWithState {
+    state S1;
+
+    CWithState@S1() {
+        ->S1;
+    }
+
+    transaction inS1(CWithState@S1 this) { }
+
+}
+
+contract UsesC {
+
+    transaction t() {
+        C cOwned = new C();
+        needsUnowned(cOwned);
+        [cOwned @ Owned];
+        needsOwned(cOwned);
+        [cOwned @ Owned];
+
+        CWithState cS1 = new CWithState();
+        needsUnownedWithState(cS1);
+        [cS1 @ S1];
+        needsStateS1(cS1);
+        [cS1 @ S1];
+    }
+
+    transaction t2() {
+        C c = new C();
+        needsShared(c);
+        [c @ Shared];
+        needsUnowned(c);
+        [c @ Shared];
+
+        CWithState cS1 = new CWithState();
+        needsSharedWithState(cS1);
+        [cS1 @ Shared];
+        needsUnownedWithState(cS1);
+        [cS1 @ Shared];
+    }
+
+    transaction needsUnowned(C@Unowned cUnowned) {
+        [cUnowned @ Unowned];
+    }
+
+    transaction needsOwned(C@Owned cOwned) {
+        [cOwned @ Owned];
+    }
+
+    transaction needsShared(C@Shared cShared) {
+        [cShared @ Shared];
+    }
+
+    transaction needsUnownedWithState(CWithState@Unowned cUnowned) {
+        [cUnowned @ Unowned];
+    }
+
+    transaction needsStateS1(CWithState@S1 arg) {
+        arg.inS1();
+    }
+
+    transaction needsSharedWithState(CWithState@Shared cShared) {
+        [cShared @ Shared];
+    }
+
+
+}

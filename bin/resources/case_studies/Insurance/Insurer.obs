@@ -1,0 +1,51 @@
+import "InsuranceBid.obs"
+import "Bank.obs"
+import "TimeService.obs"
+
+// TODO : Collections
+
+main asset contract Insurer {
+    Money@Owned money;
+    Bank@Unowned bank;
+    TimeService@Shared timeService;
+
+    Insurer@Owned(TimeService@Shared ts, Bank@Unowned b, Money@Owned >> Unowned m) {
+        timeService = ts;
+        bank = b;
+        money = m;
+    }
+
+    // TODO : Calculate Bid using some needed information, for now just int
+    transaction requestBid(int longitude, int latitude, int radius, int moistureContent, int payout) returns InsuranceBid@HoldingPayout {
+        // For now, assume 10% of policies will have to pay out, and we're keeping a $10 profit.
+        // Obviously this is oversimplified.
+        int costOfBid = payout / 10 + 10;
+
+
+        // available for 24 hours
+        int twentyFourHours = timeService.hoursToMillis(24);
+        int expirationTime = timeService.getTime() + twentyFourHours;
+
+        int insurerEscrowAmount = payout - costOfBid;
+
+        if (money.getAmount() < insurerEscrowAmount) {
+            revert "Insurer does not have sufficient funds to offer another bid.";
+        }
+
+        // get correct amount of money from owned money
+        Money escrowMoney = money.getAmountOfMoney(insurerEscrowAmount);
+
+        InsuranceBid b = new InsuranceBid(costOfBid, expirationTime, escrowMoney);
+
+        return b;
+    }
+
+    transaction receiveRefund(Money@Owned >> Unowned m) {
+        money.addMoney(m);
+    }
+
+    transaction getRemainingBalance() returns int {
+        return money.getAmount();
+    }
+
+}

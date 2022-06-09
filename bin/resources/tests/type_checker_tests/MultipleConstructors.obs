@@ -1,0 +1,16 @@
+// testing for main contracts to only have one constructor
+
+main contract C {
+    int x;
+    int y;
+
+    C@Owned(int first) {
+        x = first;
+        y = 0;
+    }
+    // error: main contracts should have one constructor
+    C@Owned(int first, int second) {
+        x = first;
+        y = second;
+    }
+}

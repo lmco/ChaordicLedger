@@ -1,0 +1,23 @@
+import "Money.obs"
+
+main asset contract Bank {
+    Money@Owned mon;
+    // the bank's private key for making tokens
+    int key;
+
+    Bank@Owned() {
+        // TODO: generate key
+        mon = new Money(1000000);
+        key = 35;
+    }
+
+    transaction withdrawMoney(int amount) returns Money@Owned{
+         return mon.getAmountOfMoney(amount);
+    }
+
+    transaction depositMoney(Money@Owned >> Unowned m) {
+        mon.addMoney(m);
+    }
+
+}
+

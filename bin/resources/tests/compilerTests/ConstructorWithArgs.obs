@@ -1,0 +1,19 @@
+contract A {}
+
+main contract ConstructorWithArgs {
+    int a;
+    A@Shared b;
+
+    ConstructorWithArgs@Owned(int x, A@Shared y) {
+        a = x;
+        b = y;
+        ->S1;
+    }
+
+    state S1 {}
+
+    state S {
+        int x;
+    }
+
+}

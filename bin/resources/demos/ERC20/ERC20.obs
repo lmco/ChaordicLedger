@@ -1,0 +1,172 @@
+import "Dict.obs"
+import "Integer.obs"
+
+asset interface ObsidianToken {
+    transaction getValue() returns int;
+    transaction merge(ObsidianToken@Owned >> Unowned other);
+    transaction split(int val) returns ObsidianToken@Owned;
+}
+
+asset contract ExampleToken implements ObsidianToken {
+    int value;
+
+    ExampleToken@Owned(int v) {
+        value = v;
+    }
+    
+    transaction getValue(ExampleToken@Unowned this) returns int {
+        return value;
+    }
+
+    transaction merge(ObsidianToken@Owned >> Unowned other) {
+        value = value + other.getValue();
+        disown other;
+    }
+
+    transaction split(ExampleToken@Owned this, int val) returns ExampleToken@Owned {
+        if (val > value) {
+            revert ("Can't split off more than the existing value");
+        }
+        ExampleToken other = new ExampleToken(val);
+        value = value - val;
+        return other;
+    }
+
+}
+
+// ERC20 has been slightly adapted for Obsidian, since Obsidian does not have a built-in authentication mechanism.
+asset interface ERC20 {
+    transaction totalSupply() returns int;
+    transaction balanceOf(int ownerAddress) returns int;
+    transaction transfer(int fromAddress, int toAddress, int value) returns bool;
+
+    // - allow ownerAddress to withdraw from your account, multiple times, up to the value amount.
+    transaction approve(int ownerAddress, int fromAddress, int value) returns bool;
+
+    // Returns the amount of allowance still available.
+    transaction allowance(int ownerAddress, int fromAddress) returns int;
+
+    // Transfers tokens from an allowance that has already been granted.
+    transaction transferFrom(int senderAddress, int fromAddress, int toAddress, int value) returns bool;
+}
+
+main asset contract ExampleTokenBank implements ERC20 {
+    int totalSupply;
+    Dict[Integer, ExampleToken]@Owned balances;
+
+    // map from fromAddress to (map from spender to amount)
+    Dict[Integer, Dict[Integer, Integer]@Owned]@Owned allowed; 
+
+    ExampleTokenBank@Owned() {
+        totalSupply = 0;
+        balances = new Dict[Integer, ExampleToken@Owned](new IntegerComparator());
+        allowed = new Dict[Integer, Dict[Integer, Integer]@Owned](new IntegerComparator());
+    }
+
+    transaction totalSupply() returns int {
+        return totalSupply;
+    }
+
+    transaction balanceOf(int ownerAddress) returns int {
+        Option[ExampleToken@Unowned] balance = balances.peek(new Integer(ownerAddress));
+        if (balance in None) {
+            return 0;
+        }
+        else {
+            return balance.unpack().getValue();
+        }
+    }
+
+    transaction transfer(int fromAddress, int toAddress, int value) returns bool {
+        Integer fromIntegerAddress = new Integer(fromAddress);
+        Option[ExampleToken@Owned] fromBalance = balances.remove(fromIntegerAddress);
+        if (fromBalance in None) {
+            return false;
+        }
+        else {
+            ExampleToken fromTokens = fromBalance.unpack();
+            if (value <= fromTokens.getValue()) {
+                Integer toIntegerAddress = new Integer(toAddress);
+                Option[ExampleToken@Owned] toBalance = balances.remove(toIntegerAddress);
+                ExampleToken toTokens;
+                if (toBalance in Some) {
+                    toTokens = toBalance.unpack();
+                }
+                else {
+                    toTokens = new ExampleToken(0); // 0 value
+                }
+
+                ExampleToken tokensToMove = fromTokens.split(value);
+                toTokens.merge(tokensToMove);
+                balances.insert(toIntegerAddress, toTokens); // OK because we just removed it.
+                balances.insert(fromIntegerAddress, fromTokens); // OK because we just removed it.
+
+                return true;
+            }
+            else {
+                // Insufficient funds available.
+                balances.insert(fromIntegerAddress, fromTokens); // // OK because we just removed it.
+                return false;
+            }
+        }
+    }
+
+    // Records a new allowance. Replaces any previous allowance.
+    transaction approve(int ownerAddress, int fromAddress, int value) returns bool {
+        Integer ownerAddressInteger = new Integer(ownerAddress);
+        Option[Dict[Integer, Integer]@Owned] ownerAllowancesOption = allowed.remove(ownerAddressInteger);
+
+        Dict[Integer, Integer] ownerAllowances;
+        if (ownerAllowancesOption in None) {
+            ownerAllowances = new Dict[Integer, Integer@Owned](new IntegerComparator());
+        }
+        else {
+            ownerAllowances = ownerAllowancesOption.unpack();
+        }
+
+        Option[Integer@Owned] oldAllowance = ownerAllowances.replace(new Integer(fromAddress), new Integer(value));
+        allowed.insert(ownerAddressInteger, ownerAllowances);
+        disown oldAllowance; // Options are assets because they CAN hold assets, but this one doesn't happen to do so.
+        return true;
+    }
+
+    transaction allowance(int ownerAddress, int fromAddress) returns int {
+        Option[Dict[Integer, Integer]@Unowned] ownerAllowancesOption = allowed.peek(new Integer(ownerAddress));
+        switch (ownerAllowancesOption) {
+            case None {
+                return 0;
+            }
+            case Some {
+                Dict[Integer, Integer@Owned] ownerAllowances = ownerAllowancesOption.unpack();
+                Option[Integer@Unowned] spenderAllowance = ownerAllowances.peek(new Integer(fromAddress));
+                if (spenderAllowance in None) {
+                    return 0;
+                }
+                else {
+                    return spenderAllowance.unpack().getValue();
+                }
+            }
+        }
+    }
+
+    // senderAddress wants to transfer value tokens from fromAddress to toAddress.
+    // This requires that an allowance have been set up in advance and that fromAddress has enough tokens.
+    transaction transferFrom(int senderAddress, int fromAddress, int toAddress, int value) returns bool 
+    {
+        int allowance = allowance(senderAddress, fromAddress);
+        if (allowance >= value) {
+            int newAllowance = allowance - value;
+            bool transferSucceeded = transfer(fromAddress, toAddress, value);
+            if (!transferSucceeded) {
+                // Perhaps not enough tokens were available to transfer.
+                return false;
+            }
+            approve(senderAddress, fromAddress, newAllowance);
+
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+}

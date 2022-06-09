@@ -1,0 +1,29 @@
+// ensures that fields are checked appropriately
+
+contract C1 {
+  C1@S(){
+    ->S;
+  }
+  state S {}
+}
+
+asset contract C2 {
+  C2@S(){
+    ->S;
+  }
+  state S {}
+}
+
+main asset contract C {
+    // okay
+
+    C2@S f3;
+
+    C1@Shared f5;
+    C1@Unowned f6;
+    C2@Shared f7;
+    C2@Unowned f8;
+    int f9;
+    string f10;
+    bool f11;
+}

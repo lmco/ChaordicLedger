@@ -1,0 +1,28 @@
+main contract TimeService {
+    int currentTimeInMillis;
+
+    TimeService@Shared() {
+        currentTimeInMillis = 0;
+    }
+
+    transaction getTime() returns int {
+        return currentTimeInMillis;
+    }
+
+    transaction incrTime() {
+        currentTimeInMillis = currentTimeInMillis + 1;
+    }
+
+    transaction hoursToMillis(int hours) returns int {
+        return hours * 3600000;
+    }
+
+    transaction setTime(int newMillis) {
+        if (newMillis >= currentTimeInMillis) {
+            currentTimeInMillis = newMillis;
+        }
+        else {
+            revert "Can't move time backwards.";
+        }
+    }
+}

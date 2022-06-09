@@ -1,0 +1,23 @@
+asset contract Money {}
+
+main asset contract Wallet {
+	 Wallet@Owned() {
+	 	  ->Empty;
+	 }
+
+	 state Full {
+	       Money@Owned m;
+	 }
+
+	 state Empty {
+	 }
+
+	 transaction loseMoney(Wallet@Full >> Empty this) {
+	       // Error -- maybe losing Money!
+	       ->Empty;
+	 }
+
+	 transaction loseMoney(Money@Owned >> Unowned n) {
+	       disown n;
+	 }
+}

@@ -1,0 +1,17 @@
+main contract StringContainer {
+    string s;
+
+    StringContainer() {
+        s = "aaa";
+    }
+
+    transaction getString() returns string {
+        return s;
+    }
+
+    transaction setString(string newS) returns string {
+        string oldS = s;
+        s = newS;
+        return oldS;
+    }
+}

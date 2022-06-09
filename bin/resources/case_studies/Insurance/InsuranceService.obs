@@ -1,0 +1,127 @@
+import "Insurer.obs"
+import "WeatherRecord.obs"
+import "Signature.obs"
+import "PolicyRecord.obs"
+import "PendingPolicyMap.obs"
+import "ActivePolicyMap.obs"
+
+
+main asset contract InsuranceService {
+    // TODO: Collection of Insurer
+    // TODO: Keys of trusted banks
+    state Ready {
+        Insurer@Shared insurer;
+        TimeService@Shared timeService;
+        // for now have to have a reference to bank
+        Bank@Shared bank;
+    }
+
+
+    state New {
+    }
+
+    // pending and active policies
+    PendingPolicyMap@Owned pendingPolicies;
+    ActivePolicyMap@Owned activePolicies;
+
+
+    InsuranceService@Owned() {
+        pendingPolicies = new PendingPolicyMap();
+        activePolicies = new ActivePolicyMap();
+        ->New();
+    }
+
+    transaction setup(InsuranceService@New >> Ready this, TimeService@Shared ts, Bank@Shared b, Insurer@Shared ins) {
+        ->Ready(insurer = ins, timeService = ts, bank = b);
+    }
+
+    transaction testSetup(InsuranceService@New >> Ready this) {
+        // Convenience transaction for testing.
+        TimeService ts = new TimeService();
+        Bank b = new Bank();
+        Money m = b.withdrawMoney(10000);
+        Insurer ins = new Insurer(ts, b, m);
+        ->Ready(insurer = ins, timeService = ts, bank = b);
+    }
+
+    transaction getTimeService(InsuranceService@Ready this) returns TimeService@Shared {
+        return timeService;
+    }
+
+    transaction getBank(InsuranceService@Ready this) returns Bank@Shared {
+        return bank;
+    }
+
+    // All bids (for now) are for one-month periods. They insure within "radius" of the given coordinate:
+    // if the moisture content ever drops below the threshold, then the policy pays out.
+    transaction requestBid(InsuranceService@Ready this, int longitude, int latitude, int radius, int moistureContent, int payout) returns Policy@Offered {
+        InsuranceBid insBid = insurer.requestBid(longitude, latitude, radius, moistureContent, payout);
+
+        int cost = insBid.getCost();
+        int expiration = insBid.getExpirationTime();
+        Money m = insBid.getPayout();
+
+        Policy policy = new Policy(cost, expiration, longitude, latitude, radius, moistureContent);
+        PolicyRecord pendingPolicy = new PolicyRecord(policy, m);
+
+        pendingPolicies.set(policy, pendingPolicy);
+
+        return policy;
+    }
+
+    transaction buyPolicy(InsuranceService@Ready this, Policy@Offered >> (Active | Expired) policy, Money@Owned >> Unowned money) returns Money@Owned {
+
+        if (timeService.getTime() > policy.getExpirationTime()) {
+            PolicyRecord pendingPolicy = pendingPolicies.get(policy); [pendingPolicy @ Pending];
+
+            // refund insurer's payout
+            Money insurerRefund = pendingPolicy.refund();
+            [pendingPolicy @ Expired];
+
+            insurer.receiveRefund(insurerRefund);
+
+            // expire policy and return money
+            disown pendingPolicy;
+            policy.expire();
+            return money;
+        } else {
+            PolicyRecord pendingPolicy = pendingPolicies.get(policy);
+            // get payment
+            int cost = policy.getCost();
+            Money payment = money.getAmountOfMoney(cost);
+
+            // activate policy record with payment
+            pendingPolicy.activate(payment);
+            activePolicies.set(policy, pendingPolicy);
+
+            // activate policy and return any change
+            policy.activate();
+            return money;
+        }
+    }
+
+    // Returns a payment.
+    transaction claim(InsuranceService@Ready this, Policy@Active >> Claimed policy, WeatherRecord@Shared weatherRecord, Signature s) returns Money@Owned {
+        if (!s.verify(weatherRecord)) {
+            // Invalid signature; can't pay a claim with it.
+            revert "Unable to verify weather record signature.";
+        }
+
+        if (policy.isClaimableWithWeather(weatherRecord)) {
+
+            // get will revert if the policy isn't found.
+            PolicyRecord record = activePolicies.get(policy);
+            Money payment = record.claim();
+
+            policy.claim();
+
+            return payment;
+        }
+        else {
+            revert "The policy cannot be claimed because it does not apply to the given weather record.";
+        }
+    }
+
+}
+
+

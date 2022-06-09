@@ -233,11 +233,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Install prerequisite - protobuf
+        run: |
+          unzip -d /tmp/protoc /tmp/protoc-21.1-linux-x86_64.zip
+          export PATH=/tmp/protoc/bin:${PATH}
+          protoc --version
+
       - name: Execute Obsidian compiler
         run: |
           ls -rotl
           pwd
           mkdir out
+          cp -R bin/resources .
           java -jar "bin/obsidianc.jar" obsidian/contracts/simple/lightswitch.obs --output-path out/
 
       - name: Execute Gradle
