@@ -40,7 +40,7 @@ clear &&
 ./network channel 2 &&
 ./network peer &&
 ./network chaincode
-exit 1
+#exit 1
 # Used the following commands to generate the values:
 #    head -c 1KiB /dev/urandom > randomArtifact0.bin
 #    sha512sum randomfile1.txt
