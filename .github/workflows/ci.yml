@@ -235,6 +235,7 @@ jobs:
 
       - name: Install prerequisite - protobuf
         run: |
+          wget https://github.com/protocolbuffers/protobuf/releases/download/v21.1/protoc-21.1-linux-x86_64.zip -P /tmp
           unzip -d /tmp/protoc /tmp/protoc-21.1-linux-x86_64.zip
           export PATH=/tmp/protoc/bin:${PATH}
           protoc --version
