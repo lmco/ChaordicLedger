@@ -1,8 +1,0 @@
-import "IO.obs"
-
-main contract TestFFI {
-    transaction Hello() {
-        new IO().print("hello");
-    }
-}
-

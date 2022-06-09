@@ -1,5 +1,0 @@
-main contract PrimOpsMul{
-    transaction primopsmul() returns int {
-        return(5*4);
-    }
-}

@@ -1,9 +1,0 @@
-import "State.obs"
-
-main contract StateClient {
-    transaction main(remote StateTest st) {
-        st.setX(2);
-        st.setX(1);
-        st.f("hi");
-    }
-}

@@ -1,3 +1,0 @@
-contract Bad {
-     int x = 3;
- }

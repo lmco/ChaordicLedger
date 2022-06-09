@@ -1,3 +1,0 @@
-interface Comparator[KeyType] {
-    transaction equals(KeyType@Unowned a, KeyType@Unowned b) returns bool;
-}

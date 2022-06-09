@@ -1,5 +1,0 @@
-main contract PrimOpsSubNeg{
-    transaction primopssubneg() returns int {
-        return(5-20);
-    }
-}

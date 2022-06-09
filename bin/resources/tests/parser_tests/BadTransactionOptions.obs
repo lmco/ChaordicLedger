@@ -1,4 +1,0 @@
-main contract C {
-    private static static transaction t1() {
-    }
-}

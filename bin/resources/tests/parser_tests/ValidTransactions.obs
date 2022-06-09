@@ -1,6 +1,0 @@
-main contract C {
-    state S1 {
-    }
-    transaction t(C@S1 this) returns int { return x; }
-    transaction t(C@S1 this, T x) { return x; }
-}
