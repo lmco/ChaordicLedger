@@ -109,7 +109,7 @@ elif [ "${MODE}" == "peer" ]; then
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
   pushd hyperledger/scripts
-  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
   deploy_chaincode "obsidianlightswitch:0.0.1" ${LIGHTSWITCH_CCNAME}
   popd
 

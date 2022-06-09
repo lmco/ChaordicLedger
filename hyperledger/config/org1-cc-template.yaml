@@ -22,6 +22,8 @@ spec:
               value: "0.0.0.0:9999"
             - name: CHAINCODE_ID
               value: "${CHAINCODE_ID}"
+            - name: LOGLEVEL
+              value: "TRACE"
           ports:
             - containerPort: 9999
 
