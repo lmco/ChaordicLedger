@@ -232,7 +232,17 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-
+      - name: Checkout the Obsidian repo
+        uses: actions/checkout@v2
+        with:
+          repository: mcoblenz/Obsidian
+          path: './Obsidian'
+      - name: Modify Obsidian build contents
+        run: |
+          mv ./Obsidian/src/test mv ./Obsidian/src/test_save
+          pushd ./Obsidian
+          sbt assembly
+          popd
       - name: Execute Obsidian compiler
         run: |
           # Install prerequisite - protobuf
@@ -240,12 +250,8 @@ jobs:
           unzip -d /tmp/protoc /tmp/protoc-21.1-linux-x86_64.zip
           export PATH=/tmp/protoc/bin:${PATH}
           protoc --version
-
           pwd
-          mkdir out
-          cp -R bin/resources .
-          ls -rotl
-          java -jar "bin/obsidianc.jar" obsidian/contracts/simple/lightswitch.obs --output-path out/
+          ./Obsidian/bin/obsidianc obsidian/contracts/simple/lightswitch.obs --output-path out/
           ls -rotl out/LightSwitch
 
       - name: Execute Gradle
@@ -254,6 +260,7 @@ jobs:
 
           docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build shadowJar #-x checkstyleMain -x checkstyleTest
           echo "buildRoot=${PWD}" >> $GITHUB_ENV
+          popd
 
   # docker-lightswitch-chaincode:
   #   runs-on: ubuntu-latest

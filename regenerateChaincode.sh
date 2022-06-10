@@ -4,6 +4,8 @@ set -e
 
 rm -rf ../Obsidian/target/*
 pushd ../Obsidian
+mv src/test src/test_save
+mkdir src/test
 sbt assembly
 popd
 rm -rf out/*
