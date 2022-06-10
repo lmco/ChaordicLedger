@@ -239,8 +239,13 @@ jobs:
           path: './Obsidian'
       - name: Modify Obsidian build contents
         run: |
-          mv ./Obsidian/src/test ./Obsidian/src/test_save
           pushd ./Obsidian
+          sed -i 's|"protobuf-java" % "3\.11\.4"|"protobuf-java" % "3\.19\.1"|g' build.sbt
+          sed -i "s|'protobuf-java', version: '3.11.4'|'protobuf-java', version: '3.19.1'|g" fabric/java/build.gradle
+
+          # Skips running the tests.
+          mv ./src/test ./src/test_save
+          
           sbt assembly
           popd
       - name: Execute Obsidian compiler
@@ -259,8 +264,15 @@ jobs:
           pushd out/LightSwitch
 
           docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build shadowJar #-x checkstyleMain -x checkstyleTest
+          ls -rotl build/libs
           echo "buildRoot=${PWD}" >> $GITHUB_ENV
           popd
+      - name: Publish chaincode jar
+        uses: actions/upload-artifact@v3
+        with:
+          name: chaincode
+          path: |
+            build/libs/*.jar
 
   # docker-lightswitch-chaincode:
   #   runs-on: ubuntu-latest
