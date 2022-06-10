@@ -272,7 +272,7 @@ jobs:
         with:
           name: lightswitch-chaincode
           path: |
-            out/LightSwitch/build/libs/*.jar
+            out/LightSwitch
 
   docker-lightswitch-chaincode:
     runs-on: ubuntu-latest
@@ -289,7 +289,7 @@ jobs:
       - uses: actions/download-artifact@v3
       - name: Prepare
         run: |
-          pushd lightswitch-chaincode
+          pushd lightswitch-chaincode/build/libs
           ls -rotl ../${{ env.BUILD_DIR }}
           cp ../${{ env.BUILD_DIR }}/chaincode.env .
           cp ../${{ env.BUILD_DIR }}/connection.json .
