@@ -37,10 +37,10 @@ ARG CC_SERVER_PORT=9999
 RUN addgroup --system javauser && useradd -g javauser javauser
 
 # copy only the artifacts we need from the first stage and discard the rest
-COPY build/libs/chaincode.jar /chaincode.jar
+COPY chaincode.jar /chaincode.jar
 COPY logging.properties /logging.properties
 #COPY --chown=javauser:javauser --from=GRADLE_BUILD /home/gradle/build/libs/chaincode.jar /chaincode.jar
-COPY --chown=javauser:javauser docker/docker-entrypoint.sh /docker-entrypoint.sh 
+COPY --chown=javauser:javauser docker-entrypoint.sh /docker-entrypoint.sh 
 RUN chmod +x /docker-entrypoint.sh
 
 ENV PORT $CC_SERVER_PORT

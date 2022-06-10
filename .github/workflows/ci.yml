@@ -290,10 +290,14 @@ jobs:
       - name: Prepare
         run: |
           pushd lightswitch-chaincode
-          ls -rotl
-          cp ../${{ env.BUILD_DIR }}/.* .
+          ls -rotl ../${{ env.BUILD_DIR }}
+          cp ../${{ env.BUILD_DIR }}/chaincode.env .
+          cp ../${{ env.BUILD_DIR }}/connection.json .
+          cp ../${{ env.BUILD_DIR }}/Dockerfile .
+          cp ../${{ env.BUILD_DIR }}/metadata.json .
       - name: Build image
         run: |
+          ls -rotl
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
           docker build --tag $imageTag ${{ env.BUILD_DIR }}
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
