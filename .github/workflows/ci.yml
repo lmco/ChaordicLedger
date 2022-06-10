@@ -299,7 +299,7 @@ jobs:
           cp ../../../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
       - name: Build image
         run: |
-          pushd lightswitch-chaincode
+          pushd lightswitch-chaincode/build/libs
           ls -rotl
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
           docker build --tag $imageTag .
