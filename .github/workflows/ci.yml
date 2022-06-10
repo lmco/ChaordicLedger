@@ -295,6 +295,7 @@ jobs:
           cp ../${{ env.BUILD_DIR }}/connection.json .
           cp ../${{ env.BUILD_DIR }}/Dockerfile .
           cp ../${{ env.BUILD_DIR }}/metadata.json .
+          cp ../${{ env.BUILD_DIR }}/logging.properties .
       - name: Build image
         run: |
           pushd lightswitch-chaincode
