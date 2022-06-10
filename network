@@ -110,8 +110,7 @@ elif [ "${MODE}" == "peer" ]; then
 elif [ "${MODE}" == "chaincode" ]; then
   pushd hyperledger/scripts
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
-  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
-  #deploy_chaincode "obsidianlightswitch:0.0.1" ${LIGHTSWITCH_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   popd
 
   echo "🏁 - Chaincode deployed."

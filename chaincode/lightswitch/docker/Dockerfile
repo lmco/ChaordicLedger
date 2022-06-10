@@ -26,7 +26,7 @@ LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
 ARG CHAINCODE_ID=lightswitch
-ARG PEER_ADDRESS=org1-peer1:7053
+ARG PEER_ADDRESS=org1-peer1:7051
 ARG CC_SERVER_PORT=9999
 
 # Setup tini to work better handle signals
@@ -56,7 +56,7 @@ ENV CORE_PEER_TLS_CERT_FILE /var/hyperledger/fabric/config/tls/tls.crt
 ENV CORE_PEER_TLS_KEY_FILE /var/hyperledger/fabric/config/tls/tls.key
 ENV CORE_PEER_TLS_ROOTCERT_FILE /var/hyperledger/fabric/config/tls/ca.crt
 ENV CORE_PEER_ID org1-peer1.org1.example.com
-ENV CORE_PEER_ADDRESS org1-peer1:7053
+ENV CORE_PEER_ADDRESS org1-peer1:7051
 ENV CORE_CHAINCODE_LOGGING_LEVEL DEBUG
 ENV CORE_CHAINCODE_LOGGING_SHIM DEBUG
 #ENTRYPOINT [ "/tini", "--", "/docker-entrypoint.sh" ]
