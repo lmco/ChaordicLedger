@@ -6,6 +6,8 @@ set -euo pipefail
 : ${CORE_PEER_TLS_ENABLED:="false"}
 : ${DEBUG:="false"}
 
+env | sort
+
 if [ "${DEBUG,,}" = "true" ]; then
    echo "DEBUG"
    exec java -Djava.util.logging.config.file=logging.properties -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000 -jar /chaincode.jar

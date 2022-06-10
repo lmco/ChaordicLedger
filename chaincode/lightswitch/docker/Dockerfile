@@ -25,10 +25,6 @@ LABEL org.opencontainers.image.title="Obsidian Lightswitch Chaincode for Chaordi
 LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
-ARG CHAINCODE_ID=lightswitch
-ARG PEER_ADDRESS=org1-peer1:7052
-ARG CC_SERVER_PORT=9999
-
 # Setup tini to work better handle signals
 # ENV TINI_VERSION v0.19.0
 # ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
@@ -43,20 +39,20 @@ COPY logging.properties /logging.properties
 COPY --chown=javauser:javauser docker-entrypoint.sh /docker-entrypoint.sh 
 RUN chmod +x /docker-entrypoint.sh
 
-ENV PORT $CC_SERVER_PORT
+ENV PORT 9999
 
-EXPOSE $CC_SERVER_PORT
+EXPOSE 9999
 
 USER javauser
 
-ENV CORE_CHAINCODE_ID_NAME $CHAINCODE_ID
-ENV CORE_PEER_ADDRESS $PEER_ADDRESS
+ENV CORE_CHAINCODE_ID_NAME lightswitch
 ENV CORE_PEER_TLS_ENABLED "false"
-ENV CORE_PEER_TLS_CERT_FILE /var/hyperledger/fabric/config/tls/tls.crt
-ENV CORE_PEER_TLS_KEY_FILE /var/hyperledger/fabric/config/tls/tls.key
-ENV CORE_PEER_TLS_ROOTCERT_FILE /var/hyperledger/fabric/config/tls/ca.crt
-ENV CORE_PEER_ID org1-peer1.org1.example.com
-ENV CORE_PEER_ADDRESS org1-peer1:7052
+#ENV CORE_PEER_TLS_CERT_FILE /var/hyperledger/fabric/config/tls/tls.crt
+#ENV CORE_PEER_TLS_KEY_FILE /var/hyperledger/fabric/config/tls/tls.key
+#ENV CORE_PEER_TLS_ROOTCERT_FILE /var/hyperledger/fabric/config/tls/ca.crt
+#ENV CORE_PEER_ID org1-peer1.org1.example.com
+ENV CORE_PEER_ADDRESS org1-peer1:7051
+ENV CORE_PEER_CHAINCODEADDRESS org1-peer1:7052
 ENV CORE_CHAINCODE_LOGGING_LEVEL DEBUG
 ENV CORE_CHAINCODE_LOGGING_SHIM DEBUG
 #ENTRYPOINT [ "/tini", "--", "/docker-entrypoint.sh" ]
