@@ -290,13 +290,13 @@ jobs:
       - name: Prepare
         run: |
           pushd lightswitch-chaincode/build/libs
-          ls -rotl ../${{ env.BUILD_DIR }}
-          cp ../${{ env.BUILD_DIR }}/chaincode.env .
-          cp ../${{ env.BUILD_DIR }}/connection.json .
-          cp ../${{ env.BUILD_DIR }}/Dockerfile .
-          cp ../${{ env.BUILD_DIR }}/metadata.json .
-          cp ../${{ env.BUILD_DIR }}/logging.properties .
-          cp ../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
+          ls -rotl ../../../${{ env.BUILD_DIR }}
+          cp ../../../${{ env.BUILD_DIR }}/chaincode.env .
+          cp ../../../${{ env.BUILD_DIR }}/connection.json .
+          cp ../../../${{ env.BUILD_DIR }}/Dockerfile .
+          cp ../../../${{ env.BUILD_DIR }}/metadata.json .
+          cp ../../../${{ env.BUILD_DIR }}/logging.properties .
+          cp ../../../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
       - name: Build image
         run: |
           pushd lightswitch-chaincode
