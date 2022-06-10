@@ -291,7 +291,7 @@ jobs:
         run: |
           pushd lightswitch-chaincode
           ls -rotl
-          cp ../../${{ env.BUILD_DIR }}/.* .
+          cp ../${{ env.BUILD_DIR }}/.* .
       - name: Build image
         run: |
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
