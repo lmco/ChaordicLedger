@@ -239,7 +239,7 @@ jobs:
           path: './Obsidian'
       - name: Modify Obsidian build contents
         run: |
-          mv ./Obsidian/src/test mv ./Obsidian/src/test_save
+          mv ./Obsidian/src/test ./Obsidian/src/test_save
           pushd ./Obsidian
           sbt assembly
           popd
