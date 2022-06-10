@@ -289,7 +289,8 @@ jobs:
       - uses: actions/download-artifact@v3
       - name: Prepare
         run: |
-          pushd out/LightSwitch
+          pushd lightswitch-chaincode
+          ls -rotl
           cp ../../${{ env.BUILD_DIR }}/.* .
       - name: Build image
         run: |
