@@ -296,6 +296,7 @@ jobs:
           cp ../${{ env.BUILD_DIR }}/Dockerfile .
           cp ../${{ env.BUILD_DIR }}/metadata.json .
           cp ../${{ env.BUILD_DIR }}/logging.properties .
+          cp ../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
       - name: Build image
         run: |
           pushd lightswitch-chaincode
