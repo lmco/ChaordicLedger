@@ -96,5 +96,5 @@ function load_docker_images() {
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION --name ${CLUSTER_NAME}
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION --name ${CLUSTER_NAME}
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0 --name ${CLUSTER_NAME}
-  kind load docker-image obsidianlightswitch:0.0.1 --name ${CLUSTER_NAME}
+  kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 --name ${CLUSTER_NAME}
 }

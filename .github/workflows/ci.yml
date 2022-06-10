@@ -298,8 +298,9 @@ jobs:
       - name: Build image
         run: |
           pushd lightswitch-chaincode
+          ls -rotl
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          docker build --tag $imageTag .
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
