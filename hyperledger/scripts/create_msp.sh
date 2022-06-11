@@ -161,6 +161,7 @@ function enroll_bootstrap_ECert_CA_users() {
     echo 'set -x
     fabric-ca-client enroll \
       --url https://'${auth}'@'${ecert_ca}' \
+      --tls false
       --tls.certfiles /var/hyperledger/fabric/config/tls/ca.crt \
       --mspdir $FABRIC_CA_CLIENT_HOME/'${ecert_ca}'/rcaadmin/msp
     ' | exec kubectl -n $NS exec deploy/${ecert_ca} -i -- /bin/sh

@@ -253,7 +253,7 @@ peer:
     # TLS Settings
     tls:
         # Require server-side TLS
-        enabled: true
+        enabled: false
         # Require client certificates / mutual TLS for inbound connections.
         # Note that clients that are not configured to use a certificate will
         # fail to connect to the peer.
@@ -484,7 +484,7 @@ vm:
 
         # Enables/disables the standard out/err from chaincode containers for
         # debugging purposes
-        attachStdout: false
+        attachStdout: true
 
         # Parameters on creating docker container.
         # Container may be efficiently created using ipam & dns-server for cluster
@@ -599,9 +599,9 @@ chaincode:
     # Logging section for the chaincode container
     logging:
       # Default level for all loggers within the chaincode container
-      level:  info
+      level:  debug
       # Override default level for the 'shim' logger
-      shim:   warning
+      shim:   debug
       # Format for the chaincode container logs
       format: '%{color}%{time:2006-01-02 15:04:05.000 MST} [%{module}] %{shortfunc} -> %{level:.4s} %{id:03x}%{color:reset} %{message}'
 
