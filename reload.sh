@@ -38,8 +38,9 @@ clear &&
 clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
-./network peer &&
-./network chaincode
+./network peer #&&
+#./network chaincode
+exit 0
 #exit 1
 # Used the following commands to generate the values:
 #    head -c 1KiB /dev/urandom > randomArtifact0.bin

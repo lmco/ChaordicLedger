@@ -149,7 +149,7 @@ function activate_chaincode_for() {
     --package-id '${cc_id}' \
     --sequence 1 \
     -o org0-orderer1:6050 \
-    --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+    --tls false --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
   
   peer lifecycle \
     chaincode commit \
@@ -158,7 +158,7 @@ function activate_chaincode_for() {
     --version 1 \
     --sequence 1 \
     -o org0-orderer1:6050 \
-    --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+    --tls false --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
   ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
 }
 
@@ -170,9 +170,9 @@ function deploy_chaincode() {
   local ccname=$2
 
   install_chaincode ${ccname}
+  
   launch_chaincode_service org1 peer1 ${ccimage} ${ccname}
-  launch_chaincode_service org1 peer2 ${ccimage} ${ccname}
-
+  #launch_chaincode_service org1 peer2 ${ccimage} ${ccname}
   activate_chaincode ${ccname}
 }
 
