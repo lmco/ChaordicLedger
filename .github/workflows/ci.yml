@@ -240,8 +240,14 @@ jobs:
       - name: Modify Obsidian build contents
         run: |
           pushd ./Obsidian
+
+          # Upgrade protocol buffer
           sed -i 's|"protobuf-java" % "3\.11\.4"|"protobuf-java" % "3\.19\.1"|g' build.sbt
           sed -i "s|'protobuf-java', version: '3.11.4'|'protobuf-java', version: '3.19.1'|g" fabric/java/build.gradle
+
+          # Upgrade chaincode shim
+          sed -i 's|"fabric-chaincode-shim" % "1\.4\.4"|"fabric-chaincode-shim" % "2\.4\.1"|g' build.sbt
+          sed -i "s|'fabric-chaincode-shim', version: '1.4.4'|'fabric-chaincode-shim', version: '2.4.1'|g" fabric/java/build.gradle
 
           # Skips running the tests.
           mv ./src/test ./src/test_save
