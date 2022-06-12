@@ -5,11 +5,11 @@ import (
 	"fmt"
 	"io"
 	"math/rand"
+	"strings"
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	shell "github.com/ipfs/go-ipfs-api"
-	u "github.com/ipfs/go-ipfs-api"
 )
 
 var sh *shell.Shell
@@ -21,7 +21,8 @@ func makeRandomObject() (string, error) {
 	z := rand.Intn(120) + 1
 	size := x * y * z
 
-	r := io.LimitReader(u.NewTimeSeededRand(), int64(size))
+	something := strings.NewReader("Some random text here.")
+	r := io.LimitReader(something, int64(size))
 	time.Sleep(time.Second)
 	return sh.Add(r)
 }
