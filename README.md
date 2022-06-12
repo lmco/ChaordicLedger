@@ -42,6 +42,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Graph construction of artifact relationships.
 
 ## Future Development Goals
+1. Add log aggregation.
 1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.

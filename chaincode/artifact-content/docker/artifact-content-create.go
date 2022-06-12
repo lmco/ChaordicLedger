@@ -34,6 +34,10 @@ func makeRandomObject() (string, error) {
 	return sh.Add(r)
 }
 
+func listFiles() (string, error) {
+	return sh.Unixfs().ls()
+}
+
 func TestUploadFolderRaw() {
 	ct, r, err := createForm(map[string]string{
 		"/file1":    "@/my/path/file1",
@@ -144,8 +148,14 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
-		fmt.Println("we're okay")
+		fmt.Println("Done making random object via API module")
 	}
+
+	_, err := listFiles()
+	if err != nil {
+		fmt.Println("err: ", err)
+	}
+	fmt.Println("Done listing files via API module")
 
 	// TestUploadFolderRaw()
 	// fmt.Println("we're okay, too!")
@@ -163,6 +173,24 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	fmt.Println("With files on tmp and long format")
 	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp&long=true")
 	fmt.Println("Done listing files")
+	fmt.Println("With files on root")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=/")
+	fmt.Println("Done listing files")
+	fmt.Println("Key list")
+	TestAPI("http://ipfs-ui:5001/api/v0/key/list")
+	fmt.Println("Done Key list")
+	fmt.Println("Pin list")
+	TestAPI("http://ipfs-ui:5001/api/v0/pin/ls")
+	fmt.Println("Done Pin list")
+	fmt.Println("Diag")
+	TestAPI("http://ipfs-ui:5001/api/v0/diag/sys")
+	fmt.Println("Done Diag")
+	fmt.Println("Version")
+	TestAPI("http://ipfs-ui:5001/api/v0/version")
+	fmt.Println("Done version")
+	fmt.Println("Log tail")
+	TestAPI("http://ipfs-ui:5001/api/v0/log/tail")
+	fmt.Println("Done log tail")
 	// // Test HTTP connectivity
 
 	// resp, err := http.Get("http://localhost:8080/api-docs/")
