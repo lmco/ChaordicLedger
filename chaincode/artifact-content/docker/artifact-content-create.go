@@ -16,10 +16,10 @@ import (
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
-	shell "github.com/ipfs/go-ipfs-api"
+	//shell "github.com/ipfs/go-ipfs-api"
 )
 
-var sh *shell.Shell
+//var sh *shell.Shell
 
 func makeRandomObject() (string, error) {
 	// do some math to make a size
@@ -72,8 +72,8 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 	return mp.FormDataContentType(), body, nil
 }
 
-func TestListFiles() {
-	resp, err := http.Get("http://ipfs-ui:5001/api/v0/filestore/ls?file-order=true")
+func TestAPI(url string) {
+	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -138,19 +138,31 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	}
 
 	// Try using the go-ipfs-api
-	sh = shell.NewShell("ipfs-ui:5001")
-	for i := 0; i < 1; i++ {
-		_, err := makeRandomObject()
-		if err != nil {
-			fmt.Println("err: ", err)
-		}
-		fmt.Println("we're okay")
-	}
+	// sh = shell.NewShell("ipfs-ui:5001")
+	// for i := 0; i < 1; i++ {
+	// 	_, err := makeRandomObject()
+	// 	if err != nil {
+	// 		fmt.Println("err: ", err)
+	// 	}
+	// 	fmt.Println("we're okay")
+	// }
 
-	TestUploadFolderRaw()
-	fmt.Println("we're okay, too!")
-	TestListFiles()
-	fmt.Println("we're okay, three!")
+	// TestUploadFolderRaw()
+	// fmt.Println("we're okay, too!")
+	fmt.Println("Listing files")
+	fmt.Println("With filestore")
+	TestAPI("http://ipfs-ui:5001/api/v0/filestore/ls")
+	fmt.Println("With files")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls")
+	fmt.Println("With files on /tmp and short format")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=/tmp")
+	fmt.Println("With files on /tmp and long format")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp&long=true")
+	fmt.Println("With files on tmp and short format")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp")
+	fmt.Println("With files on tmp and long format")
+	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp&long=true")
+	fmt.Println("Done listing files")
 	// // Test HTTP connectivity
 
 	// resp, err := http.Get("http://localhost:8080/api-docs/")
