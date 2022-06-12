@@ -60,3 +60,4 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Taking IPFS Nodes Online: [https://docs.ipfs.io/how-to/command-line-quick-start/#take-your-node-online](https://docs.ipfs.io/how-to/command-line-quick-start/#take-your-node-online)
 * Exchanging Files Between IPFS Nodes: [https://docs.ipfs.io/how-to/exchange-files-between-nodes/](https://docs.ipfs.io/how-to/exchange-files-between-nodes/)
 * Making HTTP Requests in Golang: [https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7](https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7)
+* Go IPFS API: [https://github.com/ipfs/go-ipfs-api](https://github.com/ipfs/go-ipfs-api)

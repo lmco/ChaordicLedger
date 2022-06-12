@@ -3,13 +3,27 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
-	"log"
-	"net/http"
+	"io"
+	"math/rand"
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	u "github.com/ipfs/go-ipfs-api"
 )
+
+var sh *shell.Shell
+
+func makeRandomObject() (string, error) {
+	// do some math to make a size
+	x := rand.Intn(120) + 1
+	y := rand.Intn(120) + 1
+	z := rand.Intn(120) + 1
+	size := x * y * z
+
+	r := io.LimitReader(u.NewTimeSeededRand(), int64(size))
+	sleep()
+	return sh.Add(r)
+}
 
 // InitLedger adds a base set of content to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
@@ -60,20 +74,31 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		return err
 	}
 
-	// Test HTTP connectivity
-	resp, err := http.Get("http://localhost:8080/docs/")
-	if err != nil {
-		log.Fatalln(err)
+	// Try using the go-ipfs-api
+	sh = shell.NewShell("ipfs-service:12345")
+	for i := 0; i < 200; i++ {
+		_, err := makeRandomObject()
+		if err != nil {
+			fmt.Println("err: ", err)
+		}
 	}
+	fmt.Println("we're okay")
 
-	defer resp.Body.Close()
+	// // Test HTTP connectivity
 
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		log.Fatalln(err)
-	}
+	// resp, err := http.Get("http://localhost:8080/api-docs/")
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
 
-	log.Println(string(body))
+	// defer resp.Body.Close()
+
+	// body, err := ioutil.ReadAll(resp.Body)
+	// if err != nil {
+	// 	log.Fatalln(err)
+	// }
+
+	// log.Println(string(body))
 
 	return ctx.GetStub().PutState(id, contentJSON)
 }
