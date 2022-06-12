@@ -3,6 +3,9 @@ package main
 import (
 	"encoding/json"
 	"fmt"
+	"io/ioutil"
+	"log"
+	"net/http"
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
@@ -56,6 +59,21 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	if err != nil {
 		return err
 	}
+
+	// Test HTTP connectivity
+	resp, err := http.Get("http://localhost:8080/docs/")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	log.Println(string(body))
 
 	return ctx.GetStub().PutState(id, contentJSON)
 }

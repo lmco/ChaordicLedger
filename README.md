@@ -22,7 +22,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Free and Open-Source technologies shall be leveraged.
 1. Behavior and results are measurable and repeatable.
 
-## Implementation Roadmap
+## Implementation Road Map
 |Item|Implementation Status|Documentation Status|Pipeline Execution|
 |---|---|---|---|
 |Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;|
@@ -49,14 +49,14 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 
 ## References
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
-* Markdown Editor: [https://jbt.github.io/markdown-editor/])
+* Markdown Editor: [https://jbt.github.io/markdown-editor/](https://jbt.github.io/markdown-editor/)
 * K9s - Kubernetes CLI To Manage Your Clusters In Style!: [https://k9scli.io/](https://k9scli.io/)
 * kind: [https://kind.sigs.k8s.io/](https://kind.sigs.k8s.io/)
 * Kubernetes Cheat Sheet: [https://kubernetes.io/docs/reference/kubectl/cheatsheet/](https://kubernetes.io/docs/reference/kubectl/cheatsheet/)
 * Obsidian: [https://obsidian-lang.com/](https://obsidian-lang.com/)
 * Obsidian Tutorial: [https://obsidian.readthedocs.io/en/latest/tutorial/tutorial.html](https://obsidian.readthedocs.io/en/latest/tutorial/tutorial.html)
 * Swagger Editor: [https://editor.swagger.io/](https://editor.swagger.io/)
-* Technology Readiness Level (TRL) [https://en.wikipedia.org/wiki/Technology_readiness_level](https://en.wikipedia.org/wiki/Technology_readiness_level)
-
-https://docs.ipfs.io/how-to/command-line-quick-start/#take-your-node-online
-https://docs.ipfs.io/how-to/exchange-files-between-nodes/
+* Technology Readiness Level (TRL): [https://en.wikipedia.org/wiki/Technology_readiness_level](https://en.wikipedia.org/wiki/Technology_readiness_level)
+* Taking IPFS Nodes Online: [https://docs.ipfs.io/how-to/command-line-quick-start/#take-your-node-online](https://docs.ipfs.io/how-to/command-line-quick-start/#take-your-node-online)
+* Exchanging Files Between IPFS Nodes: [https://docs.ipfs.io/how-to/exchange-files-between-nodes/](https://docs.ipfs.io/how-to/exchange-files-between-nodes/)
+* Making HTTP Requests in Golang: [https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7](https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7)
