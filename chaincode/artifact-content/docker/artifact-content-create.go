@@ -20,8 +20,8 @@ func makeRandomObject() (string, error) {
 	z := rand.Intn(120) + 1
 	size := x * y * z
 
-	r := io.LimitReader(u.NewTimeSeededRand(), int64(size))
-	sleep()
+	r := io.LimitReader(shell.NewTimeSeededRand(), int64(size))
+	time.Sleep(time.Second)
 	return sh.Add(r)
 }
 
