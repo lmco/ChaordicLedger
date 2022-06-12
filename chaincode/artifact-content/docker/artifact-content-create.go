@@ -9,6 +9,7 @@ import (
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 	shell "github.com/ipfs/go-ipfs-api"
+	u "github.com/ipfs/go-ipfs-api"
 )
 
 var sh *shell.Shell
@@ -20,7 +21,7 @@ func makeRandomObject() (string, error) {
 	z := rand.Intn(120) + 1
 	size := x * y * z
 
-	r := io.LimitReader(shell.NewTimeSeededRand(), int64(size))
+	r := io.LimitReader(u.NewTimeSeededRand(), int64(size))
 	time.Sleep(time.Second)
 	return sh.Add(r)
 }
