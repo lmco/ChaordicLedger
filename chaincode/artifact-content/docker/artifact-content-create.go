@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
-	u "github.com/ipfs/go-ipfs-api"
+	shell "github.com/ipfs/go-ipfs-api"
 )
 
 var sh *shell.Shell
