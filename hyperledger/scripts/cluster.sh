@@ -88,7 +88,7 @@ function pull_docker_images() {
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION || true
   docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0 || true
   docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0 || true
-  docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 || true
+  #docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 || true
 }
 
 function load_docker_images() {
@@ -100,5 +100,5 @@ function load_docker_images() {
   kind load docker-image ${FABRIC_CONTAINER_REGISTRY}/fabric-tools:$FABRIC_VERSION --name ${CLUSTER_NAME}
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0 --name ${CLUSTER_NAME}
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0 --name ${CLUSTER_NAME}
-  kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 --name ${CLUSTER_NAME}
+  #kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 --name ${CLUSTER_NAME}
 }

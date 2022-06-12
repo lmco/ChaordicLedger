@@ -63,8 +63,6 @@ spec:
   # Default port used by the image is 5678
   - port: 12345
     targetPort: 8080
-  - port: 5001
-    targetPort: 5001
 ---
 kind: Service
 apiVersion: v1
@@ -74,7 +72,7 @@ spec:
   selector:
     app: ipfs-app
   ports:
-  - port: 12345
+  - port: 5001
     targetPort: 5001
 ---
 kind: Service

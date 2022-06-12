@@ -1,11 +1,18 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"fmt"
+	"github.com/stretchr/testify/assert"
 	"io"
+	"io/ioutil"
 	"math/rand"
+	"mime/multipart"
+	"net/http"
+	"os"
 	"strings"
+	"testing"
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
@@ -25,6 +32,44 @@ func makeRandomObject() (string, error) {
 	r := io.LimitReader(something, int64(size))
 	time.Sleep(time.Second)
 	return sh.Add(r)
+}
+
+func TestUploadFolderRaw() {
+	ct, r, err := createForm(map[string]string{
+		"/file1":    "@/my/path/file1",
+		"/dir":      "@/my/path/dir",
+		"/dir/file": "@/my/path/dir/file",
+	})
+
+	resp, err := http.Post("http://ipfs-ui:5001/api/v0/add?pin=true&recursive=true&wrap-with-directory=true", ct, r)
+
+	respAsBytes, err := ioutil.ReadAll(resp.Body)
+	fmt.Println("response: ", string(respAsBytes))
+	fmt.Println("err: ", err)
+}
+
+func createForm(form map[string]string) (string, io.Reader, error) {
+	body := new(bytes.Buffer)
+	mp := multipart.NewWriter(body)
+	defer mp.Close()
+	for key, val := range form {
+		if strings.HasPrefix(val, "@") {
+			val = val[1:]
+			file, err := os.Open(val)
+			if err != nil {
+				return "", nil, err
+			}
+			defer file.Close()
+			part, err := mp.CreateFormFile(key, val)
+			if err != nil {
+				return "", nil, err
+			}
+			io.Copy(part, file)
+		} else {
+			mp.WriteField(key, val)
+		}
+	}
+	return mp.FormDataContentType(), body, nil
 }
 
 // InitLedger adds a base set of content to the ledger
@@ -85,6 +130,9 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		}
 	}
 	fmt.Println("we're okay")
+
+	TestUploadFolderRaw()
+	fmt.Println("we're okay, too!")
 
 	// // Test HTTP connectivity
 
