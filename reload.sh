@@ -38,18 +38,20 @@ clear &&
 clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
-./network peer #&&
-#./network chaincode
-exit 0
-#exit 1
+./network peer &&
+./network chaincode
+
 # Used the following commands to generate the values:
 #    head -c 1KiB /dev/urandom > randomArtifact0.bin
 #    sha512sum randomfile1.txt
 #    uuidgen
 # 
 #    tr -dc '[:alnum:] \n' < /dev/urandom | head -c 394 > randomArtifact1.txt
+#
+# Used the following to get the base64 string for content;
+#    cat randomArtifact0.bin | base64 -w 0 
 
-./network query '{"Args":["GetAllMetadata"]}'
+./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
 
 LfileArray=("randomArtifact0.bin" "randomArtifact1.txt")
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
@@ -57,33 +59,21 @@ for item in ${LfileArray[*]}; do
   echo "Adding $item to the ledger."
   itemhash=$(sha512sum ${item} | awk '{print $1;}')
   itemsize=$(du -b ${item} | awk '{print $1;}')
-  ./network invoke '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
-  ./network invoke '{"Args":["MetadataExists","'${item}'"]}'
+  itemcontent=$(cat ${item} | base64 -w 0)
+  ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
+  ./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["CreateContent","'${timestamp}'","'${item}'","'${itemcontent}'"]}'
+  ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
+  ./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["ContentExists","'${item}'"]}'
 done
 
-./network query '{"Args":["GetAllMetadata"]}'
-
+./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
+./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
 # Note: This assumes api/server/out/nodejs was pulled local.
 # TODO: Look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 pushd apiServer
 nohup npm start &
 popd
-
-# timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-# for item in ${LfileArray[*]}; do
-#   echo "Adding $item to the ledger."
-#   itemhash=$(sha256sum ${item} | awk '{print $1;}')
-#   itemsize=$(du -b ${item} | awk '{print $1;}')
-#   ./network invoke '{"Args":["UpdateMetadata","'${timestamp}'","'${itemhash}'","SHA256","'${item}'","'${itemsize}'"]}'
-# done
-
-# ./network query '{"Args":["GetAllMetadata"]}'
-
-# for item in ${LfileArray[*]}; do
-#   ./network invoke '{"Args":["DeleteMetadata","'${item}'"]}'
-#   ./network query '{"Args":["GetAllMetadata"]}'
-# done
 
 ./network ipfs
 

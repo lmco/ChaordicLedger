@@ -12,19 +12,21 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
 
-proxy_details_source_file=docker_registry_proxy_details.sh
-if [[ -f "$proxy_details_source_file" ]]; then
-  echo "Sourcing proxy details from $proxy_details_source_file"
-  . $proxy_details_source_file
+function sourceProxyDetails() {
+  proxy_details_source_file=docker_registry_proxy_details.sh
+  if [[ -f "$proxy_details_source_file" ]]; then
+    echo "Sourcing proxy details from $proxy_details_source_file"
+    . $proxy_details_source_file
 
-  if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
-    echo "Logging in to $DOCKER_REGISTRY_PROXY"
-    echo "echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin"
-    echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
+    if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
+      echo "Logging in to $DOCKER_REGISTRY_PROXY"
+      echo "echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin"
+      echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
+    fi
+  else
+    echo "No proxy details file to source."
   fi
-else
-  echo "No proxy details file to source."
-fi
+}
 
 export NO_PROXY=10.244.0.0/16,10.96.0.0/12,$NO_PROXY
 export no_proxy=$NO_PROXY
@@ -81,12 +83,14 @@ fi
 # TODO: Look into creating a Windows variant.
 
 if [ "${MODE}" == "init" ]; then
+  sourceProxyDetails
   echo "Initializing cluster \"${CLUSTER_NAME}\":"
   pushd hyperledger/scripts
   cluster_init
   popd
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "ipfs" ]; then
+  sourceProxyDetails
   pushd ipfs/scripts
   . create_ipfs.sh
   create_ipfs
@@ -121,13 +125,13 @@ elif [ "${MODE}" == "chaincode" ]; then
   echo "🏁 - Chaincode deployed."
 elif [ "${MODE}" == "invoke" ]; then
   pushd hyperledger/scripts
-  invoke_chaincode ${ARTIFACT_METADATA_CCNAME} $@
+  invoke_chaincode $@
   popd
 
   echo "🏁 - Chaincode invoked."
 elif [ "${MODE}" == "query" ]; then
   pushd hyperledger/scripts
-  query_chaincode ${ARTIFACT_METADATA_CCNAME} $@
+  query_chaincode $@
   popd
 
   echo "🏁 - Chaincode queried."

@@ -17,8 +17,8 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 	//
 	//   tr -dc '[:alnum:] \n' < /dev/urandom | head -c 394 > randomArtifact1.txt
 	contents := []Content{
-		{CreationTimestamp: time.Now(), Hash: "89624e43c5c4d85c476f578443b083d55e5bcf75de9852e61e921d2e75971e2b26302ae70e6ac465e07141a048ae97fc7d58dffffb7d4702d23ac359bc2c3edc", HashType: "SHA512", ID: "68b2bc65-b487-45b5-b166-52fe496515f9", SizeInBytes: 1024},
-		{CreationTimestamp: time.Now(), Hash: "fd1f049abeb128218e0bd77fa1346d11ce4414ac7dcb66ee015e5bbb0e984dd146621917c7a81cf4a4d680042510ba2dc171911897bda3dbb1e6517a0e82a1f2", HashType: "SHA512", ID: "d762245e-acd1-4162-95b5-0da6d2889893", SizeInBytes: 394},
+		{CreationTimestamp: time.Now(), ID: "68b2bc65-b487-45b5-b166-52fe496515f9", Base64EncodedContent: "aZM+rwqJuL4EkDL99P+z29WeoznFi8hSZ+FGw7k+n264GKYW4jEuUw8KaauIC3whG9EgwBwSBV5AVCQttivZHUrPTAeP22XyKhMeQ570/62nNIxuOUtlSjPYWXixJMwmKErJsD42xMUDDpUU3tJdrWi7X7fDt703dulQiTSyp2v7fksj58PDRfe+CYTgxwaKt7BtIulA2c9/rnvS5GZypFL++RDLHX6cGKd5LoJMH25NZNVr/BazWhcqkesUij5P8yAzh+hjhndZQBw3Mf3xOR5vhuEnMceGHVRCj6U8de5x60MtjWJcL5lyl2R9VlH+VYqklWqupc7fzHln5+bezzaca59ARr/EylLk6U8hxyU7/rKYUVWW0Oz4qghZONtQhIweNU7GYueARVPKzwis1s2wgq4vN4Ad43mPAu1A0txG/ThG4bM8ZkMm0bcVvx8YwdRpARirCMgkpAD3p9GBWixBcuXNxeBbDnlj66uzCdWvsjPQyCSjdGs7zXiQDxCDtAi4uYSajUYe+ecSVTNmeNmxHHdRhvZSWAzmLlyGYOOFKdUfu/m1OPbwQ4X6/jryDyBOg8f+6CjrNtca1Tmx8PvpKSqbyOkTEFYlgvoARYrWihuvwgfcmESDjWIkvjOBa3QunQ0DZyy5EAyUeZqdpm8IgYzhXvrJsggwFhTJ+gArls2W1cOWG2T076f4lWhxzPohTc/bGkwjTJ0GrM+zMnqKDqBvpKiATt2uH+TEs3/L+CjALZUHWSL4w41QeFPvZfH4ZoncvYJ4OFEVsgJ5jrCi77kIcQiw+Wd0/NdwSOa/nb9hBxPK4cwFqMiPP1+7sEzeMX/wMjoK/zoCgUfglXF+YtjLnLoJqOQ6f4n6hKwVGzZfqd6/RxfWcb9ieR83sgSsu6ezfwOMSTUR5fox8C4g0dlnZHDlacVgJIASytCwIoYnsBMSFF8LT+f/hDT79kN1X7lh3yjHwwdT8hWZyCRLj+pNqHpadwHOza2n2VIIC5xoMwrfLG2RQ1D1P1nj+MBuMBEVywWz0XZraeyZSCTNnrvynzN3rJIgCa8/EpWx52Cn+D3t3Zj77oL0351AK6+KbQI5fivxVjjEsuFk/CeDidmHlDydNATgTVY//9WoKIxwoUOVMvLi98JfI19/OWlF+SlppzHuGejfsinxabBKhWACyjl8iBxYWNx6jCL/hnf2+sAjJM8bT7hIKXseeJNVJ2Jv/+dJi2t1MHnkWsyaFXu8rJ3T8VenoMGyfxUj3WTpME0UrvLS2Fya/uP9d/Oc3YWHJVBgoy/kh5lL8jdzIjSrI3X3DCZn4APwtN2uB5NGVK1youxlzfaigIFp9drxqZLdISAeYsDD4sRbCw=="},
+		{CreationTimestamp: time.Now(), ID: "d762245e-acd1-4162-95b5-0da6d2889893", Base64EncodedContent: "aZM+rwqJuL4EkDL99P+z29WeoznFi8hSZ+FGw7k+n264GKYW4jEuUw8KaauIC3whG9EgwBwSBV5AVCQttivZHUrPTAeP22XyKhMeQ570/62nNIxuOUtlSjPYWXixJMwmKErJsD42xMUDDpUU3tJdrWi7X7fDt703dulQiTSyp2v7fksj58PDRfe+CYTgxwaKt7BtIulA2c9/rnvS5GZypFL++RDLHX6cGKd5LoJMH25NZNVr/BazWhcqkesUij5P8yAzh+hjhndZQBw3Mf3xOR5vhuEnMceGHVRCj6U8de5x60MtjWJcL5lyl2R9VlH+VYqklWqupc7fzHln5+bezzaca59ARr/EylLk6U8hxyU7/rKYUVWW0Oz4qghZONtQhIweNU7GYueARVPKzwis1s2wgq4vN4Ad43mPAu1A0txG/ThG4bM8ZkMm0bcVvx8YwdRpARirCMgkpAD3p9GBWixBcuXNxeBbDnlj66uzCdWvsjPQyCSjdGs7zXiQDxCDtAi4uYSajUYe+ecSVTNmeNmxHHdRhvZSWAzmLlyGYOOFKdUfu/m1OPbwQ4X6/jryDyBOg8f+6CjrNtca1Tmx8PvpKSqbyOkTEFYlgvoARYrWihuvwgfcmESDjWIkvjOBa3QunQ0DZyy5EAyUeZqdpm8IgYzhXvrJsggwFhTJ+gArls2W1cOWG2T076f4lWhxzPohTc/bGkwjTJ0GrM+zMnqKDqBvpKiATt2uH+TEs3/L+CjALZUHWSL4w41QeFPvZfH4ZoncvYJ4OFEVsgJ5jrCi77kIcQiw+Wd0/NdwSOa/nb9hBxPK4cwFqMiPP1+7sEzeMX/wMjoK/zoCgUfglXF+YtjLnLoJqOQ6f4n6hKwVGzZfqd6/RxfWcb9ieR83sgSsu6ezfwOMSTUR5fox8C4g0dlnZHDlacVgJIASytCwIoYnsBMSFF8LT+f/hDT79kN1X7lh3yjHwwdT8hWZyCRLj+pNqHpadwHOza2n2VIIC5xoMwrfLG2RQ1D1P1nj+MBuMBEVywWz0XZraeyZSCTNnrvynzN3rJIgCa8/EpWx52Cn+D3t3Zj77oL0351AK6+KbQI5fivxVjjEsuFk/CeDidmHlDydNATgTVY//9WoKIxwoUOVMvLi98JfI19/OWlF+SlppzHuGejfsinxabBKhWACyjl8iBxYWNx6jCL/hnf2+sAjJM8bT7hIKXseeJNVJ2Jv/+dJi2t1MHnkWsyaFXu8rJ3T8VenoMGyfxUj3WTpME0UrvLS2Fya/uP9d/Oc3YWHJVBgoy/kh5lL8jdzIjSrI3X3DCZn4APwtN2uB5NGVK1youxlzfaigIFp9drxqZLdISAeYsDD4sRbCw=="},
 	}
 
 	for _, content := range contents {
@@ -37,7 +37,7 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, hash string, hashType string, id string, sizeInBytes int) error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, base64encodedContent string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return err
@@ -47,11 +47,9 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	}
 
 	content := Content{
-		CreationTimestamp: creationTimestamp,
-		Hash:              hash,
-		HashType:          hashType,
-		ID:                id,
-		SizeInBytes:       sizeInBytes,
+		CreationTimestamp:    creationTimestamp,
+		ID:                   id,
+		Base64EncodedContent: base64encodedContent,
 	}
 
 	contentJSON, err := json.Marshal(content)

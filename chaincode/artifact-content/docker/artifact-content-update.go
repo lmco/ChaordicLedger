@@ -10,7 +10,7 @@ import (
 
 // UpdateContent replaces the existing content in the world state with the given details.
 // It's realy the Boolean opposite of CreateContent and likely could be combined.
-func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, hash string, hashType string, id string, sizeInBytes int) error {
+func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, base64encodedContent string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return err
@@ -20,11 +20,9 @@ func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterfac
 	}
 
 	content := Content{
-		CreationTimestamp: creationTimestamp,
-		Hash:              hash,
-		HashType:          hashType,
-		ID:                id,
-		SizeInBytes:       sizeInBytes,
+		CreationTimestamp:    creationTimestamp,
+		ID:                   id,
+		Base64EncodedContent: base64encodedContent,
 	}
 
 	contentJSON, err := json.Marshal(content)
