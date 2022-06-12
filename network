@@ -41,6 +41,7 @@ export NS=${NETWORK_NAME}
 export CHANNEL_NAME="cl"
 
 export ARTIFACT_METADATA_CCNAME="artifact-metadata"
+export ARTIFACT_CONTENT_CCNAME="artifact-content"
 export LIGHTSWITCH_CCNAME="lightswitch"
 
 #export CHAINCODE_NAME=asset-transfer-basic
@@ -114,6 +115,7 @@ elif [ "${MODE}" == "chaincode" ]; then
   pushd hyperledger/scripts
   #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}
   popd
 
   echo "🏁 - Chaincode deployed."

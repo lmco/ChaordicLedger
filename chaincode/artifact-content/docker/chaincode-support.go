@@ -102,6 +102,6 @@ func Init() {
 	}
 
 	if err := server.Start(); err != nil {
-		log.Panicf("Error starting artifact-metadata chaincode: %v", err)
+		log.Panicf("Error starting artifact-content chaincode: %v", err)
 	}
 }
