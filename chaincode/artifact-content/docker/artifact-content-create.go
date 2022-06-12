@@ -72,6 +72,22 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 	return mp.FormDataContentType(), body, nil
 }
 
+func TestListFiles() {
+	resp, err := http.Get("http://ipfs-ui:5001/api/v0/filestore/ls?file-order=true")
+	if err != nil {
+		log.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Println("err:", err)
+	}
+
+	fmt.Println("response: ", string(body))
+}
+
 // InitLedger adds a base set of content to the ledger
 func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) error {
 	// Used the following commands to generate the values:
@@ -128,12 +144,13 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
+		fmt.Println("we're okay")
 	}
-	fmt.Println("we're okay")
 
 	TestUploadFolderRaw()
 	fmt.Println("we're okay, too!")
-
+	TestListFiles()
+	fmt.Println("we're okay, three!")
 	// // Test HTTP connectivity
 
 	// resp, err := http.Get("http://localhost:8080/api-docs/")
