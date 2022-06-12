@@ -16,10 +16,10 @@ import (
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
-	//shell "github.com/ipfs/go-ipfs-api"
+	shell "github.com/ipfs/go-ipfs-api"
 )
 
-//var sh *shell.Shell
+var sh *shell.Shell
 
 func makeRandomObject() (string, error) {
 	// do some math to make a size
@@ -138,14 +138,14 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	}
 
 	// Try using the go-ipfs-api
-	// sh = shell.NewShell("ipfs-ui:5001")
-	// for i := 0; i < 1; i++ {
-	// 	_, err := makeRandomObject()
-	// 	if err != nil {
-	// 		fmt.Println("err: ", err)
-	// 	}
-	// 	fmt.Println("we're okay")
-	// }
+	sh = shell.NewShell("ipfs-ui:5001")
+	for i := 0; i < 1; i++ {
+		_, err := makeRandomObject()
+		if err != nil {
+			fmt.Println("err: ", err)
+		}
+		fmt.Println("we're okay")
+	}
 
 	// TestUploadFolderRaw()
 	// fmt.Println("we're okay, too!")
