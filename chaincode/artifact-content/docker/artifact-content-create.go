@@ -34,9 +34,9 @@ func makeRandomObject() (string, error) {
 	return sh.Add(r)
 }
 
-func listFiles() (string, error) {
-	return sh.Unixfs().ls()
-}
+// func listFiles() (string, error) {
+// 	return sh.Unixfs().ls()
+// }
 
 func TestUploadFolderRaw() {
 	ct, r, err := createForm(map[string]string{
@@ -151,11 +151,11 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		fmt.Println("Done making random object via API module")
 	}
 
-	_, err := listFiles()
-	if err != nil {
-		fmt.Println("err: ", err)
-	}
-	fmt.Println("Done listing files via API module")
+	// _, err := listFiles()
+	// if err != nil {
+	// 	fmt.Println("err: ", err)
+	// }
+	// fmt.Println("Done listing files via API module")
 
 	// TestUploadFolderRaw()
 	// fmt.Println("we're okay, too!")
