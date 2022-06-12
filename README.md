@@ -36,11 +36,13 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Gathering Key Performance Indicators (KPIs) via OpenTelemetry|   |   |   |
 
 ## Near-Term Items
+1. Storage of items from API call to IPFS.
+1. Retrieval of items from API call to IPFS.
 1. Chaincode processing of arbitrary artifact content.
 1. Graph construction of artifact relationships.
-1. Storage of items from API call to IPFS.
 
 ## Future Development Goals
+1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.
 1. Enable role-based authorization.
