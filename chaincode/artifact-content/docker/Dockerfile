@@ -27,6 +27,7 @@ COPY cachain/* /usr/local/share/ca-certificates/
 RUN rm -rf /var/cache/apk/* && \
   rm -rf /tmp/* && \
   update-ca-certificates && \
+  go mod init main && \
   go mod vendor && \
   go mod tidy && \
   go get -d -v ./... && \
