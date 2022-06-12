@@ -39,6 +39,7 @@ clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
+./network ipfs &&
 ./network chaincode
 
 # Used the following commands to generate the values:
@@ -74,8 +75,6 @@ done
 pushd apiServer
 nohup npm start &
 popd
-
-./network ipfs
 
 # Get default file.
 defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")

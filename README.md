@@ -61,3 +61,4 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Exchanging Files Between IPFS Nodes: [https://docs.ipfs.io/how-to/exchange-files-between-nodes/](https://docs.ipfs.io/how-to/exchange-files-between-nodes/)
 * Making HTTP Requests in Golang: [https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7](https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7)
 * Go IPFS API: [https://github.com/ipfs/go-ipfs-api](https://github.com/ipfs/go-ipfs-api)
+* Hyperledger Explorer: [https://github.com/hyperledger/blockchain-explorer](https://github.com/hyperledger/blockchain-explorer)

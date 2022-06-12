@@ -77,8 +77,8 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	}
 
 	// Try using the go-ipfs-api
-	sh = shell.NewShell("ipfs-service:12345")
-	for i := 0; i < 200; i++ {
+	sh = shell.NewShell("ipfs-ui:5001")
+	for i := 0; i < 1; i++ {
 		_, err := makeRandomObject()
 		if err != nil {
 			fmt.Println("err: ", err)
