@@ -4,7 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
-	"github.com/stretchr/testify/assert"
+	//"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
 	"math/rand"
@@ -12,7 +12,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
-	"testing"
+	//"testing"
 	"time"
 
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
