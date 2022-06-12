@@ -203,7 +203,7 @@ jobs:
   #     user: ${{ github.actor }}
   #     token: ${{ secrets.GITHUB_TOKEN }}
 
-  docker-metadata-chaincode:
+  docker-content-chaincode:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: content-chaincode
