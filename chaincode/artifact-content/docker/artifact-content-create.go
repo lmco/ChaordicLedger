@@ -75,7 +75,7 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 func TestListFiles() {
 	resp, err := http.Get("http://ipfs-ui:5001/api/v0/filestore/ls?file-order=true")
 	if err != nil {
-		fmt.Fatalln(err)
+		fmt.Println(err)
 	}
 
 	defer resp.Body.Close()
