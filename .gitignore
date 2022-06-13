@@ -8,7 +8,7 @@ log.txt
 docker_registry_proxy_details.sh
 **/out
 nodejs-server.zip
-apiServer
+apiServer*
 archive
 *.rpm
 *.tar.gz
