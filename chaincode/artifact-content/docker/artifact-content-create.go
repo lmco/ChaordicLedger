@@ -120,6 +120,58 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 	return nil
 }
 
+func TryListingFiles(baseURL string) {
+	fmt.Println("Listing files via " + baseURL)
+	fmt.Println("With filestore")
+	TestAPI(baseURL + "filestore/ls")
+	fmt.Println("With files")
+	TestAPI(baseURL + "files/ls")
+	fmt.Println("With files on /tmp and short format")
+	TestAPI(baseURL + "files/ls?arg=/tmp")
+	fmt.Println("With files on /tmp and long format")
+	TestAPI(baseURL + "files/ls?arg=%2Ftmp&long=true")
+	fmt.Println("With files on tmp and short format")
+	TestAPI(baseURL + "files/ls?arg=%2Ftmp")
+	fmt.Println("With files on tmp and long format")
+	TestAPI(baseURL + "files/ls?arg=%2Ftmp&long=true")
+	fmt.Println("Done listing files")
+	fmt.Println("With files on root")
+	TestAPI(baseURL + "files/ls?arg=/")
+	fmt.Println("Done listing files")
+	fmt.Println("Key list")
+	TestAPI(baseURL + "key/list")
+	fmt.Println("Done Key list")
+	fmt.Println("Pin list")
+	TestAPI(baseURL + "pin/ls")
+	fmt.Println("Done Pin list")
+	fmt.Println("Diag")
+	TestAPI(baseURL + "diag/sys")
+	fmt.Println("Done Diag")
+	fmt.Println("Version")
+	TestAPI(baseURL + "version")
+	fmt.Println("Done version")
+	fmt.Println("Log tail")
+	TestAPI(baseURL + "log/tail")
+	fmt.Println("Done log tail")
+}
+
+func TryGetURL(url string) {
+	fmt.Println("Trying ", url)
+	resp, err := http.Get(url)
+	if err != nil {
+		fmt.Fatalln(err)
+	}
+
+	defer resp.Body.Close()
+
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		fmt.Fatalln(err)
+	}
+
+	fmt.Println(string(body))
+}
+
 // CreateContent issues a new content to the world state with given details.
 func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, base64encodedContent string) error {
 	exists, err := s.ContentExists(ctx, id)
@@ -141,6 +193,24 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		return err
 	}
 
+	// _, err := listFiles()
+	// if err != nil {
+	// 	fmt.Println("err: ", err)
+	// }
+	// fmt.Println("Done listing files via API module")
+
+	// TestUploadFolderRaw()
+	// fmt.Println("we're okay, too!")
+
+	// Test HTTP connectivity
+
+	TryListingFiles("http://ipfs-ui:5001/api/v0/")
+	TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
+	TryListingFiles("http://ipfs-ui:5001/v0/")
+
+	TryGetURL("http://foo-service:12345/foo/")
+	TryGetURL("http://foo-service:12345/")
+
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
@@ -150,62 +220,6 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		}
 		fmt.Println("Done making random object via API module")
 	}
-
-	// _, err := listFiles()
-	// if err != nil {
-	// 	fmt.Println("err: ", err)
-	// }
-	// fmt.Println("Done listing files via API module")
-
-	// TestUploadFolderRaw()
-	// fmt.Println("we're okay, too!")
-	fmt.Println("Listing files")
-	fmt.Println("With filestore")
-	TestAPI("http://ipfs-ui:5001/api/v0/filestore/ls")
-	fmt.Println("With files")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls")
-	fmt.Println("With files on /tmp and short format")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=/tmp")
-	fmt.Println("With files on /tmp and long format")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp&long=true")
-	fmt.Println("With files on tmp and short format")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp")
-	fmt.Println("With files on tmp and long format")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=%2Ftmp&long=true")
-	fmt.Println("Done listing files")
-	fmt.Println("With files on root")
-	TestAPI("http://ipfs-ui:5001/api/v0/files/ls?arg=/")
-	fmt.Println("Done listing files")
-	fmt.Println("Key list")
-	TestAPI("http://ipfs-ui:5001/api/v0/key/list")
-	fmt.Println("Done Key list")
-	fmt.Println("Pin list")
-	TestAPI("http://ipfs-ui:5001/api/v0/pin/ls")
-	fmt.Println("Done Pin list")
-	fmt.Println("Diag")
-	TestAPI("http://ipfs-ui:5001/api/v0/diag/sys")
-	fmt.Println("Done Diag")
-	fmt.Println("Version")
-	TestAPI("http://ipfs-ui:5001/api/v0/version")
-	fmt.Println("Done version")
-	fmt.Println("Log tail")
-	TestAPI("http://ipfs-ui:5001/api/v0/log/tail")
-	fmt.Println("Done log tail")
-	// // Test HTTP connectivity
-
-	// resp, err := http.Get("http://localhost:8080/api-docs/")
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-
-	// defer resp.Body.Close()
-
-	// body, err := ioutil.ReadAll(resp.Body)
-	// if err != nil {
-	// 	log.Fatalln(err)
-	// }
-
-	// log.Println(string(body))
 
 	return ctx.GetStub().PutState(id, contentJSON)
 }
