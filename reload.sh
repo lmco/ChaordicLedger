@@ -22,7 +22,6 @@ cp LMChain/* test/cachain/
 
 rm -rf LMChain
 
-# Note: This assumes nodejs-server.zip has already been downloaded.
 # Termintate nodejs Swagger UI.
 ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
 rm -rf apiServer
@@ -72,7 +71,16 @@ done
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
 # Note: This assumes api/server/out/nodejs was pulled local.
-# TODO: Look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+
+# Pull the latest nodejs-server.zip artifact from the latest successful GitHub run.
+#   Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
+#   TODO: Once the org exists, look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
+. githubReadToken.sh
+latestSuccessfulRun=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs?state=Success | jq '.workflow_runs[0].id')
+zipDownloadUrl=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs/${latestSuccessfulRun}/artifacts | jq '.artifacts[] | select(.name=="nodejs-server")' | jq '.archive_download_url' | tr -d '\"')
+curl -vvv -L -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${githubReadToken}" ${zipDownloadUrl} --output nodejs-server.zip
+unzip nodejs-server.zip -d apiServer
+
 pushd apiServer
 nohup npm start &
 popd

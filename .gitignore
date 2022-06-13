@@ -12,3 +12,4 @@ apiServer
 archive
 *.rpm
 *.tar.gz
+githubReadToken.sh

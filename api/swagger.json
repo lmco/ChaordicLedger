@@ -114,11 +114,13 @@
         ],
         "parameters": [
           {
-            "name": "artifactPath",
-            "in": "query",
-            "description": "Path of artifact to create",
+            "in": "body",
+            "name": "body",
+            "description": "Metadata object that needs to be added to the store",
             "required": true,
-            "type": "string"
+            "schema": {
+              "$ref": "#/definitions/Artifact"
+            }
           }
         ],
         "responses": {
@@ -315,6 +317,19 @@
         },
         "message": {
           "type": "string"
+        }
+      }
+    },
+    "Artifact": {
+      "type": "object",
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "base64content": {
+          "type": "string",
+          "minLength": 1
         }
       }
     },

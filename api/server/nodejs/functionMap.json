@@ -38,7 +38,7 @@
   "createArtifact": {
     "script": "createArtifact.sh",
     "parameters": [
-      "artifactPath"
+      "body"
     ],
     "target": "deploy/chaordicledger-ipfs"
   },
