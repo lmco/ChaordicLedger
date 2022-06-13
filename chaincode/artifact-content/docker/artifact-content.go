@@ -8,9 +8,9 @@ import (
 // Insert struct field in alphabetic order => to achieve determinism accross languages
 // golang keeps the order when marshal to json but doesn't order automatically
 type Content struct {
-	CreationTimestamp    time.Time `json:CreationTimestamp`
-	ID                   string    `json:ID`
-	Base64EncodedContent string    `json:Base64EncodedContent`
+	CreationTimestamp time.Time `json:CreationTimestamp`
+	ID                string    `json:ID`
+	IPFSName          string    `json:IPFSName`
 }
 
 func main() {

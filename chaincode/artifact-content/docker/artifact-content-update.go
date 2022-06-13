@@ -19,10 +19,11 @@ func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterfac
 		return fmt.Errorf("Content %s does not exist", id)
 	}
 
+	ipfsName := "TODO: Need to look up by ID."
 	content := Content{
-		CreationTimestamp:    creationTimestamp,
-		ID:                   id,
-		Base64EncodedContent: base64encodedContent,
+		CreationTimestamp: creationTimestamp,
+		ID:                id,
+		IPFSName:          ipfsName,
 	}
 
 	contentJSON, err := json.Marshal(content)
