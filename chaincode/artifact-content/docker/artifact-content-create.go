@@ -207,11 +207,11 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		_, err := makeRandomObject()
+		resp, err := makeRandomObject()
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
-		fmt.Println("Done making random object via API module" + string(_))
+		fmt.Println("Done making random object via API module" + string(resp))
 	}
 
 	return ctx.GetStub().PutState(id, contentJSON)
