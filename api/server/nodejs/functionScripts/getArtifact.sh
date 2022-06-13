@@ -1,3 +1,4 @@
 #!/bin/sh
 set -x
-ipfs files read {{artifactID}}
+ipfs object get {{artifactID}}
+#ipfs files read {{artifactID}}
