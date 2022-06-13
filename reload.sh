@@ -1,4 +1,5 @@
 #/bin/sh
+. env.sh
 
 rm api/builder/cachain/*.cer
 rm api/server/cachain/*.cer

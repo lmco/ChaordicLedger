@@ -5,6 +5,7 @@ set -o errexit
 export CLUSTER_NAME="chaordicledger"
 TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
+. env.sh
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
@@ -41,10 +42,6 @@ export NETWORK_NAME="chaordicledger"
 export CLUSTER_NAME="chaordiccluster"
 export NS=${NETWORK_NAME}
 export CHANNEL_NAME="cl"
-
-export ARTIFACT_METADATA_CCNAME="artifact-metadata"
-export ARTIFACT_CONTENT_CCNAME="artifact-content"
-export LIGHTSWITCH_CCNAME="lightswitch"
 
 #export CHAINCODE_NAME=asset-transfer-basic
 #export CHAINCODE_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}hyperledgendary/fabric-ccaas-asset-transfer-basic:latest

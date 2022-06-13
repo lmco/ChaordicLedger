@@ -134,25 +134,18 @@ func TryListingFiles(baseURL string) {
 	TestAPI(baseURL + "files/ls?arg=%2Ftmp")
 	fmt.Println("With files on tmp and long format")
 	TestAPI(baseURL + "files/ls?arg=%2Ftmp&long=true")
-	fmt.Println("Done listing files")
 	fmt.Println("With files on root")
 	TestAPI(baseURL + "files/ls?arg=/")
-	fmt.Println("Done listing files")
 	fmt.Println("Key list")
 	TestAPI(baseURL + "key/list")
-	fmt.Println("Done Key list")
 	fmt.Println("Pin list")
 	TestAPI(baseURL + "pin/ls")
-	fmt.Println("Done Pin list")
 	fmt.Println("Diag")
 	TestAPI(baseURL + "diag/sys")
-	fmt.Println("Done Diag")
 	fmt.Println("Version")
 	TestAPI(baseURL + "version")
-	fmt.Println("Done version")
 	fmt.Println("Log tail")
 	TestAPI(baseURL + "log/tail")
-	fmt.Println("Done log tail")
 }
 
 func TryGetURL(url string) {
@@ -204,9 +197,9 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	// Test HTTP connectivity
 
-	TryListingFiles("http://ipfs-ui:5001/api/v0/")
+	//TryListingFiles("http://ipfs-ui:5001/api/v0/")
 	TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
-	TryListingFiles("http://ipfs-ui:5001/v0/")
+	//TryListingFiles("http://ipfs-ui:5001/v0/")
 
 	TryGetURL("http://foo-service:12345/foo/")
 	TryGetURL("http://foo-service:12345/")
@@ -218,7 +211,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
-		fmt.Println("Done making random object via API module")
+		fmt.Println("Done making random object via API module" + string(_))
 	}
 
 	return ctx.GetStub().PutState(id, contentJSON)
