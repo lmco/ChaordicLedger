@@ -207,7 +207,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 			fmt.Println("err: ", err)
 		}
 		fmt.Println("Done making object via API module. IPFS Name for " + id + " is " + string(resp))
-		ipfsName := string(resp)
+		ipfsName = string(resp)
 	}
 	// // Try using the go-ipfs-api
 	// sh = shell.NewShell("ipfs-ui:5001")
