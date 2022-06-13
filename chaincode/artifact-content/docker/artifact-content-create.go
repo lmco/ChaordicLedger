@@ -34,6 +34,11 @@ func makeRandomObject() (string, error) {
 	return sh.Add(r)
 }
 
+func makeObject(content string) (string, error) {
+	r := strings.NewReader(content)
+	return sh.Add(r)
+}
+
 // func listFiles() (string, error) {
 // 	return sh.Unixfs().ls()
 // }
@@ -175,17 +180,6 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		return fmt.Errorf("Content %s already exists", id)
 	}
 
-	content := Content{
-		CreationTimestamp:    creationTimestamp,
-		ID:                   id,
-		Base64EncodedContent: base64encodedContent,
-	}
-
-	contentJSON, err := json.Marshal(content)
-	if err != nil {
-		return err
-	}
-
 	// _, err := listFiles()
 	// if err != nil {
 	// 	fmt.Println("err: ", err)
@@ -197,21 +191,44 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	// Test HTTP connectivity
 
-	//TryListingFiles("http://ipfs-ui:5001/api/v0/")
-	TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
+	TryListingFiles("http://ipfs-ui:5001/api/v0/")
+	//TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/v0/")
 
 	TryGetURL("http://foo-service:12345/foo/")
 	TryGetURL("http://foo-service:12345/")
 
+	ipfsName = nil
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		resp, err := makeRandomObject()
+		resp, err := makeObject(base64encodedContent)
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
-		fmt.Println("Done making random object via API module" + string(resp))
+		fmt.Println("Done making object via API module. IPFS Name for " + id + " is " + string(resp))
+		ipfsName = string(resp)
+	}
+	// // Try using the go-ipfs-api
+	// sh = shell.NewShell("ipfs-ui:5001")
+	// for i := 0; i < 1; i++ {
+	// 	resp, err := makeRandomObject()
+	// 	if err != nil {
+	// 		fmt.Println("err: ", err)
+	// 	}
+	// 	fmt.Println("Done making random object via API module" + string(resp))
+	// 	ipfsName = string(resp)
+	// }
+
+	content := Content{
+		CreationTimestamp: creationTimestamp,
+		ID:                id,
+		IPFSName:          ipfsName,
+	}
+
+	contentJSON, err := json.Marshal(content)
+	if err != nil {
+		return err
 	}
 
 	return ctx.GetStub().PutState(id, contentJSON)

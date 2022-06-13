@@ -77,6 +77,8 @@ pushd apiServer
 nohup npm start &
 popd
 
+sleep 5
+
 # Get default file.
 defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
 echo $defaultFile
