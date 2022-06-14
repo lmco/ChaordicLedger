@@ -1,0 +1,60 @@
+{
+  "createArtifactMetadata": {
+    "script": "createArtifactMetadata.sh",
+    "target": "deploy/org1-admin-cli"
+  },
+  "deleteArtifactMetadata": {
+    "script": "deleteArtifactMetadata.sh",
+    "parameters": [
+      "metadataID"
+    ],
+    "target": "deploy/org1-admin-cli"
+  },
+  "getAllArtifactMetadata": {
+    "script": "getAllArtifactMetadata.sh",
+    "target": "deploy/org1-admin-cli"
+  },
+  "getArtifact": {
+    "script": "getArtifact.sh",
+    "parameters": [
+      "artifactID"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "getArtifactAtPath": {
+    "script": "getArtifactAtPath.sh",
+    "parameters": [
+      "artifactPath"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "deleteArtifactAtPath": {
+    "script": "deleteArtifactAtPath.sh",
+    "parameters": [
+      "artifactPath"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "createArtifact": {
+    "script": "createArtifact.sh",
+    "parameters": [
+      "body"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "uploadArtifact": {
+    "script": "uploadArtifact.sh",
+    "parameters": [
+      "artifactName",
+      "file"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "listArtifactsAtPath": {
+    "script": "listArtifactsAtPath.sh",
+    "parameters": [
+      "path"
+    ],
+    "target": "deploy/chaordicledger-ipfs"
+  }
+}

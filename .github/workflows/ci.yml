@@ -88,7 +88,8 @@ jobs:
 
           # Probably easiest to do this with python...
           ls -rotl
-          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts -m ./api/server/nodejs/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
+          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts/ArtifactsService -m ./api/server/nodejs/ArtifactsService/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
+          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts/BlockchainService -m ./api/server/nodejs/BlockchainService/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f BlockchainService.js
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code
