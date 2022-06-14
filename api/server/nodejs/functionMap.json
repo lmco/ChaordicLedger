@@ -56,5 +56,9 @@
       "path"
     ],
     "target": "deploy/chaordicledger-ipfs"
+  },
+  "getLatestBlock": {
+    "script": "getLatestBlock.sh",
+    "target": "deploy/org1-admin-cli"
   }
 }

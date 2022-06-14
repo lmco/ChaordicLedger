@@ -110,7 +110,9 @@ elif [ "${MODE}" == "peer" ]; then
 
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
+  sourceProxyDetails
   pushd hyperledger/scripts
+  # This images are already in the kind cluster's registry, just need to reference them.
   #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}

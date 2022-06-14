@@ -18,6 +18,9 @@ spec:
       containers:
         - name: ipfs-app
           image: ipfs/go-ipfs:v0.13.0
+          env:
+            - name: IPFS_LOGGING
+              value: debug
           ports:
             - containerPort: 8080
             - containerPort: 5001

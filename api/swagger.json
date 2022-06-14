@@ -27,6 +27,10 @@
     {
       "name": "users",
       "description": "Operations regarding users."
+    },
+    {
+      "name": "Blockchain",
+      "description": "Operations regarding the blockchain."
     }
   ],
   "schemes": [
@@ -36,6 +40,27 @@
     "application/json"
   ],
   "paths": {
+    "/latestblock": {
+      "get": {
+        "summary": "Gets the details from the latest block in the chain.",
+        "description": "Gets the details from the latest block in the chain.",
+        "operationId": "getLatestBlock",
+        "tags": [
+          "Blockchain"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON representation of block data.",
+            "schema": {
+              "$ref": "#/definitions/BlockData"
+            }
+          }
+        }
+      }
+    },
     "/artifact/{artifactName}": {
       "post": {
         "operationId": "uploadArtifact",
@@ -332,6 +357,9 @@
           "minLength": 1
         }
       }
+    },
+    "BlockData": {
+      "type": "string"
     },
     "ArtifactMetadata": {
       "type": "object",
