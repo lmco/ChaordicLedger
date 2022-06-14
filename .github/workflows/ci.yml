@@ -85,14 +85,18 @@ jobs:
       - name: Overlay NodeJS Server Implementation
         run: |
           # Need to overlay the functional implementation to the generated code.
-
           # Probably easiest to do this with python...
-          ls -rotl
-          ls -rotl ./api/server/nodejs/functionScripts/ArtifactsService
-          cat ./api/server/nodejs/ArtifactsService/functionMap.json
-          cat ./api/server/nodejs/BlockchainService/functionMap.json
-          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts/ArtifactsService -m ./api/server/nodejs/ArtifactsService/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
-          python ./api/server/nodejs/overlayServerImplementation.py -i ./api/server/nodejs/functionScripts/BlockchainService -m ./api/server/nodejs/BlockchainService/functionMap.json -o ${{ env.OUT_NODEJS }}/service -f BlockchainService.js
+          
+          ArtifactsServiceInputDir="./api/server/nodejs/functionScripts/ArtifactsService"
+          ls -rotl $ArtifactsServiceInputDir
+          ArtifactsServiceFunctionMapFile="$ArtifactsServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $ArtifactsServiceInputDir -m $ArtifactsServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f ArtifactsService.js
+
+          BlockchainServiceInputDir="./api/server/nodejs/functionScripts/BlockchainService"
+          ls -rotl $BlockchainServiceInputDir
+          BlockchainServiceFunctionMapFile="$BlockchainServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $BlockchainServiceInputDir -m $BlockchainServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f BlockchainService.js
+
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code
