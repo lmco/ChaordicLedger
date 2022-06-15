@@ -133,8 +133,11 @@ elif [ "${MODE}" == "query" ]; then
   echo "🏁 - Chaincode queried."
 elif [ "${MODE}" == "graphreader" ]; then
   pushd graph
-  kubectl create secret generic processor-args --from-literal=arg1="" --from-literal=arg2="" --from-literal=arg3="/dns/ipfs-ui/tcp/5001/http" --from-literal=arg4="graph" --from-literal=arg5="{}" --from-literal=arg6="{}" -n ${CLUSTER_NAME}
-  kubectl create -f config/graphprocessor_job.yaml -n ${CLUSTER_NAME}
+
+  kubectl delete secret processor-args -n ${NETWORK_NAME} || true
+  kubectl delete -f config/graphprocessor_job.yaml -n ${NETWORK_NAME} || true
+  kubectl create secret generic processor-args --from-literal=arg1="" --from-literal=arg2="" --from-literal=arg3="/dns/ipfs-ui/tcp/5001/http" --from-literal=arg4="graph" --from-literal=arg5="{\"hi\" : \"there\"}" --from-literal=arg6="{}" -n ${NETWORK_NAME}
+  kubectl create -f config/graphprocessor_job.yaml -n ${NETWORK_NAME}
   popd
 
   echo "🏁 - graph reader queried."

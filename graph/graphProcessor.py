@@ -23,7 +23,8 @@ def configureLogging():
 
 def throwIfMissingElement(typeName, elementname, content):
     if elementname not in content:
-        raise Exception(f'A {typeName} must contain the element \"{element}\".')
+        raise Exception(
+            f'A {typeName} must contain the element \"{elementname}\".')
 
 
 def validateNode(content):
