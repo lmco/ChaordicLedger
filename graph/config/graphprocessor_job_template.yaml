@@ -28,7 +28,7 @@ spec:
               secretKeyRef:
                 name: processor-args
                 key: arg3
-          - name: GRAPHFILE
+          - name: MODE
             valueFrom:
               secretKeyRef:
                 name: processor-args

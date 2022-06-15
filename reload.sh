@@ -36,11 +36,18 @@ clear &&
 ./network purge &&
 ./network init &&
 clear &&
+kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml && ## Metrics
+kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/recommended.yaml && ## Dashboard
+kubectl proxy &
+
+kubectl create serviceaccount dashboard-admin-sa &&
+kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
+clear &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
 ./network ipfs &&
-./network graphreader &&
+./network graphinit &&
 ./network chaincode
 
 # Used the following commands to generate the values:

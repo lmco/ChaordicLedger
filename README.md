@@ -37,7 +37,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 
 ## Near-Term Items
 1. Graph construction of artifact relationships.
-1. Enable IPFS logging
+1. Metrics gathering
 
 ## Future Development Goals
 1. Add log aggregation.
@@ -63,3 +63,4 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Making HTTP Requests in Golang: [https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7](https://medium.com/@masnun/making-http-requests-in-golang-dd123379efe7)
 * Go IPFS API: [https://github.com/ipfs/go-ipfs-api](https://github.com/ipfs/go-ipfs-api)
 * Hyperledger Explorer: [https://github.com/hyperledger/blockchain-explorer](https://github.com/hyperledger/blockchain-explorer)
+* Kubernetes Dashboard: [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard)

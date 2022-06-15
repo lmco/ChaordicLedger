@@ -12,7 +12,7 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
-. graph/scripts/create_graphprocessor.sh
+. graph/scripts/graphprocessor.sh
 
 function sourceProxyDetails() {
   proxy_details_source_file=docker_registry_proxy_details.sh
@@ -132,9 +132,17 @@ elif [ "${MODE}" == "query" ]; then
   popd
 
   echo "🏁 - Chaincode queried."
-elif [ "${MODE}" == "graphreader" ]; then
+elif [ "${MODE}" == "graphinit" ]; then
   pushd graph/scripts
+  sourceProxyDetails
   init_graphprocessor_job
+  popd
+
+  echo "🏁 - graph reader created."
+elif [ "${MODE}" == "graphmodify" ]; then
+  pushd graph/scripts
+  sourceProxyDetails
+  modify_graphprocessor_job
   popd
 
   echo "🏁 - graph reader created."

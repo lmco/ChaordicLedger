@@ -77,27 +77,49 @@ if __name__ == "__main__":
 
     print("hi")
     configureLogging()
-    (client, mode, graphfile, node, relationship) = validateArgs()
+    (client, mode, node, relationship) = validateArgs()
 
-    log.info("Graph file: %s", graphfile)
     log.info("Mode: %s", mode)
     log.info("Node: %s", node)
     log.info("Relationship: %s", relationship)
+
+    jsonNode = json.loads(node)
+    jsonRelationship = json.loads(relationship)
 
     if mode == "init":
         initialGraphState = {
             "nodes": [],
             "edges": []
         }
+
+        # with open("/graph.json", "wb") as f:
+        #     json.dump(initialGraphState, f)
+
         jsonStr = json.dumps(initialGraphState)
-        response = client.files.write("/", io.StringIO(jsonStr))
+        #response = client.files.write("/", jsonStr.encode('utf-8'))
+        #response = client.files.write("/graph.json", "graph.json")
+        response = client.files.write(
+            "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
         log.info(response)
     elif mode == "read":
         response = client.files.read("/graph.json")
-        log.info(str(response))
+        log.info(response.decode())
     elif mode == "write":
-        response = client.files.read("/graph.json")
-        log.warn("TODO: Implement graph update")
+        jsonData = json.loads(client.files.read(
+            "/graph.json").decode('utf-8)'))
+        if len(jsonNode) > 0:
+            log.info("Appending node: %s", node)
+            jsonData["nodes"].append(jsonNode)
+
+        if len(jsonRelationship) > 0:
+            log.info("Appending relationship: %s", relationship)
+            jsonData["edges"].append(jsonRelationship)
+
+        jsonStr = json.dumps(jsonData)
+        log.info("Writing updated graph content: %s", jsonStr)
+        response = client.files.write(
+            "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
+        log.info(response)
     else:
         log.error(f"Invalid mode ${mode} provided.")
 
