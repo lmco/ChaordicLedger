@@ -1,5 +1,6 @@
 import argparse
 from datetime import datetime
+import io
 import json
 import logging
 import sys
@@ -41,12 +42,20 @@ def validateRelationship(content):
         throwIfMissingElement("relationship", "nodeidb", possibleRelationship)
 
 
+def validateMode(mode):
+    if mode is None or mode not in ["init", "read", "write"]:
+        raise Exception(
+            f"Invalid mode: {mode}. Valid modes: [init|read|write]")
+
+
 def validateArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--ipfsapiserver", action="store",
                         help="The address of the IPFS API (e.g. /dns/localhost/tcp/5001/http)", required=False, default="/dns/ipfs-ui/tcp/5001/http")
-    parser.add_argument("-g", "--graphfile", action="store",
-                        help="The name of the file representing the graph", required=True)
+    # parser.add_argument("-g", "--graphfile", action="store",
+    #                     help="The name of the file representing the graph", required=True, default="graph.json")
+    parser.add_argument("-m", "--mode", action="store",
+                        help="Execution mode: [init|read|write]", required=False, default="init")
     parser.add_argument("-n", "--node", action="store",
                         help="A node to add", required=False)
     parser.add_argument("-r", "--relationship", action="store",
@@ -56,10 +65,11 @@ def validateArgs():
 
     client = ipfshttpclient.connect(args.ipfsapiserver)
 
+    validateMode(args.mode)
     validateNode(args.node)
     validateRelationship(args.relationship)
 
-    return (client, args.graphfile, args.node, args.relationship)
+    return (client, args.mode, args.node, args.relationship)
 
 
 if __name__ == "__main__":
@@ -67,14 +77,29 @@ if __name__ == "__main__":
 
     print("hi")
     configureLogging()
-    (client, graphfile, node, relationship) = validateArgs()
+    (client, mode, graphfile, node, relationship) = validateArgs()
 
     log.info("Graph file: %s", graphfile)
+    log.info("Mode: %s", mode)
     log.info("Node: %s", node)
     log.info("Relationship: %s", relationship)
 
-    response = client.add('test.txt')
-    log.info(response)
+    if mode == "init":
+        initialGraphState = {
+            "nodes": [],
+            "edges": []
+        }
+        jsonStr = json.dumps(initialGraphState)
+        response = client.files.write("/", io.StringIO(jsonStr))
+        log.info(response)
+    elif mode == "read":
+        response = client.files.read("/graph.json")
+        log.info(str(response))
+    elif mode == "write":
+        response = client.files.read("/graph.json")
+        log.warn("TODO: Implement graph update")
+    else:
+        log.error(f"Invalid mode ${mode} provided.")
 
     endtime = datetime.utcnow()
     log.info(

@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-graphprocessor
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: graphprocessor
+    spec:
+      containers:
+        - name: graphprocessor
+          image: ${GRAPH_PROCESSOR_IMAGE}
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: HTTP_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg1
+          - name: HTTPS_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg2
+          - name: IPFS_API_SERVER
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg3
+          - name: GRAPHFILE
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg4
+          - name: NODE
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg5
+          - name: RELATIONSHIP
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg6
+      restartPolicy: Never
