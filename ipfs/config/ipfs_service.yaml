@@ -17,7 +17,7 @@ spec:
     spec:
       containers:
         - name: ipfs-app
-          image: ipfs/go-ipfs:latest
+          image: ipfs/go-ipfs:v0.7.0
           ports:
             - containerPort: 8080
             - containerPort: 5001

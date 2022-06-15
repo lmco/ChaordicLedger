@@ -1,0 +1,6 @@
+{
+  "getLatestBlock": {
+    "script": "getRelationshipGraph.sh",
+    "target": "deploy/org1-admin-cli"
+  }
+}

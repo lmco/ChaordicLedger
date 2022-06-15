@@ -128,6 +128,7 @@ jobs:
       - name: Push image
         run: |
           docker push ${{ env.imageTag }}
+          
 
   build-java-api:
     runs-on: ubuntu-latest
@@ -186,6 +187,31 @@ jobs:
 
       - name: Copy API Definition
         run: cp ${{ env.SWAGGER_API_FILE }} ${{ env.BUILD_DIR }}
+
+      - name: Build image
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ env.imageTag }}
+
+  docker-graphprocessor:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: graphprocessor
+      IMAGE_VERSION: 0.0.1
+      BUILD_DIR: graph
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
 
       - name: Build image
         run: |

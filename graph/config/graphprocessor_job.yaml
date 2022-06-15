@@ -1,0 +1,112 @@
+# Reference: https://kind.sigs.k8s.io/docs/user/ingress/
+# Reference: https://kubernetes.io/docs/concepts/services-networking/ingress/
+
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-graphprocessor
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: graphprocessor
+    spec:
+      containers:
+        - name: graphprocessor
+          image: graphprocessor:v0.0.0
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: HTTP_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg1
+          - name: HTTPS_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg2
+          - name: IPFS_API_SERVER
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg3
+          - name: GRAPHFILE
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg4
+          - name: NODE
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg5
+          - name: RELATIONSHIP
+            valueFrom:
+              secretKeyRef:
+                name: processor-args
+                key: arg6
+      restartPolicy: Never
+
+
+
+# apiVersion: batch/v1
+# kind: Job
+# metadata:
+#   name: run-graphprocessor
+# spec:
+#   completions: 1
+#   template:
+#     metadata:
+#       name: graphprocessor
+#     spec:
+#       containers:
+#         - name: graphprocessor
+#           image: graphprocessor:v0.0.0
+#           imagePullPolicy: IfNotPresent
+#           env:
+#             - name: HTTP_PROXY
+#               value: ""
+#             - name: HTTPS_PROXY
+#               value: ""
+#             - name: IPFS_API_SERVER
+#               value: "/dns/ipfs-ui/tcp/5001/http" #/dns/ipfs-ui/tcp/5001/http
+#             - name: GRAPHFILE
+#               value: graph
+#             - name: NODE
+#               value: "{\"nodeid\" : \"testNodeId\", \"fileid\" : \"testFileId\"}"
+#             - name: RELATIONSHIP
+#               value: "{}"
+#       restartPolicy: Never
+
+# apiVersion: apps/v1
+# kind: Deployment
+# metadata:
+#   name: graphprocessor
+# spec:
+#   replicas: 1
+#   selector:
+#     matchLabels:
+#       app: graphprocessor
+#   template:
+#     metadata:
+#       labels:
+#         app: graphprocessor
+#     spec:
+#       containers:
+#         - name: graphprocessor
+#           image: graphprocessor:v0.0.0
+#           env:
+#             - name: HTTP_PROXY
+#               value: ""
+#             - name: HTTPS_PROXY
+#               value: ""
+#             - name: IPFS_API_SERVER
+#               value: "/dns/ipfs-ui/tcp/5001/http" #/dns/ipfs-ui/tcp/5001/http
+#             - name: GRAPHFILE
+#               value: graph
+#             - name: NODE
+#               value: "{}"
+#             - name: RELATIONSHIP
+#               value: "{}"
+              

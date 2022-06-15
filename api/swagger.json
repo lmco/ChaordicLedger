@@ -17,20 +17,12 @@
       "description": "Operations regarding artifacts."
     },
     {
-      "name": "concurrence",
-      "description": "Operations regarding concurrence with changes."
-    },
-    {
-      "name": "relationships",
-      "description": "Operations regarding relationships between artifacts."
-    },
-    {
-      "name": "users",
-      "description": "Operations regarding users."
-    },
-    {
       "name": "Blockchain",
       "description": "Operations regarding the blockchain."
+    },
+    {
+      "name": "Relationships",
+      "description": "Operations regarding relationships between artifacts."
     }
   ],
   "schemes": [
@@ -324,6 +316,24 @@
           },
           "404": {
             "description": "Artifact metadata not found"
+          }
+        }
+      }
+    },
+    "/relationships": {
+      "get": {
+        "summary": "Gets the relationships between artifacts.",
+        "description": "Gets the relationships between artifacts.",
+        "operationId": "getRelationshipGraph",
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
           }
         }
       }

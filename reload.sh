@@ -40,6 +40,7 @@ clear &&
 ./network channel 2 &&
 ./network peer &&
 ./network ipfs &&
+./network graphreader &&
 ./network chaincode
 
 # Used the following commands to generate the values:
