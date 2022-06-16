@@ -22,7 +22,7 @@ function sourceProxyDetails() {
 
     if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
       echo "Logging in to $DOCKER_REGISTRY_PROXY"
-      echo "echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin"
+      echo "echoing \$REGISTRY_TOKEN into \"docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin\""
       echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
     fi
   else

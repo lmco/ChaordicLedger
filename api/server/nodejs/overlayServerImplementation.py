@@ -61,7 +61,12 @@ def validateArgs():
 
 
 def getReplacementExpression(arg):
-    return "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
+    retVal = "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
+
+    if arg == "body":
+        retVal = "sed 's|{{" + arg + "}}|JSON.stringify(${" + arg + "})|g'"
+
+    return retVal
 
 
 def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, outputfile: str, namespace: str):

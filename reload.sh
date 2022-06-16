@@ -1,4 +1,11 @@
 #/bin/sh
+function log() {
+  now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+  echo "[$now] $1"
+}
+
+log "Starting reload."
+
 . env.sh
 
 rm api/builder/cachain/*.cer
@@ -39,15 +46,6 @@ cd ~/git/ChaordicLedger/
 
 ./network purge &&
 ./network init &&
-kubectl apply -f metrics/components.yaml &&
-kubectl apply -f dashboards/kubernetes/recommended.yaml
-
-nohup kubectl proxy &
-
-echo "Creating service account for dashboard"
-kubectl create serviceaccount dashboard-admin-sa &&
-kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
-
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
@@ -70,7 +68,7 @@ kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin
 LfileArray=("randomArtifact0.bin" "randomArtifact1.txt")
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 for item in ${LfileArray[*]}; do
-  echo "Adding $item to the ledger."
+  log "Adding $item to the ledger."
   itemhash=$(sha512sum ${item} | awk '{print $1;}')
   itemsize=$(du -b ${item} | awk '{print $1;}')
   itemcontent=$(cat ${item} | base64 -w 0)
@@ -103,7 +101,7 @@ sleep 10
 
 # Get default file.
 defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-echo $defaultFile
+log "Default file: $defaultFile"
 
 # Get default file contents.
 curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Ftmp%2F$defaultFile" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
@@ -113,7 +111,20 @@ curl -X POST "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2Fp
 
 # List files at new path.
 fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-echo $fileName
+log "Filename: $fileName"
 
 # Get file contents.
 curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+
+
+log "Creating service account for dashboard"
+kubectl create serviceaccount dashboard-admin-sa &&
+kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
+kubectl apply -f metrics/components.yaml &&
+kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
+kubectl apply -f dashboards/kubernetes/recommended.yaml &&
+kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
+kubectl -n kubernetes-dashboard wait --timeout=30s --for=condition=Ready kubernetes-dashboard
+nohup kubectl proxy &
+
+log "Done"
