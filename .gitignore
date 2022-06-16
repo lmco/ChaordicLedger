@@ -13,3 +13,5 @@ archive
 *.rpm
 *.tar.gz
 githubReadToken.sh
+nohup.out
+**/nohup.out

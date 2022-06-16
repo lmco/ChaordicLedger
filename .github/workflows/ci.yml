@@ -97,6 +97,11 @@ jobs:
           BlockchainServiceFunctionMapFile="$BlockchainServiceInputDir/functionMap.json"
           python ./api/server/nodejs/overlayServerImplementation.py -i $BlockchainServiceInputDir -m $BlockchainServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f BlockchainService.js
 
+          RelationshipsServiceInputDir="./api/server/nodejs/functionScripts/RelationshipsService"
+          ls -rotl $RelationshipsServiceInputDir
+          RelationshipsServiceFunctionMapFile="$RelationshipsServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $RelationshipsServiceInputDir -m $RelationshipsServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f RelationshipsService.js
+
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code

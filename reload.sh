@@ -21,6 +21,7 @@ cp LMChain/* hyperledger/admin-cli/cachain/
 cp LMChain/* test/cachain/
 
 rm -rf LMChain
+rm nohup.out
 
 # Terminate kubectl proxy.
 ps -ef | grep "kubectl proxy" | grep -v grep | awk '{print $2;}' | xargs kill -9
@@ -36,17 +37,16 @@ export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 cd ~/git/ChaordicLedger/
 
-clear &&
 ./network purge &&
 ./network init &&
-clear &&
-kubectl apply -f metrics/component.yaml &&
-kubectl apply -f dashboards/kubernetes/recommended.yaml &&
-kubectl proxy &
+kubectl apply -f metrics/components.yaml &&
+kubectl apply -f dashboards/kubernetes/recommended.yaml
 
+nohup kubectl proxy &
+
+echo "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
-clear
 
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&

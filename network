@@ -133,15 +133,15 @@ elif [ "${MODE}" == "query" ]; then
 
   echo "🏁 - Chaincode queried."
 elif [ "${MODE}" == "graphinit" ]; then
-  pushd graph/scripts
   sourceProxyDetails
+  pushd graph/scripts
   init_graphprocessor_job
   popd
 
   echo "🏁 - graph reader created."
 elif [ "${MODE}" == "graphmodify" ]; then
-  pushd graph/scripts
   sourceProxyDetails
+  pushd graph/scripts
   modify_graphprocessor_job
   popd
 
