@@ -4,7 +4,7 @@
     "target": "deploy/org1-admin-cli"
   },
   "getNumberedBlock": {
-    "script": "getLatestBlock.sh",
+    "script": "getNumberedBlock.sh",
     "parameters": [
       "blocknumber"
     ],

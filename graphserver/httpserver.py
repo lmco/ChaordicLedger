@@ -13,8 +13,10 @@ class MyServer(BaseHTTPRequestHandler):
     def write_node(self, node):
         client = ipfshttpclient.connect("/dns/ipfs-ui/tcp/5001/http")
         jsonNode = json.loads(node)
-        jsonData = json.loads(client.files.read(
-            "/graph.json").decode('utf-8'))
+        data = client.files.read(
+            "/graph.json").decode('utf-8')
+        print(data)
+        jsonData = json.loads(data)
         if len(jsonNode) > 0:
             print(f"Appending node: {node}")
             jsonData["nodes"].append(jsonNode)
