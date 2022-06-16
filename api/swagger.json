@@ -53,6 +53,37 @@
         }
       }
     },
+    "/numberedblock/{blocknumber}": {
+      "get": {
+        "summary": "Gets the details from a block in the chain.",
+        "description": "Gets the details from a block in the chain.",
+        "operationId": "getNumberedBlock",
+        "tags": [
+          "Blockchain"
+        ],
+        "parameters": [
+          {
+            "name": "blocknumber",
+            "in": "path",
+            "description": "Zero-based block index",
+            "required": true,
+            "type": "integer",
+            "minimum": 0
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON representation of block data.",
+            "schema": {
+              "$ref": "#/definitions/BlockData"
+            }
+          }
+        }
+      }
+    },
     "/artifact/{artifactName}": {
       "post": {
         "operationId": "uploadArtifact",

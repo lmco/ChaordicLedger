@@ -124,5 +124,6 @@ kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &
 kubectl apply -f dashboards/kubernetes/recommended.yaml &&
 kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
 
-nohup kubectl proxy & &&
+nohup kubectl proxy &
+
 log "Done"
