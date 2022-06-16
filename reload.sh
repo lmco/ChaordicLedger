@@ -22,8 +22,12 @@ cp LMChain/* test/cachain/
 
 rm -rf LMChain
 
-# Termintate nodejs Swagger UI.
+# Terminate kubectl proxy.
+ps -ef | grep "kubectl proxy" | grep -v grep | awk '{print $2;}' | xargs kill -9
+
+# Terminate nodejs Swagger UI.
 ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
+
 rm -rf apiServer
 mkdir apiServer
 unzip nodejs-server.zip -d ./apiServer
@@ -36,13 +40,14 @@ clear &&
 ./network purge &&
 ./network init &&
 clear &&
-kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml && ## Metrics
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.6.0/aio/deploy/recommended.yaml && ## Dashboard
+kubectl apply -f metrics/component.yaml &&
+kubectl apply -f dashboards/kubernetes/recommended.yaml &&
 kubectl proxy &
 
 kubectl create serviceaccount dashboard-admin-sa &&
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
-clear &&
+clear
+
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&

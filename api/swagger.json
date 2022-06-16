@@ -337,24 +337,73 @@
           }
         }
       }
-    }
-  },
-  "definitions": {
-    "ApiResponse": {
-      "type": "object",
-      "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
-        },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
+    },
+    "/relationships/createRelationship": {
+      "post": {
+        "summary": "Creates a new relationship between nodes.",
+        "description": "Creates a new relationship between nodes.",
+        "operationId": "createRelationship",
+        "tags": [
+          "Relationships"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Relationship to be established",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
         }
       }
     },
+    "/relationships/createNode": {
+      "post": {
+        "summary": "Creates a new node.",
+        "description": "Creates a new node.",
+        "operationId": "createNode",
+        "tags": [
+          "Relationships"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Node to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    }
+  },
+  "definitions": {
     "Artifact": {
       "type": "object",
       "properties": {
@@ -379,6 +428,32 @@
           "format": "uuid"
         },
         "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "properties": {
+        "nodeid": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileid": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Relationship": {
+      "type": "object",
+      "properties": {
+        "nodeida": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodeidb": {
           "type": "string",
           "minLength": 1
         }
