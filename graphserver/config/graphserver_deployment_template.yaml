@@ -15,6 +15,11 @@ spec:
       containers:
         - name: main
           image: ${GRAPH_SERVER_IMAGE}
+          env:
+          - name: HTTP_PROXY
+            value: ""
+          - name: HTTPS_PROXY
+            value: ""
           ports:
             - containerPort: 7070
 

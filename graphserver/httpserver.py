@@ -1,6 +1,5 @@
 # Reference: https://pythonbasics.org/webserver/
 
-import subprocess
 import ipfshttpclient
 import json
 import io
@@ -15,7 +14,7 @@ class MyServer(BaseHTTPRequestHandler):
         client = ipfshttpclient.connect("/dns/ipfs-ui/tcp/5001/http")
         jsonNode = json.loads(node)
         jsonData = json.loads(client.files.read(
-            "/graph.json").decode('utf-8)'))
+            "/graph.json").decode('utf-8'))
         if len(jsonNode) > 0:
             print(f"Appending node: {node}")
             jsonData["nodes"].append(jsonNode)
@@ -48,7 +47,7 @@ class MyServer(BaseHTTPRequestHandler):
             #                               '-m "write"', "-n " + post_body, '-r "{}"'], shell=True)
             # print("Output: %s" % output)
         except Exception as e:
-            print("Failed to execute subprocess: " + e)
+            print(e)
 
         response = "{ " + f'"response" : {post_body}' + "}\n"
         self.wfile.write(response.encode())
