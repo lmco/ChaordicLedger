@@ -37,8 +37,6 @@ ps -ef | grep "kubectl proxy" | grep -v grep | awk '{print $2;}' | xargs kill -9
 ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
 
 rm -rf apiServer
-mkdir apiServer
-unzip nodejs-server.zip -d ./apiServer
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
@@ -51,6 +49,7 @@ cd ~/git/ChaordicLedger/
 ./network peer &&
 ./network ipfs &&
 ./network graphinit &&
+./network graphserver &&
 ./network chaincode
 
 # Used the following commands to generate the values:
@@ -124,7 +123,6 @@ kubectl apply -f metrics/components.yaml &&
 kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
 kubectl apply -f dashboards/kubernetes/recommended.yaml &&
 kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
-kubectl -n kubernetes-dashboard wait --timeout=30s --for=condition=Ready kubernetes-dashboard
-nohup kubectl proxy &
 
+nohup kubectl proxy & &&
 log "Done"

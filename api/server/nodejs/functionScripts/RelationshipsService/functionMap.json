@@ -8,13 +8,13 @@
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/graphserver"
   },
   "createRelationship": {
     "script": "createRelationship.sh",
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/graphserver"
   }
 }

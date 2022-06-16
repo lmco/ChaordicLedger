@@ -1,4 +1,5 @@
 #!/bin/sh
 set -x
 
-echo "API user wants to create a node! Contents: {{body}}"
+response=$(curl -X POST http://localhost:7070 -H 'Content-Type: application/json' -d '{{body}}')
+echo $response

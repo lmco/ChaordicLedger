@@ -146,6 +146,13 @@ elif [ "${MODE}" == "graphmodify" ]; then
   popd
 
   echo "🏁 - graph reader created."
+elif [ "${MODE}" == "graphserver" ]; then
+  sourceProxyDetails
+  pushd graphserver/scripts
+  init_graphserver_deployment
+  popd
+
+  echo "🏁 - graph reader created."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
