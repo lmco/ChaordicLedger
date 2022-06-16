@@ -13,8 +13,8 @@ WORKDIR /
 COPY httpserver.py ./
 COPY graphProcessor.py ./
 
-ENV HTTP_PROXY=http://proxy-zsgov.external.lmco.com:80
-ENV HTTPS_PROXY=http://proxy-zsgov.external.lmco.com:80
+ENV HTTP_PROXY=
+ENV HTTPS_PROXY=
 
 RUN pip install ipfshttpclient
 
