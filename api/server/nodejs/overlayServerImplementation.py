@@ -63,7 +63,7 @@ def validateArgs():
 def getReplacementExpression(arg):
     retVal = "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
 
-    if arg == "body":
+    if arg == "formData":
         retVal = "sed 's|{{" + arg + "}}|\"${JSON.stringify(" + arg + ")}\"|g'"
 
     return retVal

@@ -7,13 +7,14 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 # content="{{base64encodedContent}}"
 # itemsize="{{itemsizeinbytes}}"
 
-timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+#timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+timestamp=$(date -u +%Y%m%dT%H%M%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
-formData={{formData}}
+#formData={{formData}}
 
-echo "${timestamp} $formData"
+echo '{{formData}}' > $timestamp.json
 
 # peer chaincode \
 #       invoke \

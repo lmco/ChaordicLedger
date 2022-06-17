@@ -81,6 +81,23 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 	return mp.FormDataContentType(), body, nil
 }
 
+type AnnotatedBuffer struct {
+	// defining struct variables
+	type    string
+	data    []int
+}
+
+type FormData struct {
+
+	// defining struct variables
+	fieldname    string
+	originalname string
+	encoding     string
+	mimetype     string
+	buffer       AnnotatedBuffer
+	size		int
+}
+
 func TestAPI(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
@@ -171,7 +188,7 @@ func TryGetURL(url string) {
 }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, base64encodedContent string) error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return err
@@ -190,6 +207,15 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// fmt.Println("we're okay, too!")
 
 	// Test HTTP connectivity
+	var artifact FormData
+
+	err := json.Unmarshal(formContent, &FormData)
+  
+	if err != nil {
+			// if error is not nil
+			// print error
+			fmt.Println(err)
+	}
 
 	TryListingFiles("http://ipfs-ui:5001/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
@@ -202,7 +228,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		resp, err := makeObject(base64encodedContent)
+		resp, err := makeObject(artifact[buffer][data])
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
