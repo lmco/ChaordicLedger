@@ -195,8 +195,8 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	//TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/v0/")
 
-	TryGetURL("http://foo-service:12345/foo/")
-	TryGetURL("http://foo-service:12345/")
+	//TryGetURL("http://foo-service:12345/foo/")
+	//TryGetURL("http://foo-service:12345/")
 
 	ipfsName := ""
 	// Try using the go-ipfs-api
@@ -209,6 +209,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		fmt.Println("Done making object via API module. IPFS Name for " + id + " is " + string(resp))
 		ipfsName = string(resp)
 	}
+
 	// // Try using the go-ipfs-api
 	// sh = shell.NewShell("ipfs-ui:5001")
 	// for i := 0; i < 1; i++ {

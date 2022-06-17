@@ -21,7 +21,7 @@ type serverConfig struct {
 	Address string
 }
 
-// SmartContract provides functions for managing an Metadata
+// SmartContract provides functions for managing artifact content
 type SmartContract struct {
 	contractapi.Contract
 }
@@ -91,7 +91,7 @@ func Init() {
 
 	chaincode, err := contractapi.NewChaincode(&SmartContract{})
 	if err != nil {
-		log.Panicf("Error creating metadata chaincode: %v", err)
+		log.Panicf("Error creating artifact-content chaincode: %v", err)
 	}
 
 	server := &shim.ChaincodeServer{

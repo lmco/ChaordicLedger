@@ -21,7 +21,7 @@ type serverConfig struct {
 	Address string
 }
 
-// SmartContract provides functions for managing an Metadata
+// SmartContract provides functions for managing artifact metadata
 type SmartContract struct {
 	contractapi.Contract
 }

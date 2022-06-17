@@ -97,6 +97,11 @@ jobs:
           BlockchainServiceFunctionMapFile="$BlockchainServiceInputDir/functionMap.json"
           python ./api/server/nodejs/overlayServerImplementation.py -i $BlockchainServiceInputDir -m $BlockchainServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f BlockchainService.js
 
+          MetadataServiceInputDir="./api/server/nodejs/functionScripts/MetadataService"
+          ls -rotl $MetadataServiceInputDir
+          MetadataServiceFunctionMapFile="$MetadataServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $MetadataServiceInputDir -m $MetadataServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f MetadataService.js
+
           RelationshipsServiceInputDir="./api/server/nodejs/functionScripts/RelationshipsService"
           ls -rotl $RelationshipsServiceInputDir
           RelationshipsServiceFunctionMapFile="$RelationshipsServiceInputDir/functionMap.json"

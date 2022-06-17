@@ -6,7 +6,7 @@ import (
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
 )
 
-// DeleteContent deletes an existing metadata from the world state
+// DeleteContent deletes an existing content from the world state
 func (s *SmartContract) DeleteContent(ctx contractapi.TransactionContextInterface, id string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
