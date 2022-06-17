@@ -11,15 +11,17 @@ timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
-echo "${timestamp} ${friendlyName} ${upfile}"
+formData={{formData}}
 
-peer chaincode \
-      invoke \
-      -o org0-orderer1:6050 \
-      --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
-      -n artifact-content \
-      -C cl \
-      -c '{"Args":["CreateArtifact","'${timestamp}'","'${friendlyName}'","'${upfile}'"]}'
+echo "${timestamp} $formData"
+
+# peer chaincode \
+#       invoke \
+#       -o org0-orderer1:6050 \
+#       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
+#       -n artifact-content \
+#       -C cl \
+#       -c '{"Args":["CreateArtifact","'${timestamp}'","'${friendlyName}'","'${upfile}'"]}'
 
 
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`

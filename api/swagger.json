@@ -137,15 +137,7 @@
             "in": "formData",
             "name": "upfile",
             "type": "file",
-            "required": true,
             "description": "The file to upload."
-          },
-          {
-            "in": "formData",
-            "name": "friendlyName",
-            "type": "string",
-            "required": true,
-            "description": "Description of file contents."
           }
         ],
         "responses": {

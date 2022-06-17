@@ -23,10 +23,9 @@
   "createArtifact": {
     "script": "createArtifact.sh",
     "parameters": [
-      "upfile",
-      "friendlyName"
+      "formData"
     ],
-    "target": "deploy/chaordicledger-ipfs"
+    "target": "deploy/org1-admin-cli"
   },
   "uploadArtifact": {
     "script": "uploadArtifact.sh",
@@ -34,7 +33,7 @@
       "artifactName",
       "file"
     ],
-    "target": "deploy/chaordicledger-ipfs"
+    "target": "deploy/org1-admin-cli"
   },
   "listArtifactsAtPath": {
     "script": "listArtifactsAtPath.sh",
