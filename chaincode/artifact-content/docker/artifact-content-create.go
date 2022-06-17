@@ -39,6 +39,11 @@ func makeObject(content string) (string, error) {
 	return sh.Add(r)
 }
 
+func makeFile(content []byte) (string, error) {
+	r := bytes.NewReader(content)
+	return sh.Add(r)
+}
+
 // func listFiles() (string, error) {
 // 	return sh.Unixfs().ls()
 // }
@@ -209,7 +214,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Test HTTP connectivity
 	var formData FormData
 
-	formErr := json.Unmarshal(formContent, &FormData)
+	formErr := json.Unmarshal([]byte(formContent), &FormData)
 
 	if formErr != nil {
 		// if error is not nil
@@ -228,7 +233,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		resp, err := makeObject(formData.buffer.data)
+		resp, err := makeFile(formData.buffer.data)
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
