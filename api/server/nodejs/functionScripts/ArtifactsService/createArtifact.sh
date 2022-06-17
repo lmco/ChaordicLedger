@@ -3,21 +3,23 @@ set -x
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
 #uuid=`uuidgen`
-itemid="{{itemid}}"
-content="{{base64encodedContent}}"
-itemsize="{{itemsizeinbytes}}"
+# itemid="{{itemid}}"
+# content="{{base64encodedContent}}"
+# itemsize="{{itemsizeinbytes}}"
 
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
+echo "${timestamp} ${friendlyName} ${upfile}"
+
 peer chaincode \
       invoke \
       -o org0-orderer1:6050 \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
-      -n artifact-metadata \
+      -n artifact-content \
       -C cl \
-      -c '{"Args":["CreateArtifact","'${timestamp}'","'${itemid}'","'${content}'"]}'
+      -c '{"Args":["CreateArtifact","'${timestamp}'","'${friendlyName}'","'${upfile}'"]}'
 
 
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`

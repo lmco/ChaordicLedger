@@ -21,6 +21,10 @@
       "description": "Operations regarding the blockchain."
     },
     {
+      "name": "Metadata",
+      "description": "Operations regarding metadata."
+    },
+    {
       "name": "Relationships",
       "description": "Operations regarding relationships between artifacts."
     }
@@ -84,38 +88,6 @@
         }
       }
     },
-    "/artifact/{artifactName}": {
-      "post": {
-        "operationId": "uploadArtifact",
-        "summary": "Uploads a file.",
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "tags": [
-          "Artifacts"
-        ],
-        "parameters": [
-          {
-            "in": "formData",
-            "name": "upfile",
-            "type": "file",
-            "description": "The file to upload."
-          },
-          {
-            "name": "artifactName",
-            "in": "path",
-            "description": "Name of artifact",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "412": {
-            "description": "Failed uploading artifact."
-          }
-        }
-      }
-    },
     "/artifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",
@@ -155,20 +127,25 @@
           "Artifacts"
         ],
         "consumes": [
-          "application/json"
+          "multipart/form-data"
         ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "in": "body",
-            "name": "body",
-            "description": "Metadata object that needs to be added to the store",
+            "in": "formData",
+            "name": "upfile",
+            "type": "file",
             "required": true,
-            "schema": {
-              "$ref": "#/definitions/Artifact"
-            }
+            "description": "The file to upload."
+          },
+          {
+            "in": "formData",
+            "name": "friendlyName",
+            "type": "string",
+            "required": true,
+            "description": "Description of file contents."
           }
         ],
         "responses": {
@@ -270,7 +247,7 @@
         "description": "Creates a new metadata item.",
         "operationId": "createArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "consumes": [
           "application/json"
@@ -327,7 +304,7 @@
         "description": "Deletes an existing metadata item.",
         "operationId": "deleteArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "produces": [
           "application/json"
