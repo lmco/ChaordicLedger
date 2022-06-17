@@ -1,19 +1,4 @@
 {
-  "createArtifactMetadata": {
-    "script": "createArtifactMetadata.sh",
-    "target": "deploy/org1-admin-cli"
-  },
-  "deleteArtifactMetadata": {
-    "script": "deleteArtifactMetadata.sh",
-    "parameters": [
-      "metadataID"
-    ],
-    "target": "deploy/org1-admin-cli"
-  },
-  "getAllArtifactMetadata": {
-    "script": "getAllArtifactMetadata.sh",
-    "target": "deploy/org1-admin-cli"
-  },
   "getArtifact": {
     "script": "getArtifact.sh",
     "parameters": [
