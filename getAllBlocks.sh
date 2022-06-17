@@ -25,7 +25,7 @@ do
   fi
   
   # Validate
-  if [ "$(echo $currentResult | jq .unknown)" == "null" ]
+  if [ "$(echo $currentResult | jq .unknown)" == "null" ] && [ "$(echo $currentResult | jq .error)" == "null" ]
   then
     echo "Writing block file $currentFile"
     echo $currentResult | jq .result | tr -d '\"' | tr '\\' '\"' | jq > $currentFile

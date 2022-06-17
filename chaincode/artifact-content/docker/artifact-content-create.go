@@ -193,7 +193,8 @@ func TryGetURL(url string) {
 }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
+//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return err
@@ -214,7 +215,10 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Test HTTP connectivity
 	var artifact formdata
 
-	formErr := json.Unmarshal([]byte(formContent), &artifact)
+	file, _ := ioutil.ReadFile(localFilePath)
+
+	formErr := json.Unmarshal([]byte(file), &artifact)
+	//formErr := json.Unmarshal([]byte(formContent), &artifact)
 
 	if formErr != nil {
 		// if error is not nil
@@ -222,7 +226,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		fmt.Println(formErr)
 	}
 
-	TryListingFiles("http://ipfs-ui:5001/api/v0/")
+	//TryListingFiles("http://ipfs-ui:5001/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/v0/")
 

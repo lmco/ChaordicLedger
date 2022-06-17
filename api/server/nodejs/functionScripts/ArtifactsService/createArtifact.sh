@@ -7,22 +7,23 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 # content="{{base64encodedContent}}"
 # itemsize="{{itemsizeinbytes}}"
 
-#timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
-timestamp=$(date -u +%Y%m%dT%H%M%SZ)
+timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
-#formData={{formData}}
+filename=$timestamp.json
+echo '{{formData}}' > $filename
 
-echo '{{formData}}' > $timestamp.json
+# Hm ... could we make the chaincode read a file?
 
-# peer chaincode \
-#       invoke \
-#       -o org0-orderer1:6050 \
-#       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
-#       -n artifact-content \
-#       -C cl \
-#       -c '{"Args":["CreateArtifact","'${timestamp}'","'${friendlyName}'","'${upfile}'"]}'
+peer chaincode \
+      invoke \
+      -o org0-orderer1:6050 \
+      --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
+      -n artifact-content \
+      -C cl \
+      -c '{"Args":["CreateContent","'${timestamp}'","'${friendlyName}'","'${filename}'"]}'
 
 
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
