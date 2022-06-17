@@ -19,6 +19,23 @@ import (
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
+type annotatedbuffer struct {
+	// defining struct variables
+	dataType string
+	data     []byte
+}
+
+type formdata struct {
+
+	// defining struct variables
+	fieldname    string
+	originalname string
+	encoding     string
+	mimetype     string
+	buffer       annotatedbuffer
+	size         int
+}
+
 var sh *shell.Shell
 
 func makeRandomObject() (string, error) {
@@ -84,23 +101,6 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 		}
 	}
 	return mp.FormDataContentType(), body, nil
-}
-
-type AnnotatedBuffer struct {
-	// defining struct variables
-	dataType string
-	data     []int
-}
-
-type FormData struct {
-
-	// defining struct variables
-	fieldname    string
-	originalname string
-	encoding     string
-	mimetype     string
-	buffer       AnnotatedBuffer
-	size         int
 }
 
 func TestAPI(url string) {
@@ -212,9 +212,9 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// fmt.Println("we're okay, too!")
 
 	// Test HTTP connectivity
-	var formData FormData
+	var artifact formdata
 
-	formErr := json.Unmarshal([]byte(formContent), &FormData)
+	formErr := json.Unmarshal([]byte(formContent), &artifact)
 
 	if formErr != nil {
 		// if error is not nil
@@ -233,7 +233,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		resp, err := makeFile(formData.buffer.data)
+		resp, err := makeFile(artifact.buffer.data)
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
