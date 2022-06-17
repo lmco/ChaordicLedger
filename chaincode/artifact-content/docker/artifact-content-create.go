@@ -83,8 +83,8 @@ func createForm(form map[string]string) (string, io.Reader, error) {
 
 type AnnotatedBuffer struct {
 	// defining struct variables
-	type    string
-	data    []int
+	dataType string
+	data     []int
 }
 
 type FormData struct {
@@ -95,7 +95,7 @@ type FormData struct {
 	encoding     string
 	mimetype     string
 	buffer       AnnotatedBuffer
-	size		int
+	size         int
 }
 
 func TestAPI(url string) {
@@ -210,11 +210,11 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	var artifact FormData
 
 	err := json.Unmarshal(formContent, &FormData)
-  
+
 	if err != nil {
-			// if error is not nil
-			// print error
-			fmt.Println(err)
+		// if error is not nil
+		// print error
+		fmt.Println(err)
 	}
 
 	TryListingFiles("http://ipfs-ui:5001/api/v0/")
