@@ -8,7 +8,11 @@ env:
   CUSTOM_BUILDER_IMAGE_NAME: customgradlebuilder
   CUSTOM_BUILDER_IMAGE_VERSION: 0.0.1
   GENERATED_CODE_DIR: generated
-  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.34/swagger-codegen-cli-3.0.34.jar
+  # Intentionally using the version 2 generator here; while the online editor will generate Upload options correctly for multipart/form-data,
+  #    neither the downloadable generated nodejs server code nor the codegen-cli handle it properly, instead creating a JSON input.
+  # Version 2.4.27 however appears to work.
+  SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/swagger-codegen-cli/2.4.27/swagger-codegen-cli-2.4.27.jar
+  #SWAGGER_CODEGEN_CLI_SOURCE_JAR: https://repo1.maven.org/maven2/io/swagger/codegen/v3/swagger-codegen-cli/3.0.34/swagger-codegen-cli-3.0.34.jar
   SWAGGER_CODEGEN_CLI_LOCAL_JAR: swagger-codegen-cli.jar
   SWAGGER_API_FILE: api/swagger.json
   OUT_GO: out/go
@@ -297,95 +301,95 @@ jobs:
         run: |
           docker push ${{ env.imageTag }}
 
-  build-obsidian-lightswitch-chaincode:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - name: Checkout the Obsidian repo
-        uses: actions/checkout@v2
-        with:
-          repository: mcoblenz/Obsidian
-          path: './Obsidian'
-      - name: Modify Obsidian build contents
-        run: |
-          pushd ./Obsidian
+  # build-obsidian-lightswitch-chaincode:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Checkout the Obsidian repo
+  #       uses: actions/checkout@v2
+  #       with:
+  #         repository: mcoblenz/Obsidian
+  #         path: './Obsidian'
+  #     - name: Modify Obsidian build contents
+  #       run: |
+  #         pushd ./Obsidian
 
-          # Upgrade protocol buffer
-          sed -i 's|"protobuf-java" % "3\.11\.4"|"protobuf-java" % "3\.19\.1"|g' build.sbt
-          sed -i "s|'protobuf-java', version: '3.11.4'|'protobuf-java', version: '3.19.1'|g" fabric/java/build.gradle
+  #         # Upgrade protocol buffer
+  #         sed -i 's|"protobuf-java" % "3\.11\.4"|"protobuf-java" % "3\.19\.1"|g' build.sbt
+  #         sed -i "s|'protobuf-java', version: '3.11.4'|'protobuf-java', version: '3.19.1'|g" fabric/java/build.gradle
 
-          # Upgrade chaincode shim
-          sed -i 's|"fabric-chaincode-shim" % "1\.4\.4"|"fabric-chaincode-shim" % "2\.2\.3"|g' build.sbt
-          sed -i "s|'fabric-chaincode-shim', version: '1.4.4'|'fabric-chaincode-shim', version: '2.2.3'|g" fabric/java/build.gradle
+  #         # Upgrade chaincode shim
+  #         sed -i 's|"fabric-chaincode-shim" % "1\.4\.4"|"fabric-chaincode-shim" % "2\.2\.3"|g' build.sbt
+  #         sed -i "s|'fabric-chaincode-shim', version: '1.4.4'|'fabric-chaincode-shim', version: '2.2.3'|g" fabric/java/build.gradle
 
-          # Skips running the tests.
-          mv ./src/test ./src/test_save
+  #         # Skips running the tests.
+  #         mv ./src/test ./src/test_save
           
-          sbt assembly
-          popd
-      - name: Execute Obsidian compiler
-        run: |
-          # Install prerequisite - protobuf
-          wget https://github.com/protocolbuffers/protobuf/releases/download/v21.1/protoc-21.1-linux-x86_64.zip -P /tmp
-          unzip -d /tmp/protoc /tmp/protoc-21.1-linux-x86_64.zip
-          export PATH=/tmp/protoc/bin:${PATH}
-          protoc --version
-          pwd
-          ./Obsidian/bin/obsidianc obsidian/contracts/simple/lightswitch.obs --output-path out/
-          ls -rotl out/LightSwitch
+  #         sbt assembly
+  #         popd
+  #     - name: Execute Obsidian compiler
+  #       run: |
+  #         # Install prerequisite - protobuf
+  #         wget https://github.com/protocolbuffers/protobuf/releases/download/v21.1/protoc-21.1-linux-x86_64.zip -P /tmp
+  #         unzip -d /tmp/protoc /tmp/protoc-21.1-linux-x86_64.zip
+  #         export PATH=/tmp/protoc/bin:${PATH}
+  #         protoc --version
+  #         pwd
+  #         ./Obsidian/bin/obsidianc obsidian/contracts/simple/lightswitch.obs --output-path out/
+  #         ls -rotl out/LightSwitch
 
-      - name: Execute Gradle
-        run: |
-          pushd out/LightSwitch
+  #     - name: Execute Gradle
+  #       run: |
+  #         pushd out/LightSwitch
 
-          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build shadowJar #-x checkstyleMain -x checkstyleTest
-          ls -rotl build/libs
-          echo "buildRoot=${PWD}" >> $GITHUB_ENV
-          popd
-      - name: Publish chaincode jar
-        uses: actions/upload-artifact@v3
-        with:
-          name: lightswitch-chaincode
-          path: |
-            out/LightSwitch
+  #         docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build shadowJar #-x checkstyleMain -x checkstyleTest
+  #         ls -rotl build/libs
+  #         echo "buildRoot=${PWD}" >> $GITHUB_ENV
+  #         popd
+  #     - name: Publish chaincode jar
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: lightswitch-chaincode
+  #         path: |
+  #           out/LightSwitch
 
-  docker-lightswitch-chaincode:
-    runs-on: ubuntu-latest
-    needs: [build-obsidian-lightswitch-chaincode]
-    env:
-      IMAGE_NAME: obsidian-lightswitch
-      IMAGE_VERSION: v0.0.0
-      BUILD_DIR: chaincode/lightswitch/docker/
-    permissions:
-      packages: write
-      contents: read
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/download-artifact@v3
-      - name: Prepare
-        run: |
-          pushd lightswitch-chaincode/build/libs
-          ls -rotl ../../../${{ env.BUILD_DIR }}
-          cp ../../../${{ env.BUILD_DIR }}/chaincode.env .
-          cp ../../../${{ env.BUILD_DIR }}/connection.json .
-          cp ../../../${{ env.BUILD_DIR }}/Dockerfile .
-          cp ../../../${{ env.BUILD_DIR }}/metadata.json .
-          cp ../../../${{ env.BUILD_DIR }}/logging.properties .
-          cp ../../../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
-      - name: Build image
-        run: |
-          pushd lightswitch-chaincode/build/libs
-          ls -rotl
-          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-          docker build --tag $imageTag .
-          echo "imageTag=${imageTag}" >> $GITHUB_ENV
+  # docker-lightswitch-chaincode:
+  #   runs-on: ubuntu-latest
+  #   needs: [build-obsidian-lightswitch-chaincode]
+  #   env:
+  #     IMAGE_NAME: obsidian-lightswitch
+  #     IMAGE_VERSION: v0.0.0
+  #     BUILD_DIR: chaincode/lightswitch/docker/
+  #   permissions:
+  #     packages: write
+  #     contents: read
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - uses: actions/download-artifact@v3
+  #     - name: Prepare
+  #       run: |
+  #         pushd lightswitch-chaincode/build/libs
+  #         ls -rotl ../../../${{ env.BUILD_DIR }}
+  #         cp ../../../${{ env.BUILD_DIR }}/chaincode.env .
+  #         cp ../../../${{ env.BUILD_DIR }}/connection.json .
+  #         cp ../../../${{ env.BUILD_DIR }}/Dockerfile .
+  #         cp ../../../${{ env.BUILD_DIR }}/metadata.json .
+  #         cp ../../../${{ env.BUILD_DIR }}/logging.properties .
+  #         cp ../../../${{ env.BUILD_DIR }}/docker-entrypoint.sh .
+  #     - name: Build image
+  #       run: |
+  #         pushd lightswitch-chaincode/build/libs
+  #         ls -rotl
+  #         imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+  #         docker build --tag $imageTag .
+  #         echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
-      - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+  #     - name: Log in to registry
+  #       run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
 
-      - name: Push image
-        run: |
-          docker push ${{ env.imageTag }}
+  #     - name: Push image
+  #       run: |
+  #         docker push ${{ env.imageTag }}
 
     # steps:
     #   -

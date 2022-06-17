@@ -16,3 +16,4 @@ githubReadToken.sh
 nohup.out
 **/nohup.out
 outputs
+*.log
