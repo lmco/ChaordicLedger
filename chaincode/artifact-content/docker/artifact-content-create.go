@@ -207,7 +207,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// fmt.Println("we're okay, too!")
 
 	// Test HTTP connectivity
-	var artifact FormData
+	var formData FormData
 
 	err := json.Unmarshal(formContent, &FormData)
 
@@ -228,7 +228,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Try using the go-ipfs-api
 	sh = shell.NewShell("ipfs-ui:5001")
 	for i := 0; i < 1; i++ {
-		resp, err := makeObject(artifact[buffer][data])
+		resp, err := makeObject(formData[buffer][data])
 		if err != nil {
 			fmt.Println("err: ", err)
 		}
