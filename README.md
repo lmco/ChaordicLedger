@@ -37,6 +37,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 
 ## Near-Term Items
 1. Graph construction of artifact relationships.
+1. Write then read arbitrary content.
 1. Metrics trending
 
 ## Future Development Goals

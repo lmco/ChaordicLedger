@@ -12,10 +12,13 @@ friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
-filename=$timestamp.json
-echo '{{formData}}' > $filename
+filename=$friendlyName.json
+echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
+
+content="{{formData}}"
 
 # Hm ... could we make the chaincode read a file?
+#data=$(cat $filename)
 
 peer chaincode \
       invoke \
@@ -23,7 +26,7 @@ peer chaincode \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \
       -C cl \
-      -c '{"Args":["CreateContent","'${timestamp}'","'${friendlyName}'","'${filename}'"]}'
+      -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}"
 
 
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`

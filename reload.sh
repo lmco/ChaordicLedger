@@ -28,7 +28,7 @@ cp LMChain/* hyperledger/admin-cli/cachain/
 cp LMChain/* test/cachain/
 
 rm -rf LMChain
-rm nohup.out
+rm kubectl_proxy.log
 
 # Terminate kubectl proxy.
 ps -ef | grep "kubectl proxy" | grep -v grep | awk '{print $2;}' | xargs kill -9

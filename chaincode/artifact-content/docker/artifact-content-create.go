@@ -57,6 +57,7 @@ func makeObject(content string) (string, error) {
 }
 
 func makeFile(content []byte) (string, error) {
+	fmt.Println("Attempting to write to IPFS: " + string(content))
 	r := bytes.NewReader(content)
 	return sh.Add(r)
 }
@@ -193,8 +194,8 @@ func TryGetURL(url string) {
 }
 
 // CreateContent issues a new content to the world state with given details.
-//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
+	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return err
@@ -215,16 +216,21 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	// Test HTTP connectivity
 	var artifact formdata
 
-	file, _ := ioutil.ReadFile(localFilePath)
-
-	formErr := json.Unmarshal([]byte(file), &artifact)
-	//formErr := json.Unmarshal([]byte(formContent), &artifact)
+	//file, _ := ioutil.ReadFile(localFilePath)
+	//formErr := json.Unmarshal([]byte(file), &artifact)
+	formErr := json.Unmarshal([]byte(formContent), &artifact)
 
 	if formErr != nil {
 		// if error is not nil
 		// print error
-		fmt.Println(formErr)
+		fmt.Errorf("Error unmashalling JSON: %s", formErr)
 	}
+
+	fmt.Println(creationTimestamp)
+	fmt.Println(id)
+	fmt.Println(formContent)
+
+	fmt.Println(artifact)
 
 	//TryListingFiles("http://ipfs-ui:5001/api/v0/")
 	//TryListingFiles("http://ipfs-ui:5001/api/api/v0/")
