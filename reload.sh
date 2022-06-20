@@ -113,10 +113,20 @@ fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother"
 log "Filename: $fileName"
 
 # Get file contents.
-curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g" | jq
 
 # Get all known artifacts.
-curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+
+echo $allArtifacts | jq
+
+ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
+for name in $ipfsNames
+do
+  #fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+  fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
+  echo $fileData
+done
 
 log "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
