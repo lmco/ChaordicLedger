@@ -13,6 +13,11 @@ type Content struct {
 	IPFSName          string    `json:IPFSName`
 }
 
+type Node struct {
+	NodeID string `json:nodeid`
+	FileID string `json:fileid`
+}
+
 func main() {
 	Init()
 }

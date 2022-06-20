@@ -41,7 +41,10 @@ class MyServer(BaseHTTPRequestHandler):
         '''Reads post request body'''
         self._set_headers()
         content_len = int(self.headers.get('Content-Length'))
-        post_body = self.rfile.read(content_len).decode()
+        print("Content Length %s" % content_len)
+        post_body_bin = self.rfile.read(content_len)
+        print("Received %s" % post_body_bin)
+        post_body = post_body_bin.decode()
         print("Received %s" % post_body)
         try:
             self.write_node(post_body)

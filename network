@@ -152,7 +152,7 @@ elif [ "${MODE}" == "graphserver" ]; then
   init_graphserver_deployment
   popd
 
-  echo "🏁 - graph reader created."
+  echo "🏁 - graph server created."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   

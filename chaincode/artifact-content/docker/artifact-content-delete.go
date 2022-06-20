@@ -15,6 +15,6 @@ func (s *SmartContract) DeleteContent(ctx contractapi.TransactionContextInterfac
 	if !exists {
 		return fmt.Errorf("Content %s does not exist", id)
 	}
-
-	return ctx.GetStub().DelState(id)
+	return fmt.Errorf("Not implemented; no delete API available for objects in IPFS.")
+	//return ctx.GetStub().DelState(id)
 }

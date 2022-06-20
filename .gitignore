@@ -17,3 +17,4 @@ nohup.out
 **/nohup.out
 outputs
 *.log
+**/rebuildReload.sh

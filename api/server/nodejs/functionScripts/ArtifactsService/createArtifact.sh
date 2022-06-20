@@ -15,7 +15,8 @@ friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 filename=$friendlyName.json
 echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
-content="{{formData}}"
+#content="{\"test\": \"value\"}"
+content=$(cat $filename | sed 's|"|\\"|g')
 
 # Hm ... could we make the chaincode read a file?
 #data=$(cat $filename)
