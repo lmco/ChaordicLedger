@@ -1,7 +1,7 @@
 {
-  "getLatestBlock": {
+  "getRelationshipGraph": {
     "script": "getRelationshipGraph.sh",
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/chaordicledger-ipfs"
   },
   "createNode": {
     "script": "createNode.sh",

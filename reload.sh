@@ -115,6 +115,9 @@ log "Filename: $fileName"
 # Get file contents.
 curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
 
+# Get all known artifacts.
+curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+
 log "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&

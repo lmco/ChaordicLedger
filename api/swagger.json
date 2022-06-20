@@ -233,6 +233,24 @@
         }
       }
     },
+    "/artifacts/all": {
+      "get": {
+        "summary": "Gets the list of existing artifacts",
+        "description": "Gets the list of existing artifacts",
+        "operationId": "listAllArtifacts",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/artifact/metadata": {
       "post": {
         "summary": "Creates a new metadata item.",

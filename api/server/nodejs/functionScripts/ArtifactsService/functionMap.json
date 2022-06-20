@@ -41,5 +41,9 @@
       "path"
     ],
     "target": "deploy/chaordicledger-ipfs"
+  },
+  "listAllArtifacts": {
+    "script": "listAllArtifacts.sh",
+    "target": "deploy/org1-admin-cli"
   }
 }
