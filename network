@@ -136,7 +136,7 @@ elif [ "${MODE}" == "query" ]; then
   echo "🏁 - Chaincode queried."
 elif [ "${MODE}" == "graphinit" ]; then
   sourceProxyDetails
-  pushd graphjob/scripts
+  pushd graph/job/scripts
   init_graph_job
   popd
 

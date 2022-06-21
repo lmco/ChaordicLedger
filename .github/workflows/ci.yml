@@ -215,12 +215,13 @@ jobs:
         run: |
           docker push ${{ env.imageTag }}
 
-  docker-graphprocessor:
+  docker-graphjob:
     runs-on: ubuntu-latest
     env:
-      IMAGE_NAME: graphprocessor
+      IMAGE_NAME: graphjob
       IMAGE_VERSION: 0.0.1
-      BUILD_DIR: graphprocessor
+      BUILD_DIR: graph
+      DOCKERFILE: JobDockerfile
     permissions:
       packages: write
       contents: read
@@ -230,7 +231,33 @@ jobs:
       - name: Build image
         run: |
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.DOCKERFILE }}
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ env.imageTag }}
+
+  docker-graphprocessor:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: graphprocessor
+      IMAGE_VERSION: 0.0.1
+      BUILD_DIR: graph
+      DOCKERFILE: ProcessorDockerfile
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.DOCKERFILE }}
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry

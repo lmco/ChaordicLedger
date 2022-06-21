@@ -7,7 +7,7 @@ function init_graph_job()
 {
   local graphJobConfig=$GRAPH_TMP_DIR/init_graph_job_template.yaml
 
-  export GRAPH_JOB_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/graphprocessor:0.0.1
+  export GRAPH_JOB_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/graphjob:0.0.1
   populateTemplate ../config/graph_job_template.yaml ${graphJobConfig}
 
   kubectl delete -f $graphJobConfig -n ${NETWORK_NAME} || true
