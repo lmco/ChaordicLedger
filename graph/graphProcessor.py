@@ -6,11 +6,10 @@ import logging
 import sys
 import ipfshttpclient
 
-log = None
+log = logging.getLogger(__name__)
 
 
 def configureLogging():
-    log = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
                                   '%m-%d-%Y %H:%M:%S')
 

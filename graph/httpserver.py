@@ -9,11 +9,10 @@ import sys
 
 hostName = "0.0.0.0"
 serverPort = 5678
-log = None
+log = logging.getLogger(__name__)
 
 
 def configureLogging():
-    log = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
                                   '%m-%d-%Y %H:%M:%S')
 
