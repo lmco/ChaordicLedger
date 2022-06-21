@@ -8,13 +8,13 @@
     "parameters": [
       "body"
     ],
-    "target": "deploy/graphserver"
+    "target": "deploy/chaordicledger-graph"
   },
   "createRelationship": {
     "script": "createRelationship.sh",
     "parameters": [
       "body"
     ],
-    "target": "deploy/graphserver"
+    "target": "deploy/chaordicledger-graph"
   }
 }
