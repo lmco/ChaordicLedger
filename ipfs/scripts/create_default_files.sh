@@ -2,7 +2,7 @@
 
 set -x
 now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-defaultFileName=$(echo $now | sed "s|[:-]||g")
+#defaultFileName=$(echo $now | sed "s|[:-]||g")
 defaultFilePath=/tmp/$defaultFileName.txt
 # defaultFile=/tmp/default.txt
 # echo "The quick brown fox jumps over the lazy dog." > $defaultFile

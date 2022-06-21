@@ -90,6 +90,7 @@ function pull_docker_images() {
   docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0 || true
   docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0 || true
   docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/graphprocessor:0.0.1 || true
+  docker pull ${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}curlimages/curl:7.83.1 || true # For route diagnostics
   #docker pull ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 || true
 }
 
@@ -104,6 +105,6 @@ function load_docker_images() {
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0 --name ${CLUSTER_NAME}
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0 --name ${CLUSTER_NAME}
   kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/graphprocessor:0.0.1 --name ${CLUSTER_NAME}
-  kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/graphserver:0.0.1 --name ${CLUSTER_NAME}
+  kind load docker-image ${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}curlimages/curl:7.83.1 --name ${CLUSTER_NAME}
   #kind load docker-image ${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0 --name ${CLUSTER_NAME}
 }

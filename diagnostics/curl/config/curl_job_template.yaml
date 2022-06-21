@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: run-curl
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: curl
+    spec:
+      containers:
+        - name: curl
+          image: ${CURL_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args: ["${CURL_URL}"]
+      restartPolicy: Never

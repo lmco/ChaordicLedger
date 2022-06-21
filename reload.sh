@@ -49,7 +49,7 @@ cd ~/git/ChaordicLedger/
 ./network peer &&
 ./network ipfs &&
 ./network graphinit &&
-./network graphserver &&
+./network graphprocessor &&
 ./network chaincode
 
 # Used the following commands to generate the values:
@@ -72,12 +72,13 @@ for item in ${LfileArray[*]}; do
   itemsize=$(du -b ${item} | awk '{print $1;}')
   itemcontent=$(cat ${item} | base64 -w 0)
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
-  ./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["CreateContent","'${timestamp}'","'${item}'","'${itemcontent}'"]}'
+  #./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["CreateContent","'${timestamp}'","'${item}'","'${itemcontent}'"]}'
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
-  ./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["ContentExists","'${item}'"]}'
+  #./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["ContentExists","'${item}'"]}'
 done
 
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
+
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
 # Note: This assumes api/server/out/nodejs was pulled local.
@@ -98,26 +99,35 @@ popd
 
 sleep 10
 
+# TODO: Update to use a graph API method instead of an Artifact API method.
+initialGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/artifact?artifactPath=%2Fgraph.json' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+echo $initialGraphState | jq
+
+# Create a random file and upload it.
+now=`date -u +"%Y%m%dT%H%M%SZ"`
+randomFile=randomArtifact_${now}.bin
+head -c 1KiB /dev/urandom > $randomFile
+curl -X POST -F "upfile=@${randomFile}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
+
 # Get default file.
-defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-log "Default file: $defaultFile"
+#defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
+#log "Default file: $defaultFile"
 
 # Get default file contents.
-curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Ftmp%2F$defaultFile" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+#curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Ftmp%2F$defaultFile" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
 
-# Create new file via API.
-curl -X POST "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2Fpath.txt" -H "accept: */*"
+## Create new file via API.
+#curl -X POST "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2Fpath.txt" -H "accept: */*"
 
 # List files at new path.
-fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-log "Filename: $fileName"
+#fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
+#log "Filename: $fileName"
 
 # Get file contents.
-curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g" | jq
+#curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g" | jq
 
 # Get all known artifacts.
 allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-
 echo $allArtifacts | jq
 
 ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")

@@ -295,10 +295,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		FileID: formData.OriginalName,
 	}
 
-	//PostToGraph(node, "http://graphserver/")
-	PostToGraph(node, "http://graphserver/graph/")
-	// PostToGraph(node, "http://graphserver:7070/graph")
-	// PostToGraph(node, "http://graphserver:7070/")
+	PostToGraph(node, "http://graph-service:12345")
 
 	content := Content{
 		CreationTimestamp: creationTimestamp,

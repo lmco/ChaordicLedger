@@ -220,7 +220,7 @@ jobs:
     env:
       IMAGE_NAME: graphprocessor
       IMAGE_VERSION: 0.0.1
-      BUILD_DIR: graph
+      BUILD_DIR: graphprocessor
     permissions:
       packages: write
       contents: read

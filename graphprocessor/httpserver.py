@@ -5,8 +5,8 @@ import json
 import io
 from http.server import BaseHTTPRequestHandler, HTTPServer
 
-hostName = "localhost"
-serverPort = 7070
+hostName = "0.0.0.0"
+serverPort = 5678
 
 
 class MyServer(BaseHTTPRequestHandler):

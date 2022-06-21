@@ -12,7 +12,9 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
-. graph/scripts/graphprocessor.sh
+. graphjob/scripts/graphjob.sh
+. graphprocessor/scripts/graphprocessor.sh
+. diagnostics/curl/scripts/curl.sh
 
 function sourceProxyDetails() {
   proxy_details_source_file=docker_registry_proxy_details.sh
@@ -134,25 +136,33 @@ elif [ "${MODE}" == "query" ]; then
   echo "🏁 - Chaincode queried."
 elif [ "${MODE}" == "graphinit" ]; then
   sourceProxyDetails
-  pushd graph/scripts
-  init_graphprocessor_job
+  pushd graphjob/scripts
+  init_graph_job
   popd
 
   echo "🏁 - graph reader created."
-elif [ "${MODE}" == "graphmodify" ]; then
-  sourceProxyDetails
-  pushd graph/scripts
-  modify_graphprocessor_job
-  popd
+# elif [ "${MODE}" == "graphmodify" ]; then
+#   sourceProxyDetails
+#   pushd graph/scripts
+#   modify_graphprocessor_job
+#   popd
 
-  echo "🏁 - graph reader created."
-elif [ "${MODE}" == "graphserver" ]; then
+#   echo "🏁 - graph reader created."
+elif [ "${MODE}" == "graphprocessor" ]; then
   sourceProxyDetails
-  pushd graphserver/scripts
-  init_graphserver_deployment
+  pushd graphprocessor/scripts
+  init_graphprocessor_deployment
   popd
 
   echo "🏁 - graph server created."
+elif [ "${MODE}" == "curl" ]; then
+  sourceProxyDetails
+  pushd diagnostics/curl/scripts
+  #Example: run_curl http://foo-service:12345
+  run_curl $@
+  popd
+
+  echo "🏁 - curl executed."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
@@ -169,6 +179,9 @@ elif [ "${MODE}" == "purge" ]; then
   popd
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
+else
+  echo "Unrecognized mode: ${MODE}"
+  exit 1
 fi
 
 function print_help() {
