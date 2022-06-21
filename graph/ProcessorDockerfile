@@ -18,6 +18,7 @@ ENV HTTPS_PROXY=
 ENV PYTHONUNBUFFERED=1
 
 RUN pip install ipfshttpclient
+RUN pip install pycurl
 
 EXPOSE 5678/tcp
 

@@ -109,6 +109,10 @@ randomFile=randomArtifact_${now}.bin
 head -c 1KiB /dev/urandom > $randomFile
 curl -X POST -F "upfile=@${randomFile}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
 
+# TODO: Update to use a graph API method instead of an Artifact API method.
+currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/artifact?artifactPath=%2Fgraph.json' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+echo $currentGraphState | jq
+
 # Get default file.
 #defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
 #log "Default file: $defaultFile"

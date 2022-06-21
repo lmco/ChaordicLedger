@@ -11,7 +11,7 @@ log = logging.getLogger(__name__)
 
 def configureLogging():
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
-                                  '%m-%d-%Y %H:%M:%S')
+                                  '%Y-%m-%dT%H:%M:%SZ')
 
     log.setLevel(logging.DEBUG)
 
@@ -118,9 +118,9 @@ if __name__ == "__main__":
         log.info("Writing updated graph content: %s", jsonStr)
         response = client.files.write(
             "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
-        log.info(response)
+        log.info("Response from IPFS File API Client: %s", response)
     else:
-        log.error(f"Invalid mode ${mode} provided.")
+        log.error("Invalid mode %s provided.", mode)
 
     endtime = datetime.utcnow()
     log.info(

@@ -14,7 +14,7 @@ log = logging.getLogger(__name__)
 
 def configureLogging():
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
-                                  '%m-%d-%Y %H:%M:%S')
+                                  '%Y-%m-%dT%H:%M:%SZ')
 
     log.setLevel(logging.DEBUG)
 
@@ -79,7 +79,6 @@ class MyServer(BaseHTTPRequestHandler):
 
 if __name__ == "__main__":
     configureLogging()
-    # logging.basicConfig(level=logging.INFO)
     webServer = HTTPServer((hostName, serverPort), MyServer)
     log.info("Server started http://%s:%s", hostName, serverPort)
 
