@@ -15,9 +15,10 @@ COPY graphProcessor.py ./
 
 ENV HTTP_PROXY=
 ENV HTTPS_PROXY=
+ENV PYTHONUNBUFFERED=1
 
 RUN pip install ipfshttpclient
 
 EXPOSE 5678/tcp
 
-CMD [ "python", "./httpserver.py" ]
+CMD [ "python", "-u", "./httpserver.py" ]

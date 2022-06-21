@@ -4,9 +4,26 @@ import ipfshttpclient
 import json
 import io
 from http.server import BaseHTTPRequestHandler, HTTPServer
+import logging
+import sys
 
 hostName = "0.0.0.0"
 serverPort = 5678
+log = None
+
+
+def configureLogging():
+    log = logging.getLogger(__name__)
+    formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
+                                  '%m-%d-%Y %H:%M:%S')
+
+    log.setLevel(logging.DEBUG)
+
+    stdout_handler = logging.StreamHandler(sys.stdout)
+    stdout_handler.setLevel(logging.DEBUG)
+    stdout_handler.setFormatter(formatter)
+
+    log.addHandler(stdout_handler)
 
 
 class MyServer(BaseHTTPRequestHandler):
@@ -15,17 +32,17 @@ class MyServer(BaseHTTPRequestHandler):
         jsonNode = json.loads(node)
         data = client.files.read(
             "/graph.json").decode('utf-8')
-        print(data)
+        log.info(data)
         jsonData = json.loads(data)
         if len(jsonNode) > 0:
-            print(f"Appending node: {node}")
+            log.info(f"Appending node: %s", node)
             jsonData["nodes"].append(jsonNode)
 
         jsonStr = json.dumps(jsonData)
-        print(f"Writing updated graph content: {jsonStr}")
+        log.info(f"Writing updated graph content: %s", jsonStr)
         response = client.files.write(
             "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
-        print(response)
+        log.info(response)
 
     def _set_headers(self):
         self.send_response(200)
@@ -41,18 +58,18 @@ class MyServer(BaseHTTPRequestHandler):
         '''Reads post request body'''
         self._set_headers()
         content_len = int(self.headers.get('Content-Length'))
-        print("Content Length %s" % content_len)
+        log.info("Content Length %s", content_len)
         post_body_bin = self.rfile.read(content_len)
-        print("Received %s" % post_body_bin)
+        log.info("Received %s", post_body_bin)
         post_body = post_body_bin.decode()
-        print("Received %s" % post_body)
+        log.info("Received %s", post_body)
         try:
             self.write_node(post_body)
             # output = subprocess.run(args=["python", "graphProcessor.py", "-i /dns/ipfs-ui/tcp/5001/http",
             #                               '-m "write"', "-n " + post_body, '-r "{}"'], shell=True)
-            # print("Output: %s" % output)
+            # log.info("Output: %s", output)
         except Exception as e:
-            print(e)
+            log.error(e)
 
         response = "{ " + f'"response" : {post_body}' + "}\n"
         self.wfile.write(response.encode())
@@ -62,8 +79,10 @@ class MyServer(BaseHTTPRequestHandler):
 
 
 if __name__ == "__main__":
+    configureLogging()
+    # logging.basicConfig(level=logging.INFO)
     webServer = HTTPServer((hostName, serverPort), MyServer)
-    print("Server started http://%s:%s" % (hostName, serverPort))
+    log.info("Server started http://%s:%s", hostName, serverPort)
 
     try:
         webServer.serve_forever()
@@ -71,4 +90,4 @@ if __name__ == "__main__":
         pass
 
     webServer.server_close()
-    print("Server stopped.")
+    log.info("Server stopped.")

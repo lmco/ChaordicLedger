@@ -6,17 +6,18 @@ import logging
 import sys
 import ipfshttpclient
 
-log = logging.getLogger(__name__)
+log = None
 
 
 def configureLogging():
+    log = logging.getLogger(__name__)
     formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s',
                                   '%m-%d-%Y %H:%M:%S')
 
-    log.setLevel(logging.INFO)
+    log.setLevel(logging.DEBUG)
 
     stdout_handler = logging.StreamHandler(sys.stdout)
-    stdout_handler.setLevel(logging.INFO)
+    stdout_handler.setLevel(logging.DEBUG)
     stdout_handler.setFormatter(formatter)
 
     log.addHandler(stdout_handler)
@@ -75,7 +76,6 @@ def validateArgs():
 if __name__ == "__main__":
     starttime = datetime.utcnow()
 
-    print("hi")
     configureLogging()
     (client, mode, node, relationship) = validateArgs()
 
