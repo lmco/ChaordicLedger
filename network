@@ -150,7 +150,7 @@ elif [ "${MODE}" == "graphinit" ]; then
 #   echo "🏁 - graph reader created."
 elif [ "${MODE}" == "graphprocessor" ]; then
   sourceProxyDetails
-  pushd graphprocessor/scripts
+  pushd graph/processor/scripts
   init_graphprocessor_deployment
   popd
 

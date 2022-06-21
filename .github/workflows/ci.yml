@@ -231,7 +231,7 @@ jobs:
       - name: Build image
         run: |
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.DOCKERFILE }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.BUILD_DIR }}/${{ env.DOCKERFILE }}
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
@@ -257,7 +257,7 @@ jobs:
       - name: Build image
         run: |
           imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
-          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.DOCKERFILE }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }} -f ${{ env.BUILD_DIR }}/${{ env.DOCKERFILE }}
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
