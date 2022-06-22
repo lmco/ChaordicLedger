@@ -33,16 +33,19 @@ class MyServer(BaseHTTPRequestHandler):
             "/graph.json").decode('utf-8')
         log.info(graph)
         graphData = json.loads(graph)
-        if len(jsonData) > 0 and "type" in jsonData:
+        if len(jsonData) > 0 and "Type" in jsonData:
             # Need to identify type:
-            if jsonData["type"] == "node":
-                log.info(f"Appending node: %s", jsonData["data"])
-                graphData["nodes"].append(jsonData["data"])
-            elif jsonData["type"] == "relationship":
-                log.info(f"Appending relationship: %s", jsonData["data"])
-                graphData["relationships"].append(jsonData["relationships"])
+            datatype = jsonData["Type"]
+            data = jsonData["Data"]
+            skip = False
+            if datatype == "node":
+                log.info(f"Appending node: %s", data)
+                graphData["nodes"].append(data)
+            elif datatype == "relationship":
+                log.info(f"Appending relationship: %s", data)
+                graphData["relationships"].append(data)
             else:
-                log.error("Unrecognized type: %s", jsonData["type"])
+                log.error("Unrecognized type: %s", datatype)
                 skip = True
 
             if not skip:

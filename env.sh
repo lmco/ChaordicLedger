@@ -4,4 +4,5 @@ export FABRIC_CONTAINER_REGISTRY="${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}h
 
 export ARTIFACT_METADATA_CCNAME="artifact-metadata"
 export ARTIFACT_CONTENT_CCNAME="artifact-content"
+export ARTIFACT_RELATIONSHIP_CCNAME="artifact-relationship"
 export LIGHTSWITCH_CCNAME="lightswitch"
