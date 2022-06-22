@@ -15,7 +15,7 @@ func (s *SmartContract) InitLedger(ctx contractapi.TransactionContextInterface) 
 	return nil
 }
 
-func PostToGraph(relationshipData RelationshipData, url string) {
+func PostRelationshipToGraph(relationshipData RelationshipData, url string) {
 	fmt.Println("Posting to ", url)
 	relationshipDataJSON, err := json.Marshal(relationshipData)
 	fmt.Println(string(relationshipDataJSON))
@@ -53,7 +53,7 @@ func (s *SmartContract) CreateRelationship(ctx contractapi.TransactionContextInt
 	}
 
 	// Create a relationship in the relationship tree
-	PostToGraph(relationshipData, "http://graph-service:12345")
+	PostRelationshipToGraph(relationshipData, "http://graph-service:12345")
 
 	relationshipDataJSON, err := json.Marshal(relationshipData)
 	if err != nil {

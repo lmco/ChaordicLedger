@@ -12,7 +12,7 @@ friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 #itemhash=$(sha512sum ${item} | awk '{print $1;}')
 #itemsize=$(du -b ${item} | awk '{print $1;}')
 
-filename=$friendlyName.json
+filename=${friendlyName}_artifact.json
 echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 #content="{\"test\": \"value\"}"

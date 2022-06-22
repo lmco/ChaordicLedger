@@ -42,8 +42,8 @@ class MyServer(BaseHTTPRequestHandler):
                 log.info(f"Appending node: %s", data)
                 graphData["nodes"].append(data)
             elif datatype == "relationship":
-                log.info(f"Appending relationship: %s", data)
-                graphData["relationships"].append(data)
+                log.info(f"Appending edge: %s", data)
+                graphData["edges"].append(data)
             else:
                 log.error("Unrecognized type: %s", datatype)
                 skip = True

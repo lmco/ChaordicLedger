@@ -8,13 +8,13 @@
     "parameters": [
       "body"
     ],
-    "target": "deploy/chaordicledger-graph"
+    "target": "deploy/org1-admin-cli"
   },
   "createRelationship": {
     "script": "createRelationship.sh",
     "parameters": [
       "body"
     ],
-    "target": "deploy/chaordicledger-graph"
+    "target": "deploy/org1-admin-cli"
   }
 }
