@@ -228,11 +228,11 @@ type FormData struct {
 	Size         int
 }
 
-func PostToGraph(node Node, url string) {
+func PostToGraph(nodedata NodeData, url string) {
 	fmt.Println("Posting to ", url)
-	nodeJSON, err := json.Marshal(node)
-	fmt.Println(string(nodeJSON))
-	body := strings.NewReader(string(nodeJSON))
+	nodedataJSON, err := json.Marshal(nodedata)
+	fmt.Println(string(nodedataJSON))
+	body := strings.NewReader(string(nodedataJSON))
 	req, err := http.NewRequest("POST", url, body)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
@@ -241,7 +241,7 @@ func PostToGraph(node Node, url string) {
 		fmt.Println("Executing request")
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
-			fmt.Println("Error sending node creation request: ", err)
+			fmt.Println("Error sending node data creation request: ", err)
 		} else {
 			fmt.Println("Request executed")
 		}
@@ -295,7 +295,12 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 		FileID: formData.OriginalName,
 	}
 
-	PostToGraph(node, "http://graph-service:12345")
+	nodedata := NodeData{
+		Type: "node",
+		Data: node,
+	}
+
+	PostToGraph(nodedata, "http://graph-service:12345")
 
 	content := Content{
 		CreationTimestamp: creationTimestamp,

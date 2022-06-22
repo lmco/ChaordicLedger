@@ -26,22 +26,33 @@ def configureLogging():
 
 
 class MyServer(BaseHTTPRequestHandler):
-    def write_node(self, node):
+    def write_data(self, data):
         client = ipfshttpclient.connect("/dns/ipfs-ui/tcp/5001/http")
-        jsonNode = json.loads(node)
-        data = client.files.read(
-            "/graph.json").decode('utf-8')
-        log.info(data)
         jsonData = json.loads(data)
-        if len(jsonNode) > 0:
-            log.info(f"Appending node: %s", node)
-            jsonData["nodes"].append(jsonNode)
+        graph = client.files.read(
+            "/graph.json").decode('utf-8')
+        log.info(graph)
+        graphData = json.loads(graph)
+        if len(jsonData) > 0 and "type" in jsonData:
+            # Need to identify type:
+            if jsonData["type"] == "node":
+                log.info(f"Appending node: %s", jsonData["data"])
+                graphData["nodes"].append(jsonData["data"])
+            elif jsonData["type"] == "relationship":
+                log.info(f"Appending relationship: %s", jsonData["data"])
+                graphData["relationships"].append(jsonData["relationships"])
+            else:
+                log.error("Unrecognized type: %s", jsonData["type"])
+                skip = True
 
-        jsonStr = json.dumps(jsonData)
-        log.info(f"Writing updated graph content: %s", jsonStr)
-        response = client.files.write(
-            "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
-        log.info(response)
+            if not skip:
+                graphStr = json.dumps(graphData)
+                log.info(f"Writing updated graph content: %s", graphStr)
+                response = client.files.write(
+                    "/graph.json", io.BytesIO(graphStr.encode('utf-8')), create=True, truncate=True)
+                log.info(response)
+        else:
+            log.error("Unrecognized data, no type provided: %s", jsonData)
 
     def _set_headers(self):
         self.send_response(200)
@@ -63,7 +74,7 @@ class MyServer(BaseHTTPRequestHandler):
         post_body = post_body_bin.decode()
         log.info("Received %s", post_body)
         try:
-            self.write_node(post_body)
+            self.write_data(post_body)
             # output = subprocess.run(args=["python", "graphProcessor.py", "-i /dns/ipfs-ui/tcp/5001/http",
             #                               '-m "write"', "-n " + post_body, '-r "{}"'], shell=True)
             # log.info("Output: %s", output)
@@ -74,6 +85,7 @@ class MyServer(BaseHTTPRequestHandler):
         self.wfile.write(response.encode())
 
     def do_PUT(self):
+        log.info("Received a PUT, treating as a POST")
         self.do_POST()
 
 

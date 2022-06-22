@@ -5,7 +5,7 @@ import (
 )
 
 // Metadata describes basic details of what makes up a simple metadata
-// Insert struct field in alphabetic order => to achieve determinism accross languages
+// Insert struct field in alphabetic order => to achieve determinism across languages
 // golang keeps the order when marshal to json but doesn't order automatically
 type Metadata struct {
 	CreationTimestamp time.Time `json:CreationTimestamp`
