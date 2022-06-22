@@ -36,12 +36,11 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Gathering Key Performance Indicators (KPIs) via OpenTelemetry|   |   |   |
 
 ## Near-Term Items
-1. Graph construction of artifact relationships.
-1. Write then read arbitrary content.
 1. Metrics trending
 
 ## Future Development Goals
 1. Add log aggregation.
+1. Clean up the form of API return values.
 1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.

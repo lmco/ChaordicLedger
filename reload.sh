@@ -97,6 +97,8 @@ pushd apiServer
 nohup npm start > apiserver.log 2>&1  &
 popd
 
+sleep 10
+
 log "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&

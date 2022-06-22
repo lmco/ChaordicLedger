@@ -12,21 +12,27 @@ function getGraphState() {
 
 # Create a random file and upload it.
 function createAndUploadRandomFile() {
-  mkdir -p /tmp/chaordicledger/generated/files
+  index=$1
+  filesdir=$2
+  mkdir -p $filesdir
   now=`date -u +"%Y%m%dT%H%M%SZ"`
-  randomFile=randomArtifact_${now}.bin
+  randomFile=$filesdir/randomArtifact${index}_${now}.bin
   head -c 1KiB /dev/urandom > $randomFile
   curl -X POST -F "upfile=@${randomFile}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
   sleep 1
   log "Uploaded ${randomFile}"
 }
 
+outdir=/tmp/chaordicledger/generated
+graphsdir=$outdir/graphs
+filesdir=$outdir/files
+
 getGraphState
 
-for i in {1..10}
+for i in {1..20}
 do
   log "Creating File ${i}"
-  createAndUploadRandomFile
+  createAndUploadRandomFile ${i} $filedir
 done
 
 getGraphState
@@ -48,12 +54,13 @@ do
       "nodeida": "'${a}'",
       "nodeidb": "'${b}'"
     }' 'http://localhost:8080/v1/relationships/createRelationship'
-  fi
   done
 done
 
 getGraphState
 
-python3 tools/digraphGenerator.py -o /tmp/chaordicledger/generated/graphs
+python3 tools/digraphGenerator.py -o $graphsdir
+ls -rotl $filesdir
+ls -rotl $graphsdir
 
 log "Done"
