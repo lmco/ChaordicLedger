@@ -1,0 +1,28 @@
+main contract LightSwitch {
+  state On {
+    int brightness;
+  }
+  state Off;
+
+  int switchLocation available in On, Off;
+
+  transaction foo() {
+    LightSwitch s = new LightSwitch(); //Assume a LightSwitch is in Off upon instantiation
+    s.turnOn(50);
+  }
+
+  LightSwitch@Off() { // constructor always ends with the object in Off state
+   ->Off;
+  }
+
+  transaction turnOn(LightSwitch@Off >> On this, int b) // turnOn() can only be called on objects that are in Off state.
+  {
+      On::brightness = b; // prepare to initialize field in the next transition to On
+      ->On;
+  }
+
+  transaction turnOff(LightSwitch@On >> Off this)
+  {
+    ->Off;
+  }
+}

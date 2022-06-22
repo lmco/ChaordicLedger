@@ -1,0 +1,46 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: graphjob
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: graphjob
+    spec:
+      containers:
+        - name: graphjob
+          image: ${GRAPH_JOB_IMAGE}
+          imagePullPolicy: IfNotPresent
+          env:
+          - name: HTTP_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg1
+          - name: HTTPS_PROXY
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg2
+          - name: IPFS_API_SERVER
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg3
+          - name: MODE
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg4
+          - name: NODE
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg5
+          - name: RELATIONSHIP
+            valueFrom:
+              secretKeyRef:
+                name: graphjob-args
+                key: arg6
+      restartPolicy: Never

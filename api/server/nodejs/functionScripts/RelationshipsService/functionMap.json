@@ -1,0 +1,20 @@
+{
+  "getRelationshipGraph": {
+    "script": "getRelationshipGraph.sh",
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "createNode": {
+    "script": "createNode.sh",
+    "parameters": [
+      "body"
+    ],
+    "target": "deploy/org1-admin-cli"
+  },
+  "createRelationship": {
+    "script": "createRelationship.sh",
+    "parameters": [
+      "body"
+    ],
+    "target": "deploy/org1-admin-cli"
+  }
+}

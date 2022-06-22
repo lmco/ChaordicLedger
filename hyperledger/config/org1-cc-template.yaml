@@ -22,6 +22,14 @@ spec:
               value: "0.0.0.0:9999"
             - name: CHAINCODE_ID
               value: "${CHAINCODE_ID}"
+            - name: CORE_CHAINCODE_LOGGING_LEVEL
+              value: "DEBUG"
+            - name: CORE_CHAINCODE_LOGGING_SHIM
+              value: "DEBUG"
+            - name: CORE_PEER_ADDRESS
+              value: "org1-${PEER_NAME}:7051"
+            - name: CORE_PEER_CHAINCODEADDRESS
+              value: "org1-${PEER_NAME}:7052"
           ports:
             - containerPort: 9999
 

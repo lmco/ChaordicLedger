@@ -17,16 +17,16 @@
       "description": "Operations regarding artifacts."
     },
     {
-      "name": "concurrence",
-      "description": "Operations regarding concurrence with changes."
+      "name": "Blockchain",
+      "description": "Operations regarding the blockchain."
     },
     {
-      "name": "relationships",
+      "name": "Metadata",
+      "description": "Operations regarding metadata."
+    },
+    {
+      "name": "Relationships",
       "description": "Operations regarding relationships between artifacts."
-    },
-    {
-      "name": "users",
-      "description": "Operations regarding users."
     }
   ],
   "schemes": [
@@ -36,34 +36,54 @@
     "application/json"
   ],
   "paths": {
-    "/artifact/{artifactName}": {
-      "post": {
-        "operationId": "uploadArtifact",
-        "summary": "Uploads a file.",
-        "consumes": [
-          "multipart/form-data"
-        ],
+    "/latestblock": {
+      "get": {
+        "summary": "Gets the details from the latest block in the chain.",
+        "description": "Gets the details from the latest block in the chain.",
+        "operationId": "getLatestBlock",
         "tags": [
-          "Artifacts"
+          "Blockchain"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON representation of block data.",
+            "schema": {
+              "$ref": "#/definitions/BlockData"
+            }
+          }
+        }
+      }
+    },
+    "/numberedblock/{blocknumber}": {
+      "get": {
+        "summary": "Gets the details from a block in the chain.",
+        "description": "Gets the details from a block in the chain.",
+        "operationId": "getNumberedBlock",
+        "tags": [
+          "Blockchain"
         ],
         "parameters": [
           {
-            "in": "formData",
-            "name": "upfile",
-            "type": "file",
-            "description": "The file to upload."
-          },
-          {
-            "name": "artifactName",
+            "name": "blocknumber",
             "in": "path",
-            "description": "Name of artifact",
+            "description": "Zero-based block index",
             "required": true,
-            "type": "string"
+            "type": "integer",
+            "minimum": 0
           }
         ],
+        "produces": [
+          "application/json"
+        ],
         "responses": {
-          "412": {
-            "description": "Failed uploading artifact."
+          "200": {
+            "description": "A JSON representation of block data.",
+            "schema": {
+              "$ref": "#/definitions/BlockData"
+            }
           }
         }
       }
@@ -107,18 +127,17 @@
           "Artifacts"
         ],
         "consumes": [
-          "application/json"
+          "multipart/form-data"
         ],
         "produces": [
           "application/json"
         ],
         "parameters": [
           {
-            "name": "artifactPath",
-            "in": "query",
-            "description": "Path of artifact to create",
-            "required": true,
-            "type": "string"
+            "in": "formData",
+            "name": "upfile",
+            "type": "file",
+            "description": "The file to upload."
           }
         ],
         "responses": {
@@ -214,13 +233,31 @@
         }
       }
     },
+    "/artifacts/all": {
+      "get": {
+        "summary": "Gets the list of existing artifacts",
+        "description": "Gets the list of existing artifacts",
+        "operationId": "listAllArtifacts",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/artifact/metadata": {
       "post": {
         "summary": "Creates a new metadata item.",
         "description": "Creates a new metadata item.",
         "operationId": "createArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "consumes": [
           "application/json"
@@ -277,7 +314,7 @@
         "description": "Deletes an existing metadata item.",
         "operationId": "deleteArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "produces": [
           "application/json"
@@ -300,23 +337,106 @@
           }
         }
       }
+    },
+    "/relationships": {
+      "get": {
+        "summary": "Gets the relationships between artifacts.",
+        "description": "Gets the relationships between artifacts.",
+        "operationId": "getRelationshipGraph",
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/relationships/createRelationship": {
+      "post": {
+        "summary": "Creates a new relationship between nodes.",
+        "description": "Creates a new relationship between nodes.",
+        "operationId": "createRelationship",
+        "tags": [
+          "Relationships"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Relationship to be established",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Relationship"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/relationships/createNode": {
+      "post": {
+        "summary": "Creates a new node.",
+        "description": "Creates a new node.",
+        "operationId": "createNode",
+        "tags": [
+          "Relationships"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "body",
+            "description": "Node to be created",
+            "required": true,
+            "schema": {
+              "$ref": "#/definitions/Node"
+            }
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
     }
   },
   "definitions": {
-    "ApiResponse": {
+    "Artifact": {
       "type": "object",
       "properties": {
-        "code": {
-          "type": "integer",
-          "format": "int32"
+        "name": {
+          "type": "string",
+          "minLength": 1
         },
-        "type": {
-          "type": "string"
-        },
-        "message": {
-          "type": "string"
+        "base64content": {
+          "type": "string",
+          "minLength": 1
         }
       }
+    },
+    "BlockData": {
+      "type": "string"
     },
     "ArtifactMetadata": {
       "type": "object",
@@ -326,6 +446,32 @@
           "format": "uuid"
         },
         "name": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Node": {
+      "type": "object",
+      "properties": {
+        "nodeid": {
+          "type": "string",
+          "minLength": 1
+        },
+        "fileid": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "Relationship": {
+      "type": "object",
+      "properties": {
+        "nodeida": {
+          "type": "string",
+          "minLength": 1
+        },
+        "nodeidb": {
           "type": "string",
           "minLength": 1
         }

@@ -8,5 +8,15 @@ log.txt
 docker_registry_proxy_details.sh
 **/out
 nodejs-server.zip
-apiServer
+apiServer*
 archive
+*.rpm
+*.tar.gz
+githubReadToken.sh
+nohup.out
+**/nohup.out
+outputs
+*.log
+**/rebuildReload.sh
+randomArtifact*
+**/outdir

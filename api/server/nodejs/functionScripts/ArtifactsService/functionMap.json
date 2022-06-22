@@ -1,19 +1,4 @@
 {
-  "createArtifactMetadata": {
-    "script": "createArtifactMetadata.sh",
-    "target": "deploy/org1-admin-cli"
-  },
-  "deleteArtifactMetadata": {
-    "script": "deleteArtifactMetadata.sh",
-    "parameters": [
-      "metadataID"
-    ],
-    "target": "deploy/org1-admin-cli"
-  },
-  "getAllArtifactMetadata": {
-    "script": "getAllArtifactMetadata.sh",
-    "target": "deploy/org1-admin-cli"
-  },
   "getArtifact": {
     "script": "getArtifact.sh",
     "parameters": [
@@ -38,9 +23,9 @@
   "createArtifact": {
     "script": "createArtifact.sh",
     "parameters": [
-      "artifactPath"
+      "formData"
     ],
-    "target": "deploy/chaordicledger-ipfs"
+    "target": "deploy/org1-admin-cli"
   },
   "uploadArtifact": {
     "script": "uploadArtifact.sh",
@@ -48,7 +33,7 @@
       "artifactName",
       "file"
     ],
-    "target": "deploy/chaordicledger-ipfs"
+    "target": "deploy/org1-admin-cli"
   },
   "listArtifactsAtPath": {
     "script": "listArtifactsAtPath.sh",
@@ -56,5 +41,9 @@
       "path"
     ],
     "target": "deploy/chaordicledger-ipfs"
+  },
+  "listAllArtifacts": {
+    "script": "listAllArtifacts.sh",
+    "target": "deploy/org1-admin-cli"
   }
 }

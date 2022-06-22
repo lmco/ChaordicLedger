@@ -5,33 +5,39 @@ set -o errexit
 export CLUSTER_NAME="chaordicledger"
 TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
+. env.sh
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
+. graph/job/scripts/graphjob.sh
+. graph/processor/scripts/graphprocessor.sh
+. diagnostics/curl/scripts/curl.sh
 
-proxy_details_source_file=docker_registry_proxy_details.sh
-if [[ -f "$proxy_details_source_file" ]]; then
-  echo "Sourcing proxy details from $proxy_details_source_file"
-  . $proxy_details_source_file
+function sourceProxyDetails() {
+  proxy_details_source_file=docker_registry_proxy_details.sh
+  if [[ -f "$proxy_details_source_file" ]]; then
+    echo "Sourcing proxy details from $proxy_details_source_file"
+    . $proxy_details_source_file
 
-  if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
-    echo "Logging in to $DOCKER_REGISTRY_PROXY"
-    echo "echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin"
-    echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
+    if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
+      echo "Logging in to $DOCKER_REGISTRY_PROXY"
+      echo "echoing \$REGISTRY_TOKEN into \"docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin\""
+      echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
+    fi
+  else
+    echo "No proxy details file to source."
   fi
-else
-  echo "No proxy details file to source."
-fi
+}
+
+export NO_PROXY=10.244.0.0/16,10.96.0.0/12,$NO_PROXY
+export no_proxy=$NO_PROXY
 
 export NGINX_HTTP_PORT=${TEST_NETWORK_INGRESS_HTTP_PORT:-80}
 export NGINX_HTTPS_PORT=${TEST_NETWORK_INGRESS_HTTPS_PORT:-443}
 
-export FABRIC_CA_VERSION=1.5.2
-export FABRIC_VERSION=2.4.1
-export FABRIC_CONTAINER_REGISTRY="${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}hyperledger"
 export NETWORK_NAME="chaordicledger"
 export CLUSTER_NAME="chaordiccluster"
 export NS=${NETWORK_NAME}
@@ -41,11 +47,11 @@ export CHANNEL_NAME="cl"
 #export CHAINCODE_IMAGE=${DOCKER_REGISTRY_PROXY}${GHCR_IO}hyperledgendary/fabric-ccaas-asset-transfer-basic:latest
 
 export PEER_TLS_ENABLED=false
-export CHAINCODE_NAME=artifact-metadata
-export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
+#export CHAINCODE_NAME=artifact-metadata
+#export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
 
 echo ${FABRIC_CONTAINER_REGISTRY}
-echo ${CHAINCODE_IMAGE}
+#echo ${CHAINCODE_IMAGE}
 
 export LOCAL_REGISTRY_NAME="kind-registry"
 export LOCAL_REGISTRY_PORT="5000"
@@ -74,12 +80,14 @@ fi
 # TODO: Look into creating a Windows variant.
 
 if [ "${MODE}" == "init" ]; then
+  sourceProxyDetails
   echo "Initializing cluster \"${CLUSTER_NAME}\":"
   pushd hyperledger/scripts
   cluster_init
   popd
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "ipfs" ]; then
+  sourceProxyDetails
   pushd ipfs/scripts
   . create_ipfs.sh
   create_ipfs
@@ -105,8 +113,13 @@ elif [ "${MODE}" == "peer" ]; then
 
   echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
+  sourceProxyDetails
   pushd hyperledger/scripts
-  deploy_chaincode
+  # This images are already in the kind cluster's registry, just need to reference them.
+  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}
+  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/relationship-chaincode:v0.0.0" ${ARTIFACT_RELATIONSHIP_CCNAME}
   popd
 
   echo "🏁 - Chaincode deployed."
@@ -122,6 +135,35 @@ elif [ "${MODE}" == "query" ]; then
   popd
 
   echo "🏁 - Chaincode queried."
+elif [ "${MODE}" == "graphinit" ]; then
+  sourceProxyDetails
+  pushd graph/job/scripts
+  init_graph_job
+  popd
+
+  echo "🏁 - graph reader created."
+# elif [ "${MODE}" == "graphmodify" ]; then
+#   sourceProxyDetails
+#   pushd graph/scripts
+#   modify_graphprocessor_job
+#   popd
+
+#   echo "🏁 - graph reader created."
+elif [ "${MODE}" == "graphprocessor" ]; then
+  sourceProxyDetails
+  pushd graph/processor/scripts
+  init_graphprocessor_deployment
+  popd
+
+  echo "🏁 - graph server created."
+elif [ "${MODE}" == "curl" ]; then
+  sourceProxyDetails
+  pushd diagnostics/curl/scripts
+  #Example: run_curl http://foo-service:12345
+  run_curl $@
+  popd
+
+  echo "🏁 - curl executed."
 elif [ "${MODE}" == "term" ]; then
   echo "Terminating cluster \"${CLUSTER_NAME}\":"
   
@@ -138,6 +180,9 @@ elif [ "${MODE}" == "purge" ]; then
   popd
   
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
+else
+  echo "Unrecognized mode: ${MODE}"
+  exit 1
 fi
 
 function print_help() {

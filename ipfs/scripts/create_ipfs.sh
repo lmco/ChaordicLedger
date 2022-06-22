@@ -40,6 +40,7 @@ function create_sample_file() {
   # sleep 10
   #echo "Retrieving file $identifier"
   #fileContents=$(curl localhost/ipfs/$identifier)
+  echo $result
   fileContents=$(curl localhost/ipfs/$result)
   echo $fileContents
 }
@@ -47,8 +48,9 @@ function create_sample_file() {
 function create_ipfs() {
   init_storage_volumes
   create_service
-  echo "Waiting 10 seconds after IPFS service creation."
-  sleep 10
+  local wait=15
+  sleep $wait
+  echo "Waiting ${wait} seconds after IPFS service creation."
   create_sample_file
 }
 
