@@ -99,49 +99,27 @@ popd
 
 sleep 10
 
-# TODO: Update to use a graph API method instead of an Artifact API method.
-initialGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/artifact?artifactPath=%2Fgraph.json' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-echo $initialGraphState | jq
-
-# Create a random file and upload it.
-now=`date -u +"%Y%m%dT%H%M%SZ"`
-randomFile1=randomArtifact_${now}.bin
-head -c 1KiB /dev/urandom > $randomFile1
-curl -X POST -F "upfile=@${randomFile1}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
-sleep 2
-
-# Create another random file and upload it.
-now=`date -u +"%Y%m%dT%H%M%SZ"`
-randomFile2=randomArtifact_${now}.bin
-head -c 1KiB /dev/urandom > $randomFile2
-curl -X POST -F "upfile=@${randomFile2}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
-
-# Create a relationship between the two files
-curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-  "nodeida": "'${randomFile1}'",
-  "nodeidb": "'${randomFile2}'"
-}' 'http://localhost:8080/v1/relationships/createRelationship'
-
 # Get current graph state
 currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
 echo $currentGraphState | jq
 
-# Get default file.
-#defaultFile=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Ftmp" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-#log "Default file: $defaultFile"
+# now=`date -u +"%Y%m%dT%H%M%SZ"`
+# randomFile1=randomArtifact_${now}.bin
+# head -c 1KiB /dev/urandom > $randomFile1
+# curl -X POST -F "upfile=@${randomFile1}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
+# sleep 2
 
-# Get default file contents.
-#curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Ftmp%2F$defaultFile" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g"
+# # Create another random file and upload it.
+# now=`date -u +"%Y%m%dT%H%M%SZ"`
+# randomFile2=randomArtifact_${now}.bin
+# head -c 1KiB /dev/urandom > $randomFile2
+# curl -X POST -F "upfile=@${randomFile2}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
 
-## Create new file via API.
-#curl -X POST "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2Fpath.txt" -H "accept: */*"
-
-# List files at new path.
-#fileName=$(curl -X GET "http://localhost:8080/v1/artifacts?path=%2Fsome%2Fother" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g")
-#log "Filename: $fileName"
-
-# Get file contents.
-#curl -X GET "http://localhost:8080/v1/artifact?artifactPath=%2Fsome%2Fother%2F$fileName" -H "accept: */*" | jq .result | sed "s|[\"]||g" | sed "s|\\\\n||g" | jq
+# # Create a relationship between the two files
+# curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
+#   "nodeida": "'${randomFile1}'",
+#   "nodeidb": "'${randomFile2}'"
+# }' 'http://localhost:8080/v1/relationships/createRelationship'
 
 # Get all known artifacts.
 allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
@@ -154,26 +132,6 @@ do
   fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
   echo $fileData
 done
-
-# Create relationships between each file
-for a in $ipfsNames
-do
-  for b in $ipfsNames
-  do
-    if [ a != b ]
-    then
-      echo "Relating ${a} to ${b}"
-
-      curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-        "nodeida": "'${a}'",
-        "nodeidb": "'${b}'"
-      }' 'http://localhost:8080/v1/relationships/createRelationship'
-    fi
-  done
-done
-
-currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-echo $currentGraphState | jq
 
 log "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
