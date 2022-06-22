@@ -1,7 +1,7 @@
 #!/bin/sh
 
 blocknumber=0
-outdir="outputs"
+outdir="/tmp/chaordicledger"
 blockdir=$outdir/blocks
 blockinfo=$outdir/blockinfo
 mkdir -p $blockdir
