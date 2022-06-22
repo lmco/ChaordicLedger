@@ -143,4 +143,8 @@ do
   echo $fileData
 done
 
+log "View the API documentation at http://localhost:8080/docs"
+log "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
+log "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
+
 log "Done"

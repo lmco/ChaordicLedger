@@ -32,7 +32,7 @@ getGraphState
 for i in {1..20}
 do
   log "Creating File ${i}"
-  createAndUploadRandomFile ${i} $filedir
+  createAndUploadRandomFile ${i} $filesdir
 done
 
 getGraphState
@@ -60,7 +60,11 @@ done
 getGraphState
 
 python3 tools/digraphGenerator.py -o $graphsdir
+
+log "Files in $filesdir"
 ls -rotl $filesdir
+
+log "Graphs in $graphsdir"
 ls -rotl $graphsdir
 
 log "Done"
