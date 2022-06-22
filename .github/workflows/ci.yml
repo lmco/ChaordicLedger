@@ -303,7 +303,7 @@ jobs:
         run: |
           docker push ${{ env.imageTag }}
 
-docker-relationship-chaincode:
+  docker-relationship-chaincode:
     runs-on: ubuntu-latest
     env:
       IMAGE_NAME: relationship-chaincode

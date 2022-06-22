@@ -1,5 +1,5 @@
 {
-  "address": "artifact-content.org1.example.com:9999",
+  "address": "artifact-relationship.org1.example.com:9999",
   "dial_timeout": "10s",
   "tls_required": false
 }

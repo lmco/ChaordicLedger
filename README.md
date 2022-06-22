@@ -65,3 +65,4 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Go IPFS API: [https://github.com/ipfs/go-ipfs-api](https://github.com/ipfs/go-ipfs-api)
 * Hyperledger Explorer: [https://github.com/hyperledger/blockchain-explorer](https://github.com/hyperledger/blockchain-explorer)
 * Kubernetes Dashboard: [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard)
+* YAML Lint: [http://www.yamllint.com/](http://www.yamllint.com/)
