@@ -2,24 +2,15 @@
 set -x
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
-#uuid=`uuidgen`
-# itemid="{{itemid}}"
-# content="{{base64encodedContent}}"
-# itemsize="{{itemsizeinbytes}}"
-
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+# TODO: Update the interface to allow the user to provide a friendly name.
 friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
-#itemhash=$(sha512sum ${item} | awk '{print $1;}')
-#itemsize=$(du -b ${item} | awk '{print $1;}')
 
 filename=${friendlyName}_artifact.json
 echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
-#content="{\"test\": \"value\"}"
 content=$(cat $filename | sed 's|"|\\"|g')
-
-# Hm ... could we make the chaincode read a file?
-#data=$(cat $filename)
 
 peer chaincode \
       invoke \

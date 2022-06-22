@@ -97,7 +97,15 @@ pushd apiServer
 nohup npm start > apiserver.log 2>&1  &
 popd
 
-sleep 10
+log "Creating service account for dashboard"
+kubectl create serviceaccount dashboard-admin-sa &&
+kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
+kubectl apply -f metrics/components.yaml &&
+kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
+kubectl apply -f dashboards/kubernetes/recommended.yaml &&
+kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
+
+nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
 # Get current graph state
 currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
@@ -132,15 +140,5 @@ do
   fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
   echo $fileData
 done
-
-log "Creating service account for dashboard"
-kubectl create serviceaccount dashboard-admin-sa &&
-kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
-kubectl apply -f metrics/components.yaml &&
-kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
-kubectl apply -f dashboards/kubernetes/recommended.yaml &&
-kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
-
-nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
 log "Done"
