@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: filebeat-setup
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: filebeat-setup
+    spec:
+      containers:
+        - name: filebeat-setup
+          image: lmregistry.global.lmco.com/ext.docker.elastic.co/beats/filebeat:7.17.3 #${GRAPH_PROCESSOR_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args: ["setup", "-E", "setup.kibana.host=kibana-kibana:5601", "-E", "output.elasticsearch.hosts=[\"elasticsearch-master:9200\"]"]
+      restartPolicy: Never

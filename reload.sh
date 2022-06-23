@@ -1,7 +1,20 @@
 #/bin/sh
+set -e
+
 function log() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
   echo "[$now] $1"
+}
+
+function terminateProcess() {
+  expr=$1
+  result=$(ps -ef | grep "$expr" | grep -v grep | awk '{print $2;}')
+
+  if [ -z "$result" ]; then
+    echo "No need to terminate \"$expr\"; it's not running."
+  else
+    kill -9 $result
+  fi
 }
 
 log "Starting reload."
@@ -28,15 +41,23 @@ cp LMChain/* hyperledger/admin-cli/cachain/
 cp LMChain/* test/cachain/
 
 rm -rf LMChain
-rm kubectl_proxy.log
+
+if [ -f kubectl_proxy.log ]; then
+  rm kubectl_proxy.log
+fi
+
+# Terminate kubectl port-forwarding for monitoring.
+terminateProcess "kubectl port-forward"
 
 # Terminate kubectl proxy.
-ps -ef | grep "kubectl proxy" | grep -v grep | awk '{print $2;}' | xargs kill -9
+terminateProcess "kubectl proxy"
 
 # Terminate nodejs Swagger UI.
-ps -ef | grep "node index" | grep -v grep | awk '{print $2;}' | xargs kill -9
+terminateProcess "node index"
 
-rm -rf apiServer
+if [ -d "apiServer" ]; then
+  rm -rf apiServer
+fi
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
@@ -44,6 +65,7 @@ cd ~/git/ChaordicLedger/
 
 ./network purge &&
 ./network init &&
+./network monitor &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
@@ -51,16 +73,6 @@ cd ~/git/ChaordicLedger/
 ./network graphinit &&
 ./network graphprocessor &&
 ./network chaincode
-
-# Used the following commands to generate the values:
-#    head -c 1KiB /dev/urandom > randomArtifact0.bin
-#    sha512sum randomfile1.txt
-#    uuidgen
-# 
-#    tr -dc '[:alnum:] \n' < /dev/urandom | head -c 394 > randomArtifact1.txt
-#
-# Used the following to get the base64 string for content;
-#    cat randomArtifact0.bin | base64 -w 0 
 
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
 
@@ -72,16 +84,12 @@ for item in ${LfileArray[*]}; do
   itemsize=$(du -b ${item} | awk '{print $1;}')
   itemcontent=$(cat ${item} | base64 -w 0)
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
-  #./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["CreateContent","'${timestamp}'","'${item}'","'${itemcontent}'"]}'
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
-  #./network invoke ${ARTIFACT_CONTENT_CCNAME} '{"Args":["ContentExists","'${item}'"]}'
 done
 
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
 
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
-
-# Note: This assumes api/server/out/nodejs was pulled local.
 
 # Pull the latest nodejs-server.zip artifact from the latest successful GitHub run.
 #   Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
@@ -113,24 +121,6 @@ nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
 echo $currentGraphState | jq
 
-# now=`date -u +"%Y%m%dT%H%M%SZ"`
-# randomFile1=randomArtifact_${now}.bin
-# head -c 1KiB /dev/urandom > $randomFile1
-# curl -X POST -F "upfile=@${randomFile1}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
-# sleep 2
-
-# # Create another random file and upload it.
-# now=`date -u +"%Y%m%dT%H%M%SZ"`
-# randomFile2=randomArtifact_${now}.bin
-# head -c 1KiB /dev/urandom > $randomFile2
-# curl -X POST -F "upfile=@${randomFile2}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' 'http://localhost:8080/v1/artifact'
-
-# # Create a relationship between the two files
-# curl -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d '{
-#   "nodeida": "'${randomFile1}'",
-#   "nodeidb": "'${randomFile2}'"
-# }' 'http://localhost:8080/v1/relationships/createRelationship'
-
 # Get all known artifacts.
 allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
 echo $allArtifacts | jq
@@ -144,6 +134,7 @@ do
 done
 
 log "View the API documentation at http://localhost:8080/docs"
+log "View the Elastic dashboard at http://localhost:5601/"
 log "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
 log "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
 

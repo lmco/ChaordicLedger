@@ -27,12 +27,12 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |---|---|---|---|
 |Scripted generation of root certificate authority.|&#9745;|&#9745;|&#9745;|
 |Scripted generation of node certificate signed by generated root certificate authority.|&#9745;|&#9745;||
-|Creation of Hyperledger Node|&#9745;|In Progress|   |
-|Creation of hybrid Hyperledger/IPFS Cluster|&#9745;|In Progress|   |
-|Creation of RESTful API|&#9745;|In Progress||
-|Creation of Chaincode|&#9745;|&#9745;|   |
+|Creation of Hyperledger Node|&#9745;|&#9745;||
+|Creation of hybrid Hyperledger/IPFS Cluster|&#9745;|&#9745;||
+|Creation of RESTful API|&#9745;|&#9745;|&#9745;|
+|Creation of Chaincode|&#9745;|&#9745;|&#9745;|
 |Enable Communication of Multiple Nodes on a common Network|   |   |   |
-|Defining and Executing Simulations|   |   |   |
+|Defining and Executing Simulations|In Progress|   |   |
 |Gathering Key Performance Indicators (KPIs) via OpenTelemetry|   |   |   |
 
 ## Near-Term Items

@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: metricbeat-setup
+spec:
+  completions: 1
+  template:
+    metadata:
+      name: metricbeat-setup
+    spec:
+      containers:
+        - name: metricbeat-setup
+          image: docker.elastic.co/beats/metricbeat:7.17.4 #${GRAPH_PROCESSOR_IMAGE}
+          imagePullPolicy: IfNotPresent
+          args: ["setup", "-E", "setup.kibana.host=kibana-kibana:5601", "-E", "output.elasticsearch.hosts=[\"elasticsearch-master:9200\"]"]
+      restartPolicy: Never
