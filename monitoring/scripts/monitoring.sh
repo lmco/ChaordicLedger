@@ -68,12 +68,5 @@ function enable_monitoring() {
   echo "Waiting for dapr-system installation and start-up..."
   helm install dapr dapr/dapr --namespace dapr-system --set global.logAsJson=true --set global.registry="${REGISTRY}daprio" --wait
 
-  # echo "Waiting for dapr-system start-up..."
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-dashboard -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-operator -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-placement-server -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-sentry -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-sidecar-injector -n dapr-system --timeout=120s
-
   nohup kubectl port-forward svc/kibana-kibana 5601 -n dapr-monitoring > ${MONITORING_TMP}/port-forward.log 2>&1 &
 }
