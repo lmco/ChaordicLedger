@@ -135,7 +135,8 @@ done
 
 log "View the API documentation at http://localhost:8080/docs"
 log "View the Elastic dashboard at http://localhost:5601/"
+log "View the Elastic Metrics Inventory at http://localhost:5601/app/metrics/inventory and select the metricbeat item"
+log "View the Elastic Metrics Explorer at http://localhost:5601/app/metrics/explorer?metricsExplorer"
 log "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
 log "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
-
 log "Done"
