@@ -5,6 +5,13 @@ set -o errexit
 export CLUSTER_NAME="chaordicledger"
 TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
+if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
+  echo "Purging contents of $TEMP_DIR"
+  rm -rf $TEMP_DIR/*
+else
+  echo "NOT purging contents of $TEMP_DIR"
+fi
+
 . env.sh
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
@@ -12,6 +19,7 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 . hyperledger/scripts/create_msp.sh
 . hyperledger/scripts/create_channel.sh
 . hyperledger/scripts/create_chaincode.sh
+. monitoring/scripts/monitoring.sh
 . graph/job/scripts/graphjob.sh
 . graph/processor/scripts/graphprocessor.sh
 . diagnostics/curl/scripts/curl.sh
@@ -86,6 +94,13 @@ if [ "${MODE}" == "init" ]; then
   cluster_init
   popd
   echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "monitor" ]; then
+  sourceProxyDetails
+  echo "Enabling monitoring:"
+  pushd monitoring/scripts
+  enable_monitoring
+  popd
+  echo "🏁 - Monitoring is ready."
 elif [ "${MODE}" == "ipfs" ]; then
   sourceProxyDetails
   pushd ipfs/scripts
