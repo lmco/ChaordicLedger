@@ -5,6 +5,13 @@ set -o errexit
 export CLUSTER_NAME="chaordicledger"
 TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
+if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
+  echo "Purging contents of $TEMP_DIR"
+  rm -rf $TEMP_DIR/*
+else
+  echo "NOT purging contents of $TEMP_DIR"
+fi
+
 . env.sh
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
