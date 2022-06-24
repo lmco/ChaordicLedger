@@ -28,12 +28,12 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Scripted generation of root certificate authority.|✔️|✔️|✔️|
 |Scripted generation of node certificate signed by generated root certificate authority.|✔️|✔️|➖|
 |Creation of Hyperledger Node|✔️|✔️|➖|
-|Creation of hybrid Hyperledger/IPFS Cluster|✔️|✔️|&#9796;|
+|Creation of hybrid Hyperledger/IPFS Cluster|✔️|✔️|✔️|
 |Creation of RESTful API|✔️|✔️|✔️|
 |Creation of Chaincode|✔️|✔️|✔️|
-|Enable Communication of Multiple Nodes on a common Network|||➖|
-|Defining and Executing Simulations|In Progress|   |➖|
-|Gathering Key Performance Indicators (KPIs) via OpenTelemetry|   |   |➖|
+|Enable Communication of Multiple Nodes on a common Network|⏸|⏸|➖|
+|Defining and Executing Simulations|⏩|⏸|➖|
+|Gathering Key Performance Indicators (KPIs)|⏸|⏸|➖|
 
 ## Near-Term Items
 1. Clean up the form of API return values.
@@ -69,3 +69,5 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Examples -- graphviz 0.20 documentation [https://graphviz.readthedocs.io/en/stable/examples.html] (https://graphviz.readthedocs.io/en/stable/examples.html)
 * Drawing graphs with dot [https://www.graphviz.org/pdf/dotguide.pdf] (https://www.graphviz.org/pdf/dotguide.pdf)
 * Emojipedia [https://emojipedia.org/](https://emojipedia.org/)
+* Unicode Character Table [https://unicode-table.com/en/2714/](https://unicode-table.com/en/2714/)
+    * *Note: The HTML code for ✔️is \&#10004;*
