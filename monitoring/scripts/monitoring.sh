@@ -24,11 +24,6 @@ function enable_monitoring() {
   # One replica, so only wait for index 0
   kubectl wait --namespace=dapr-monitoring --for=condition=ready pod --timeout=600s -l statefulset.kubernetes.io/pod-name=elasticsearch-master-0
 
-  # TODO: Load metricbeat and filebeat via helm chart.
-
-  # TODO: Download helm chart, replace image prefix with proxy variables, install.
-
-  
   helm pull elastic/kibana --untar --untardir $MONITORING_TMP
   sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/kibana/values.yaml
   helm install kibana $MONITORING_TMP/kibana -n dapr-monitoring
@@ -36,6 +31,17 @@ function enable_monitoring() {
 
   echo "Waiting for kibana start-up..."
   kubectl wait --for=condition=Ready pods -l=app=kibana -n dapr-monitoring --timeout=600s
+
+  # Load metricbeat via helm chart.
+  helm pull elastic/metricbeat --untar --untardir $MONITORING_TMP
+  sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/metricbeat/values.yaml
+  helm install metricbeat $MONITORING_TMP/metricbeat -n dapr-monitoring --wait
+
+  # Note: filebeat appears to hit a memory limit; disabling for now as it's not really necessary.
+  # Load filebeat via helm chart.
+  # helm pull elastic/filebeat --untar --untardir $MONITORING_TMP
+  # sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/filebeat/values.yaml
+  # helm install filebeat $MONITORING_TMP/filebeat -n dapr-monitoring --wait
 
   source_url=https://docs.dapr.io/docs
 
@@ -62,7 +68,7 @@ function enable_monitoring() {
   echo "Waiting for dapr-system installation and start-up..."
   helm install dapr dapr/dapr --namespace dapr-system --set global.logAsJson=true --set global.registry="${REGISTRY}daprio" --wait
 
-  echo "Waiting for dapr-system start-up..."
+  # echo "Waiting for dapr-system start-up..."
   # kubectl wait --for=condition=Ready pods -l=app=dapr-dashboard -n dapr-system --timeout=120s
   # kubectl wait --for=condition=Ready pods -l=app=dapr-operator -n dapr-system --timeout=120s
   # kubectl wait --for=condition=Ready pods -l=app=dapr-placement-server -n dapr-system --timeout=120s
