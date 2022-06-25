@@ -5,14 +5,16 @@ set -o errexit
 export CLUSTER_NAME="chaordicledger"
 TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
+. env.sh
+
 if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
-  echo "Purging contents of $TEMP_DIR"
+  syslog "Purging contents of $TEMP_DIR to get a clean set of results."
   rm -rf $TEMP_DIR/*
 else
-  echo "NOT purging contents of $TEMP_DIR"
+  syslog "NOT purging contents of $TEMP_DIR"
 fi
 
-. env.sh
+syslog "Sourcing multiple scripts to allow access to the necessary setup functions."
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
 . hyperledger/scripts/cluster.sh
@@ -24,19 +26,21 @@ fi
 . graph/processor/scripts/graphprocessor.sh
 . diagnostics/curl/scripts/curl.sh
 
+syslog "Setting additional environment variables necessary for setup, including considerations for corporate firewalls."
+
 function sourceProxyDetails() {
   proxy_details_source_file=docker_registry_proxy_details.sh
   if [[ -f "$proxy_details_source_file" ]]; then
-    echo "Sourcing proxy details from $proxy_details_source_file"
+    syslog "Sourcing proxy details from $proxy_details_source_file"
     . $proxy_details_source_file
 
     if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
-      echo "Logging in to $DOCKER_REGISTRY_PROXY"
-      echo "echoing \$REGISTRY_TOKEN into \"docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin\""
+      syslog "Logging in to $DOCKER_REGISTRY_PROXY"
+      #syslog "echoing \$REGISTRY_TOKEN into \"docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin\""
       echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
     fi
   else
-    echo "No proxy details file to source."
+    syslog "No proxy details file to source."
   fi
 }
 
@@ -58,7 +62,7 @@ export PEER_TLS_ENABLED=false
 #export CHAINCODE_NAME=artifact-metadata
 #export CHAINCODE_IMAGE="${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0"
 
-echo ${FABRIC_CONTAINER_REGISTRY}
+#echo ${FABRIC_CONTAINER_REGISTRY}
 #echo ${CHAINCODE_IMAGE}
 
 export LOCAL_REGISTRY_NAME="kind-registry"
@@ -74,34 +78,32 @@ ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION:-catrust}
 
 ## Parse mode
 if [[ $# -lt 1 ]] ; then
-  print_help
+  syslog "Invalid arguments. Exiting."
   exit 0
 else
   MODE=$1
   shift
 fi
 
-
-# TODO: Segregate the creation of MSPs, Orders, and Peers
-# TODO: Use kubectl to go into each peer and issue a 'peer' command.
 # TODO: Need ability to launch and join an existing network.
 # TODO: Look into creating a Windows variant.
 
 if [ "${MODE}" == "init" ]; then
   sourceProxyDetails
-  echo "Initializing cluster \"${CLUSTER_NAME}\":"
+  syslog "Initializing cluster \"${CLUSTER_NAME}\""
   pushd hyperledger/scripts
   cluster_init
   popd
-  echo "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
+  syslog "🏁 - Cluster \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "monitor" ]; then
   sourceProxyDetails
-  echo "Enabling monitoring:"
+  syslog "Enabling monitoring"
   pushd monitoring/scripts
   enable_monitoring
   popd
-  echo "🏁 - Monitoring is ready."
+  syslog "🏁 - Monitoring is ready."
 elif [ "${MODE}" == "ipfs" ]; then
+  syslog "Enabling IPFS"
   sourceProxyDetails
   pushd ipfs/scripts
   . create_ipfs.sh
@@ -110,53 +112,60 @@ elif [ "${MODE}" == "ipfs" ]; then
   
   echo "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "msp" ]; then
+  syslog "Creating MSPs"
   pushd hyperledger/scripts
   create_msp $@
   popd
   
-  echo "🏁 - MSP for \"${CLUSTER_NAME}\" is ready."
+  syslog "🏁 - MSPs for \"${CLUSTER_NAME}\" are ready."
 elif [ "${MODE}" == "channel" ]; then
+  syslog "Initialzing channel \"${CHANNEL_NAME}\""
   pushd hyperledger/scripts
   channel_init $@
   popd
 
-  echo "🏁 - Channel \"${CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
+  syslog "🏁 - Channel \"${CHANNEL_NAME}\" for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "peer" ]; then
+  syslog "Initializing peers"
   pushd hyperledger/scripts
   channel_join $@
   popd
 
-  echo "🏁 - Peers joined \"${CHANNEL_NAME}\"."
+  syslog "🏁 - Peers joined \"${CHANNEL_NAME}\"."
 elif [ "${MODE}" == "chaincode" ]; then
+  syslog "Deploying chaincode"
   sourceProxyDetails
   pushd hyperledger/scripts
   # This images are already in the kind cluster's registry, just need to reference them.
-  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}
   deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/relationship-chaincode:v0.0.0" ${ARTIFACT_RELATIONSHIP_CCNAME}
+  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   popd
 
-  echo "🏁 - Chaincode deployed."
+  syslog "🏁 - Chaincode deployed."
 elif [ "${MODE}" == "invoke" ]; then
+  syslog "Invoking chaincode \"$1\""
   pushd hyperledger/scripts
   invoke_chaincode $@
   popd
 
-  echo "🏁 - Chaincode invoked."
+  syslog "🏁 - Chaincode \"$1\" invoked."
 elif [ "${MODE}" == "query" ]; then
+  syslog "Querying chaincode \"$1\""
   pushd hyperledger/scripts
   query_chaincode $@
   popd
 
-  echo "🏁 - Chaincode queried."
+  syslog "🏁 - Chaincode \"$1\" queried."
 elif [ "${MODE}" == "graphinit" ]; then
+  syslog "Initializing relationship graph."
   sourceProxyDetails
   pushd graph/job/scripts
   init_graph_job
   popd
 
-  echo "🏁 - graph reader created."
+  syslog "🏁 - Relationship graph initialized."
 # elif [ "${MODE}" == "graphmodify" ]; then
 #   sourceProxyDetails
 #   pushd graph/scripts
@@ -165,41 +174,39 @@ elif [ "${MODE}" == "graphinit" ]; then
 
 #   echo "🏁 - graph reader created."
 elif [ "${MODE}" == "graphprocessor" ]; then
+  syslog "Initializing relationship graph processor"
   sourceProxyDetails
   pushd graph/processor/scripts
   init_graphprocessor_deployment
   popd
 
-  echo "🏁 - graph server created."
+  syslog "🏁 - Relationship graph processor created."
 elif [ "${MODE}" == "curl" ]; then
+  syslog "Executing curl"
   sourceProxyDetails
   pushd diagnostics/curl/scripts
   #Example: run_curl http://foo-service:12345
   run_curl $@
   popd
 
-  echo "🏁 - curl executed."
+  syslog "🏁 - curl executed."
 elif [ "${MODE}" == "term" ]; then
-  echo "Terminating cluster \"${CLUSTER_NAME}\":"
+  syslog "Terminating cluster \"${CLUSTER_NAME}\":"
   
   pushd cleanup/agnostic
   ./cleanup_hyperledger.sh
   popd
   
-  echo "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
+  syslog "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
 elif [ "${MODE}" == "purge" ]; then
-  echo "Purging cluster \"${CLUSTER_NAME}\":"
+  syslog "Purging cluster \"${CLUSTER_NAME}\":"
   
   pushd cleanup/agnostic
   ./purge_hyperledger.sh
   popd
   
-  echo "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
+  syslog "🏁 - Cluster \"${CLUSTER_NAME}\" and its supporting Docker images are gone."
 else
-  echo "Unrecognized mode: ${MODE}"
+  syslog "Unrecognized mode: \"${MODE}\". Exiting."
   exit 1
 fi
-
-function print_help() {
-  echo "TODO"
-}

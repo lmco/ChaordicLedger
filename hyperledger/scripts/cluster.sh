@@ -2,6 +2,12 @@
 
 set -o errexit
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger cluster functions."
+fi
+
 CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 

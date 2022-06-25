@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger utilities."
+fi
+
 # Performs substitutions in a template based on known global variables.
 function populateTemplate() {
   local templateFile=$1

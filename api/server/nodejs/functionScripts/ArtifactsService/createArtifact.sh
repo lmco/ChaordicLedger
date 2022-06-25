@@ -21,6 +21,7 @@ peer chaincode \
       -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}"
 
 
+
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 
 # data="{{body}}"

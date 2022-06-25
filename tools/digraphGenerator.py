@@ -3,7 +3,6 @@ import logging
 import json
 import os
 import requests
-from datetime import datetime
 from graphviz import Digraph
 
 # https://graphviz.readthedocs.io/en/stable/examples.html
@@ -31,8 +30,8 @@ def add_edge(a: str, b: str, dotgraph: Digraph):
 def generate_graph_file(outdir: str, file_name_prefix: str, dotgraph: Digraph):
     os.makedirs(outdir, exist_ok=True)
     filename = os.path.join(outdir, f'{file_name_prefix}.gv')
-    log.info("Generating %s", filename)
     dotgraph.save(filename)
+    log.info("Generated %s", filename)
     return filename
 
 

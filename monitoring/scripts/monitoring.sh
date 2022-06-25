@@ -2,6 +2,12 @@
 
 set -o errexit
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing monitoring functions."
+fi
+
 MONITORING_TMP=${TEMP_DIR}/monitoring
 mkdir -p $MONITORING_TMP
 

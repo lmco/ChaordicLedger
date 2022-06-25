@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing diagnostic functions."
+fi
+
 CURL_TMP_DIR=${TEMP_DIR}/curl
 mkdir -p ${CURL_TMP_DIR}
 

@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger MSP creation functions."
+fi
+
 # Reference: test-network-k8s/scripts/test_network.sh
 MSP_TMP_DIR=${TEMP_DIR}/msp
 mkdir -p ${MSP_TMP_DIR}

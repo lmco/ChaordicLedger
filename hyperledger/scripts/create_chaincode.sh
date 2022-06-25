@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger chaincode creation functions."
+fi
+
 CHAINCODE_TMP_DIR=${TEMP_DIR}/chaincode
 mkdir -p $CHAINCODE_TMP_DIR
 

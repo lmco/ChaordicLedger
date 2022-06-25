@@ -11,22 +11,25 @@ function terminateProcess() {
   result=$(ps -ef | grep "$expr" | grep -v grep | awk '{print $2;}')
 
   if [ -z "$result" ]; then
-    echo "No need to terminate \"$expr\"; it's not running."
+    syslog "No need to terminate \"$expr\"; it's not running."
   else
+    syslog "Terminating process matching \"$expr\" that has PID $result."
     kill -9 $result
   fi
 }
 
-log "Starting reload."
-
 . env.sh
 
+syslog "Starting reload."
+
+syslog "Removing corporate Certificate Authority certificates."
 rm api/builder/cachain/*.cer
 rm api/server/cachain/*.cer
 rm chaincode/artifact-metadata/docker/cachain/*.cer
 rm hyperledger/admin-cli/cachain/*.cer
 rm test/cachain/*.cer
 
+syslog "Expanding archive of corporate Certificate Authority certificates."
 unzip -o cachain.zip
 mkdir -p api/builder/cachain/
 mkdir -p api/server/cachain/
@@ -34,35 +37,42 @@ mkdir -p chaincode/artifact-metadata/docker/cachain/
 mkdir -p hyperledger/admin-cli/cachain/
 mkdir -p test/cachain/
 
+syslog "Loading corporate Certificate Authority certificates where necessary."
 cp LMChain/* api/builder/cachain/
 cp LMChain/* api/server/cachain/
 cp LMChain/* chaincode/artifact-metadata/docker/cachain/
 cp LMChain/* hyperledger/admin-cli/cachain/
 cp LMChain/* test/cachain/
 
+syslog "Removing Certificate Authority certificate extraction directory."
 rm -rf LMChain
 
 if [ -f kubectl_proxy.log ]; then
+  syslog "Removing kubectl proxy log."
   rm kubectl_proxy.log
 fi
 
-# Terminate kubectl port-forwarding for monitoring.
+syslog "Terminating kubectl port-forwarding for monitoring."
 terminateProcess "kubectl port-forward"
 
-# Terminate kubectl proxy.
+syslog "Terminaging kubectl proxy."
 terminateProcess "kubectl proxy"
 
-# Terminate nodejs Swagger UI.
+syslog "Terminaging nodejs Swagger UI."
 terminateProcess "node index"
 
 if [ -d "apiServer" ]; then
+  syslog "Removing API server directory."
   rm -rf apiServer
+else
+  syslog "NOT removing API server directory. It does not exist."
 fi
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 cd ~/git/ChaordicLedger/
 
+syslog "Initializing the system."
 ./network purge &&
 ./network init &&
 ./network monitor &&
@@ -74,40 +84,45 @@ cd ~/git/ChaordicLedger/
 ./network graphprocessor &&
 ./network chaincode
 
+syslog "Invoking metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
 
 LfileArray=("randomArtifact0.bin" "randomArtifact1.txt")
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 for item in ${LfileArray[*]}; do
-  log "Adding $item to the ledger."
+  syslog "Adding metadata for artifact \"$item\" to the ledger."
   itemhash=$(sha512sum ${item} | awk '{print $1;}')
   itemsize=$(du -b ${item} | awk '{print $1;}')
   itemcontent=$(cat ${item} | base64 -w 0)
+  
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
   ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
 done
 
+syslog "Querying metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
-
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
-# Pull the latest nodejs-server.zip artifact from the latest successful GitHub run.
-#   Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
+syslog "Pull the latest nodejs-server.zip artifact from the latest successful GitHub run."
+#   Note: Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
 #   TODO: Once the org exists, look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 . githubReadToken.sh
 latestSuccessfulRun=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs?state=Success | jq '.workflow_runs[0].id')
 zipDownloadUrl=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs/${latestSuccessfulRun}/artifacts | jq '.artifacts[] | select(.name=="nodejs-server")' | jq '.archive_download_url' | tr -d '\"')
 curl -vvv -L -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${githubReadToken}" ${zipDownloadUrl} --output nodejs-server.zip
-rm -rf apiServer
+
+syslog "Extracting nodejs-server.zip artifact."
 unzip nodejs-server.zip -d apiServer
 
 pushd apiServer
+syslog "Starting API server."
 nohup npm start > apiserver.log 2>&1  &
 popd
 
+syslog "Waiting for the API server to start."
 sleep 10
 
-log "Creating service account for dashboard"
+syslog "Creating service account for dashboard"
 kubectl create serviceaccount dashboard-admin-sa &&
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
 kubectl apply -f metrics/components.yaml &&
@@ -115,28 +130,30 @@ kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &
 kubectl apply -f dashboards/kubernetes/recommended.yaml &&
 kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
 
+syslog "Starting kubectl proxy."
 nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
-# Get current graph state
+syslog "Getting the current graph state."
 currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
 echo $currentGraphState | jq
 
-# Get all known artifacts.
+syslog "Getting a list of all known artifacts."
 allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
 echo $allArtifacts | jq
 
 ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
 for name in $ipfsNames
 do
+  syslog "Getting contents of known artifact with name \"$name\""
   #fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
   fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
-  echo $fileData
+  syslog $fileData
 done
 
-log "View the API documentation at http://localhost:8080/docs"
-log "View the Elastic dashboard at http://localhost:5601/"
-log "View the Elastic Metrics Inventory at http://localhost:5601/app/metrics/inventory and select the metricbeat item"
-log "View the Elastic Metrics Explorer at http://localhost:5601/app/metrics/explorer?metricsExplorer"
-log "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
-log "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
-log "Done"
+syslog "View the API documentation at http://localhost:8080/docs"
+syslog "View the Elastic dashboard at http://localhost:5601/"
+syslog "View the Elastic Metrics Inventory at http://localhost:5601/app/metrics/inventory and select the metricbeat item"
+syslog "View the Elastic Metrics Explorer at http://localhost:5601/app/metrics/explorer?metricsExplorer"
+syslog "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
+syslog "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
+syslog "Done initializing the system."

@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger prerequisite checks."
+fi
+
 function check_return_code() {
   app=$1
   params=$2

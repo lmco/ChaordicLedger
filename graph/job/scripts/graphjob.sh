@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing graph initialization functions."
+fi
+
 GRAPH_TMP_DIR=${TEMP_DIR}/graph
 mkdir -p ${GRAPH_TMP_DIR}
 
