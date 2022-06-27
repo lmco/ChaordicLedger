@@ -1,7 +1,8 @@
 {
   "getRelationshipGraph": {
     "script": "getRelationshipGraph.sh",
-    "target": "deploy/chaordicledger-ipfs"
+    "target": "deploy/chaordicledger-ipfs",
+    "directResult": "true"
   },
   "createNode": {
     "script": "createNode.sh",
