@@ -134,12 +134,12 @@ syslog "Starting kubectl proxy."
 nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
 syslog "Getting the current graph state."
-currentGraphState=$(curl -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-echo $currentGraphState | jq
+currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+syslog "$(echo $currentGraphState | tr -d '[:space:]')"
 
 syslog "Getting a list of all known artifacts."
-allArtifacts=$(curl -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-echo $allArtifacts | jq
+allArtifacts=$(curl -s -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+syslog "$(echo $allArtifacts | tr -d '[:space:]')"
 
 ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
 for name in $ipfsNames

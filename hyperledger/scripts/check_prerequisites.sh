@@ -13,7 +13,7 @@ function check_return_code() {
   $app $params > /dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
-    echo "Application '${app}' is not available."
+    syserr "Application '${app}' is not available."
     return 1
   fi
 }

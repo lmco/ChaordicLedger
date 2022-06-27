@@ -1,7 +1,7 @@
 #/bin/sh
 . testenv.sh
-SCENARIO_NAME="Create Twenty Related Artifacts"
-FILE_COUNT_TO_GENERATE=20
+SCENARIO_NAME="Create Ten Randomly Related Artifacts"
+FILE_COUNT_TO_GENERATE=10
 TEST_OUT_DIR=${SCENARIO_NAME// /}
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files
@@ -30,11 +30,16 @@ for a in $ipfsNames
 do
   for b in $ipfsNames
   do
-    data='{ "nodeida": "'${a}'", "nodeidb": "'${b}'"}'
-    testlog "Relationship $relationshipCount: Relating artifact \"${a}\" to artifact \"${b}\" by posting ${data} to $url"
-    result=$(curl -s -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d "${data}" "${url}")
-    testlog $(echo $result | tr -d '[:space:]')
-    relationshipCount=$((relationshipCount+1))
+    modResult=$(expr $RANDOM % 2)
+    if [ "$modResult" = "0" ]; then
+      data='{ "nodeida": "'${a}'", "nodeidb": "'${b}'"}'
+      testlog "Relationship $relationshipCount: Relating artifact \"${a}\" to artifact \"${b}\" by posting ${data} to $url"
+      result=$(curl -s -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d "${data}" "${url}")
+      testlog $(echo $result | tr -d '[:space:]')
+      relationshipCount=$((relationshipCount+1))
+    else
+      testlog "Not relating ${a} to ${b}"
+    fi
   done
 done
 

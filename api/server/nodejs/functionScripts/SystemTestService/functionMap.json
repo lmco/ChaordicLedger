@@ -1,0 +1,10 @@
+{
+  "resetArtifact": {
+    "script": "resetArtifact.sh",
+    "target": "deploy/chaordicledger-ipfs"
+  },
+  "resetRelationships": {
+    "script": "resetRelationships.sh",
+    "target": "deploy/org1-admin-cli"
+  }
+}

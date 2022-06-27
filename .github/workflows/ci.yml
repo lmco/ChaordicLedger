@@ -111,6 +111,11 @@ jobs:
           RelationshipsServiceFunctionMapFile="$RelationshipsServiceInputDir/functionMap.json"
           python ./api/server/nodejs/overlayServerImplementation.py -i $RelationshipsServiceInputDir -m $RelationshipsServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f RelationshipsService.js
 
+          SystemTestServiceInputDir="./api/server/nodejs/functionScripts/SystemTestService"
+          ls -rotl $SystemTestServiceInputDir
+          SystemTestServiceFunctionMapFile="$SystemTestServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $SystemTestServiceInputDir -m $SystemTestServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f SystemTestService.js
+
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code

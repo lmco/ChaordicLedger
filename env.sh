@@ -1,8 +1,15 @@
 #!/bin/sh
 
+export SYSTEM_NAME="chaordicledger"
+
 function syslog() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  echo "[$now | ${SYSTEM_NAME}] $1"
+  echo "[$now | ${SYSTEM_NAME} | INFO] $1"
+}
+
+function syserr() {
+  now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
+  echo "[$now | ${SYSTEM_NAME} | ERROR] $1"
 }
 
 $(return >/dev/null 2>&1)
@@ -19,4 +26,3 @@ export ARTIFACT_METADATA_CCNAME="artifact-metadata"
 export ARTIFACT_CONTENT_CCNAME="artifact-content"
 export ARTIFACT_RELATIONSHIP_CCNAME="artifact-relationship"
 export LIGHTSWITCH_CCNAME="lightswitch"
-export SYSTEM_NAME="chaordicledger"

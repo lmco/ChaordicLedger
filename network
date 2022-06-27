@@ -110,7 +110,7 @@ elif [ "${MODE}" == "ipfs" ]; then
   create_ipfs
   popd
   
-  echo "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
+  syslog "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "msp" ]; then
   syslog "Creating MSPs"
   pushd hyperledger/scripts

@@ -12,14 +12,14 @@ function populateTemplate() {
   local outputPath=$2
 
   if [ -z "${templateFile}" ]; then
-    echo "ERROR: Failed to populate template. Template File is empty."
+    syslog "ERROR: Failed to populate template. Template File is empty."
     return 1
   elif [ -z "${outputPath}" ]; then
-    echo "ERROR: Failed to populate template. Output Path is empty."
+    syslog "ERROR: Failed to populate template. Output Path is empty."
     return 1
   fi
 
-  echo "Processing template \"${templateFile}\" to create \"${outputPath}\""
+  syslog "Processing template \"${templateFile}\" to create \"${outputPath}\""
 
   # Note: envsubst only works with exported variables or variables set and then chained into an invocation.
   envsubst < ${templateFile} > ${outputPath}

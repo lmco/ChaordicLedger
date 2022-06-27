@@ -27,6 +27,10 @@
     {
       "name": "Relationships",
       "description": "Operations regarding relationships between artifacts."
+    },
+    {
+      "name": "SystemTest",
+      "description": "Operations applicable only to system testing."
     }
   ],
   "schemes": [
@@ -416,6 +420,42 @@
         "responses": {
           "405": {
             "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/system/resetArtifacts": {
+      "delete": {
+        "summary": "Clears all artifacts.",
+        "description": "Clears artifacts.",
+        "operationId": "resetArtifacts",
+        "tags": [
+          "SystemTest"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/system/resetRelationships": {
+      "delete": {
+        "summary": "Clears all nodes and relationships.",
+        "description": "Clears all nodes and relationships.",
+        "operationId": "resetRelationships",
+        "tags": [
+          "SystemTest"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
           }
         }
       }
