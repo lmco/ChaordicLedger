@@ -1,8 +1,9 @@
 #/bin/sh
 . testenv.sh
 SCENARIO_NAME="Create Ten Randomly Related Artifacts"
+setTestOutdir
+
 FILE_COUNT_TO_GENERATE=10
-TEST_OUT_DIR="$OUT_DIR/${SCENARIO_NAME// /}"
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files
 

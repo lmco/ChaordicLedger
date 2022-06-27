@@ -5,7 +5,11 @@ export ROOT_DIR=$(pwd)
 
 pushd scenarios
 
-./createTenRandomlyRelatedArtifacts.sh
-#./createTwentyRelatedArtifacts.sh
+#./createOneArtifact.sh
+#./testCleanup.sh
+#./createTenRandomlyRelatedArtifacts.sh
+#./testCleanup.sh
+./createTwentyRelatedArtifacts.sh
+#./testCleanup.sh
 
 popd

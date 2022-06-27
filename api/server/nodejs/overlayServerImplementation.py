@@ -107,7 +107,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             shutil.copy(inputscript, outputscript)
 
             if "local" == target:
-                expression = "/bin/sh ./service/{scriptname}"
+                expression = f"/bin/sh ./service/{scriptname}"
             else:
                 expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
 

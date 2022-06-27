@@ -2,7 +2,8 @@
 . testenv.sh
 SCENARIO_NAME="Create One Artifact"
 FILE_COUNT_TO_GENERATE=1
-TEST_OUT_DIR=${SCENARIO_NAME// /}
+setTestOutdir
+
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files
 

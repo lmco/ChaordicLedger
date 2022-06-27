@@ -1,5 +1,5 @@
 {
-  "resetArtifact": {
+  "resetArtifacts": {
     "script": "resetArtifacts.sh",
     "target": "local"
   },

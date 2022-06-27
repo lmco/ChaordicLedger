@@ -3,6 +3,10 @@
 API_ROOT_URL="http://localhost:8080/v1"
 OUT_DIR=/tmp/chaordicledger/generated
 
+function setTestOutdir() {
+  export TEST_OUT_DIR="$OUT_DIR/${SCENARIO_NAME// /}"
+}
+
 function testlog() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
   echo -e "[$now | ${SYSTEM_NAME} | \"${SCENARIO_NAME}\" | INFO] $1"
@@ -23,7 +27,7 @@ function getGraphState() {
 function getAllKnownArtifacts() {
   url="${API_ROOT_URL}/artifacts/all"
   testlog "Getting all known artifacts from ${url}"
-  allArtifacts=$(curl -s -X GET "${url}" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+  export allArtifacts=$(curl -s -X GET "${url}" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
   testlog $(echo $allArtifacts | tr -d '[:space:]')
 }
 
