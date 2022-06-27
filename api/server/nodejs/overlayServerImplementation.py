@@ -106,7 +106,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             log.info("Copying %s to %s for %s", inputscript, outputscript, key)
             shutil.copy(inputscript, outputscript)
 
-            expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
+            if "local" == target:
+                expression = "/bin/sh ./service/{scriptname}"
+            else:
+                expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
 
             log.info('Expression for operation "%s" is "%s"', key, expression)
 

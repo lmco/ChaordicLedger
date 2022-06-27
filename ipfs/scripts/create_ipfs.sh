@@ -55,8 +55,8 @@ function create_ipfs() {
 }
 
 function delete_ipfs() {
-  kubectl delete -f ../config/ipfs_service.yaml
+  kubectl delete -f ../config/ipfs_service.yaml -n $NS
   kubectl delete -f ../config/ipfs_pvc.yaml -n $NS
   kubectl delete -f ../config/ipfs_pv.yaml -n $NS
-  kubectl delete -f ../config/ipfs_storage_type.yaml -n $NS
+  kubectl delete -f ../config/ipfs_storage_type.yaml
 }

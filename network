@@ -111,6 +111,16 @@ elif [ "${MODE}" == "ipfs" ]; then
   popd
   
   syslog "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
+elif [ "${MODE}" == "ipfsReset" ]; then
+  syslog "Resetting IPFS"
+  sourceProxyDetails
+  pushd ipfs/scripts
+  . create_ipfs.sh
+  delete_ipfs
+  create_ipfs
+  popd
+  
+  syslog "🏁 - IPFS for \"${CLUSTER_NAME}\" is ready."
 elif [ "${MODE}" == "msp" ]; then
   syslog "Creating MSPs"
   pushd hyperledger/scripts
