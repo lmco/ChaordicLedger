@@ -1,6 +1,6 @@
 {
   "resetArtifact": {
-    "script": "resetArtifact.sh",
+    "script": "resetArtifacts.sh",
     "target": "deploy/chaordicledger-ipfs"
   },
   "resetRelationships": {
