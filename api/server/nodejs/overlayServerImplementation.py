@@ -101,7 +101,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
 
             directResult = False
             if "directResult" in mapfile[key]:
-                directResult = (mapfile[key][directResult] == "true")
+                directResult = (mapfile[key]["directResult"] == "true")
 
             scriptname = mapfile[key]["script"]
             target = mapfile[key]["target"]
