@@ -59,17 +59,13 @@ if __name__ == "__main__":
 
     url = "http://localhost:8080/v1/relationships/getRelationshipGraph"
     log.info(f"Accessing {url} to retrieve relationship data.")
-    x = requests.get(url)
-
-    data = json.loads(x.text)
-
-    processed_data = data["result"].replace("\\\"", "\"")
+    response = requests.get(url)
 
     title = args.title
     dotgraph = Digraph(name=title,
                        graph_attr=graphattributes)
 
-    data = json.loads(processed_data)
+    data = json.loads(response.text)
 
     for node in data["nodes"]:
         add_node(node["NodeID"], dotgraph)

@@ -46,6 +46,7 @@
   },
   "listAllArtifacts": {
     "script": "listAllArtifacts.sh",
+    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   }
 }

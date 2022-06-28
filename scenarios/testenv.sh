@@ -35,7 +35,7 @@ function createAndUploadRandomFile() {
   index=$1
   filesdir=$2
   size="1KiB"
-  url="${API_ROOT_URL}/artifact"
+  url="${API_ROOT_URL}/artifacts/createArtifact"
   testlog "Creating random file number ${index} and uploading it to ${url}."
 
   mkdir -p $filesdir
