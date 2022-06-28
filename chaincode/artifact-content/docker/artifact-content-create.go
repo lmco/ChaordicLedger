@@ -250,7 +250,7 @@ func PostToGraph(nodedata NodeData, url string) {
 }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) string, error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (string, error) {
 	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
