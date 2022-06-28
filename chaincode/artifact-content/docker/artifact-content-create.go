@@ -254,10 +254,10 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
-		return err
+		return "{}", err
 	}
 	if exists {
-		return fmt.Errorf("Content %s already exists", id)
+		return "{}", fmt.Errorf("Content %s already exists", id)
 	}
 
 	fmt.Println("Timestamp: ", creationTimestamp)
