@@ -250,7 +250,7 @@ func PostToGraph(nodedata NodeData, url string) {
 }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) string, error {
 	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
@@ -315,5 +315,5 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
 
-	return ctx.GetStub().PutState(ipfsName, contentJSON)
+	return string(contentJSON), ctx.GetStub().PutState(ipfsName, contentJSON)
 }

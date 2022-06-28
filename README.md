@@ -69,6 +69,8 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Graphviz Online: [https://dreampuf.github.io/GraphvizOnline/] (https://dreampuf.github.io/GraphvizOnline/)
 * Examples -- graphviz 0.20 documentation: [https://graphviz.readthedocs.io/en/stable/examples.html] (https://graphviz.readthedocs.io/en/stable/examples.html)
 * Drawing graphs with dot: [https://www.graphviz.org/pdf/dotguide.pdf] (https://www.graphviz.org/pdf/dotguide.pdf)
+* Dapr Docs: [https://docs.dapr.io/operations/monitoring/logging/fluentd/](https://docs.dapr.io/operations/monitoring/logging/fluentd/)
+* Fluentd: [https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd](https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd)
 * Emojipedia: [https://emojipedia.org/](https://emojipedia.org/)
 * Unicode Character Table: [https://unicode-table.com/en/2714/](https://unicode-table.com/en/2714/)
     * *Note: The HTML code for ✔️is \&#10004;*

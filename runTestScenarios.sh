@@ -3,7 +3,7 @@ set -e
 
 export ROOT_DIR=$(pwd)
 
-pushd scenarios
+pushd scenarios/randomArtifacts
 
 #./createOneArtifact.sh
 #./testCleanup.sh

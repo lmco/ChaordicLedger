@@ -20,7 +20,7 @@ peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}"
 
-
+#cat $filename
 
 # now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 

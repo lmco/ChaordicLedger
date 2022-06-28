@@ -68,6 +68,11 @@ else
   syslog "NOT removing API server directory. It does not exist."
 fi
 
+if [ -f nodejs-server.zip ]; then
+  syslog "Removing nodejs server archive."
+  rm nodejs-server.zip
+fi
+
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 cd ~/git/ChaordicLedger/
