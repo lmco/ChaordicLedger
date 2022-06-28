@@ -26,6 +26,7 @@
     "parameters": [
       "formData"
     ],
+    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   },
   "uploadArtifact": {

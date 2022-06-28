@@ -20,8 +20,8 @@ result=$(peer chaincode \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \
       -C cl \
-      -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}")
+      -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}" )
 
 duration=$(( SECONDS - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": $result }"

@@ -14,4 +14,4 @@ result=$(peer chaincode \
 
 duration=$(( SECONDS - start ))
 
-echo "{ \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"durationInSeconds\": \"$duration\", \"result\": $result }"

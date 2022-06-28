@@ -1,5 +1,6 @@
 #/bin/sh
 set -e
+start=$SECONDS
 
 function log() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
@@ -144,7 +145,7 @@ syslog "$(echo $currentGraphState | tr -d '[:space:]')"
 
 syslog "Getting a list of all known artifacts."
 allArtifacts=$(curl -s -X GET "http://localhost:8080/v1/artifacts/listAllArtifacts" -H "accept: */*")
-syslog "$(echo $allArtifacts | tr -d '[:space:]')"
+syslog "$(echo $allArtifacts | jq .result | tr -d '[:space:]')"
 
 ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
 for name in $ipfsNames
@@ -154,10 +155,12 @@ do
   syslog $fileData
 done
 
+duration=$(( SECONDS - start ))
+
 syslog "View the API documentation at http://localhost:8080/docs"
 syslog "View the Elastic dashboard at http://localhost:5601/"
 syslog "View the Elastic Metrics Inventory at http://localhost:5601/app/metrics/inventory and select the metricbeat item"
 syslog "View the Elastic Metrics Explorer at http://localhost:5601/app/metrics/explorer?metricsExplorer"
 syslog "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
 syslog "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
-syslog "Done initializing the system."
+syslog "Done initializing the system in $duration seconds."
