@@ -12,7 +12,8 @@ public class ArtifactsApiExample {
 
         ArtifactsApi apiInstance = new ArtifactsApi();
         try {
-            apiInstance.getAllArtifactMetadata();
+            // Invoke a method here.
+            //apiInstance.getAllArtifactMetadata();
         } catch (ApiException e) {
             System.err.println("Exception when calling ArtifactsApi#getAllArtifactMetadata");
             e.printStackTrace();
