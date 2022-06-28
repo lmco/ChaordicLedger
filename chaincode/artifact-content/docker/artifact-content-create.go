@@ -15,9 +15,7 @@ import (
 	//"testing"
 	"time"
 
-	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
-	"github.com/hyperledger/fabric-protos-go/peer"
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
@@ -258,13 +256,12 @@ func PostToGraph(nodedata NodeData, url string) {
 
 // CreateContent issues a new content to the world state with given details.
 func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (*Content, error) {
-	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
-		return "{}", err
+		return nil, err
 	}
 	if exists {
-		return "{}", fmt.Errorf("Content %s already exists", id)
+		return nil, fmt.Errorf("Content %s already exists", id)
 	}
 
 	fmt.Println("Timestamp: ", creationTimestamp)
@@ -317,7 +314,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	contentJSON, err := json.Marshal(content)
 	if err != nil {
-		return "{}", err
+		return nil, err
 	}
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
