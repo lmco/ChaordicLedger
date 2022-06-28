@@ -15,7 +15,9 @@ import (
 	//"testing"
 	"time"
 
+	"github.com/hyperledger/fabric-chaincode-go/shim"
 	"github.com/hyperledger/fabric-contract-api-go/contractapi"
+	"github.com/hyperledger/fabric-protos-go/peer"
 	shell "github.com/ipfs/go-ipfs-api"
 )
 
@@ -247,6 +249,11 @@ func PostToGraph(nodedata NodeData, url string) {
 		}
 		defer resp.Body.Close()
 	}
+}
+
+func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+	// Return the result as success payload
+	return shim.Success([]byte("Hello, world!"))
 }
 
 // CreateContent issues a new content to the world state with given details.

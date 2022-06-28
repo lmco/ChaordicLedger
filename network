@@ -28,22 +28,6 @@ syslog "Sourcing multiple scripts to allow access to the necessary setup functio
 
 syslog "Setting additional environment variables necessary for setup, including considerations for corporate firewalls."
 
-function sourceProxyDetails() {
-  proxy_details_source_file=docker_registry_proxy_details.sh
-  if [[ -f "$proxy_details_source_file" ]]; then
-    syslog "Sourcing proxy details from $proxy_details_source_file"
-    . $proxy_details_source_file
-
-    if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
-      syslog "Logging in to $DOCKER_REGISTRY_PROXY"
-      #syslog "echoing \$REGISTRY_TOKEN into \"docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin\""
-      echo $REGISTRY_TOKEN | docker login $DOCKER_REGISTRY_PROXY -u $REGISTRY_USER --password-stdin
-    fi
-  else
-    syslog "No proxy details file to source."
-  fi
-}
-
 export NO_PROXY=10.244.0.0/16,10.96.0.0/12,$NO_PROXY
 export no_proxy=$NO_PROXY
 
