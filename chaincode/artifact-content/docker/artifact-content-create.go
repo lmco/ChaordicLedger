@@ -251,13 +251,13 @@ func PostToGraph(nodedata NodeData, url string) {
 	}
 }
 
-func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
-	// Return the result as success payload
-	return shim.Success([]byte("Hello, world!"))
-}
+// func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+// 	// Return the result as success payload
+// 	return shim.Success([]byte("Hello, world!"))
+// }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (string, error) {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (*Content, error) {
 	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
@@ -322,5 +322,5 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
 
-	return string(contentJSON), ctx.GetStub().PutState(ipfsName, contentJSON)
+	return content, ctx.GetStub().PutState(ipfsName, contentJSON)
 }

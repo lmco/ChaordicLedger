@@ -1,3 +1,8 @@
 #!/bin/sh
 set -x
-ipfs files rm {{artifactPath}}
+start=$SECONDS
+
+result=$(ipfs files rm {{artifactPath}})
+
+duration=$(( SECONDS - start ))
+echo $result

@@ -1,4 +1,8 @@
 #!/bin/sh
 set -x
+start=$SECONDS
 
-ipfs files read "/graph.json"
+result=$(ipfs files read "/graph.json")
+
+duration=$(( SECONDS - start ))
+echo "{ \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"

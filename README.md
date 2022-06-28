@@ -36,7 +36,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Gathering Key Performance Indicators (KPIs)|⏸|⏸|➖|
 
 ## Near-Term Items
-1. Clean up the form of API return values.
+1. Return artifact-to-IPFS-name mapping in createArtifact API return value.
 1. Include KPI values in API return values.
 1. Add Infrastructure as Code (IaC) configuration.
 
