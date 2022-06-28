@@ -57,7 +57,7 @@ if __name__ == "__main__":
         "area": "3"  # Only used by patchwork.
     }
 
-    url = "http://localhost:8080/v1/relationships"
+    url = "http://localhost:8080/v1/relationships/getRelationshipGraph"
     log.info(f"Accessing {url} to retrieve relationship data.")
     x = requests.get(url)
 

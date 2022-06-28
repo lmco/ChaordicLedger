@@ -16,7 +16,7 @@ do
   echo "Retrieving block number: ${blocknumber}"
   blockname=block`printf %03d ${blocknumber}`
   currentFile=$blockdir/${blockname}.json
-  currentResult=$(curl -s -X GET "http://localhost:8080/v1/numberedblock/${blocknumber}" -H "accept: application/json")
+  currentResult=$(curl -s -X GET "http://localhost:8080/v1/blockchain/getNumberedBlock/${blocknumber}" -H "accept: application/json")
 
   if [ $? -ne 0 ]
   then

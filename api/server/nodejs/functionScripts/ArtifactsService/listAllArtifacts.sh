@@ -8,4 +8,4 @@ peer chaincode \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \
       -C cl \
-      -c "{\"Args\":[\"GetAllContent\"]}"
+      -c "{\"Args\":[\"GetAllContent\"]}" | tr -d "\n"

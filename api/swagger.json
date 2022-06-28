@@ -40,7 +40,7 @@
     "application/json"
   ],
   "paths": {
-    "/latestblock": {
+    "/blockchain/getLatestBlock": {
       "get": {
         "summary": "Gets the details from the latest block in the chain.",
         "description": "Gets the details from the latest block in the chain.",
@@ -61,7 +61,7 @@
         }
       }
     },
-    "/numberedblock/{blocknumber}": {
+    "/blockchain/getNumberedBlock/{blocknumber}": {
       "get": {
         "summary": "Gets the details from a block in the chain.",
         "description": "Gets the details from a block in the chain.",
@@ -92,7 +92,36 @@
         }
       }
     },
-    "/artifactObject": {
+    "/artifacts/createArtifact": {
+      "post": {
+        "summary": "Creates a new artifact.",
+        "description": "Creates a new artifact.",
+        "operationId": "createArtifact",
+        "tags": [
+          "Artifacts"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "upfile",
+            "type": "file",
+            "description": "The file to upload."
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/artifacts/getArtifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
@@ -122,34 +151,7 @@
         }
       }
     },
-    "/artifact": {
-      "post": {
-        "summary": "Creates a new artifact.",
-        "description": "Creates a new artifact.",
-        "operationId": "createArtifact",
-        "tags": [
-          "Artifacts"
-        ],
-        "consumes": [
-          "multipart/form-data"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "in": "formData",
-            "name": "upfile",
-            "type": "file",
-            "description": "The file to upload."
-          }
-        ],
-        "responses": {
-          "405": {
-            "description": "Invalid input"
-          }
-        }
-      },
+    "/artifacts/getArtifactAtPath": {
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
@@ -177,7 +179,9 @@
             "description": "Artifact not found"
           }
         }
-      },
+      }
+    },
+    "/artifacts/deleteArtifactAtPath": {
       "delete": {
         "summary": "Deletes an existing artifact.",
         "description": "Deletes an existing artifact.",
@@ -207,7 +211,7 @@
         }
       }
     },
-    "/artifacts": {
+    "/artifacts/listArtifactsAtPath": {
       "get": {
         "summary": "Gets the list of artifacts at the given path.",
         "description": "Gets the list of artifacts at the given path.",
@@ -237,7 +241,7 @@
         }
       }
     },
-    "/artifacts/all": {
+    "/artifacts/listAllArtifacts": {
       "get": {
         "summary": "Gets the list of existing artifacts",
         "description": "Gets the list of existing artifacts",
@@ -255,7 +259,7 @@
         }
       }
     },
-    "/artifact/metadata": {
+    "/metadata/createArtifactMetadata": {
       "post": {
         "summary": "Creates a new metadata item.",
         "description": "Creates a new metadata item.",
@@ -285,13 +289,15 @@
             "description": "Invalid input"
           }
         }
-      },
+      }
+    },
+    "/metadata/getAllArtifactMetadata": {
       "get": {
         "summary": "Retrieves all known metadata.",
         "description": "Retrieves all known metadata.",
         "operationId": "getAllArtifactMetadata",
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "consumes": [
           "application/json"
@@ -312,7 +318,7 @@
         }
       }
     },
-    "/artifact/metadata/{metadataID}": {
+    "/metadata/deleteArtifactMetadata/{metadataID}": {
       "delete": {
         "summary": "Deletes an existing metadata item.",
         "description": "Deletes an existing metadata item.",
@@ -342,7 +348,7 @@
         }
       }
     },
-    "/relationships": {
+    "/relationships/getRelationshipGraph": {
       "get": {
         "summary": "Gets the relationships between artifacts.",
         "description": "Gets the relationships between artifacts.",
@@ -424,7 +430,7 @@
         }
       }
     },
-    "/system/resetArtifacts": {
+    "/systemtest/resetArtifacts": {
       "delete": {
         "summary": "Clears all artifacts.",
         "description": "Clears artifacts.",
@@ -442,7 +448,7 @@
         }
       }
     },
-    "/system/resetRelationships": {
+    "/systemtest/resetRelationships": {
       "delete": {
         "summary": "Clears all nodes and relationships.",
         "description": "Clears all nodes and relationships.",

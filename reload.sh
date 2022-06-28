@@ -134,19 +134,18 @@ syslog "Starting kubectl proxy."
 nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
 syslog "Getting the current graph state."
-currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships' | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraph')
 syslog "$(echo $currentGraphState | tr -d '[:space:]')"
 
 syslog "Getting a list of all known artifacts."
-allArtifacts=$(curl -s -X GET "http://localhost:8080/v1/artifacts/all" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+allArtifacts=$(curl -s -X GET "http://localhost:8080/v1/artifacts/listAllArtifacts" -H "accept: */*")
 syslog "$(echo $allArtifacts | tr -d '[:space:]')"
 
 ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
 for name in $ipfsNames
 do
   syslog "Getting contents of known artifact with name \"$name\""
-  #fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
-  fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
+  fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifacts/getArtifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
   syslog $fileData
 done
 

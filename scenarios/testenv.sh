@@ -18,16 +18,16 @@ function testerr() {
 }
 
 function getGraphState() {
-  url="${API_ROOT_URL}/relationships"
+  url="${API_ROOT_URL}/relationships/getRelationshipGraph"
   testlog "Getting current graph state from ${url}"
-  currentGraphState=$(curl -s -X GET --header 'Accept: application/json' "${url}" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+  currentGraphState=$(curl -s -X GET --header 'Accept: application/json' "${url}")
   testlog $(echo $currentGraphState | tr -d '[:space:]')
 }
 
 function getAllKnownArtifacts() {
-  url="${API_ROOT_URL}/artifacts/all"
+  url="${API_ROOT_URL}/artifacts/listAllArtifacts"
   testlog "Getting all known artifacts from ${url}"
-  export allArtifacts=$(curl -s -X GET "${url}" -H "accept: */*" | jq .result | sed "s|\\\\n||g" | cut -c2- | rev | cut -c2- | rev | sed 's|\\"|"|g')
+  export allArtifacts=$(curl -s -X GET --header 'Accept: application/json' "${url}")
   testlog $(echo $allArtifacts | tr -d '[:space:]')
 }
 
