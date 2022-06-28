@@ -22,6 +22,11 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateContent\",\"${timestamp}\",\"${friendlyName}\",\"${content}\"]}" )
 
+if [ "$result" == "" ]
+then
+      result="\"\""
+fi
+
 duration=$(( SECONDS - start ))
 
 echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": $result }"

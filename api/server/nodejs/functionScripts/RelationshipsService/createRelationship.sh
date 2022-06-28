@@ -20,6 +20,11 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateRelationship\",\"${nodeida}\",\"${nodeidb}\"]}")
 
+if [ "$result" == "" ]
+then
+      result="\"\""
+fi
+
 duration=$(( SECONDS - start ))
 
 echo "{ \"file\" : \"$filename\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"

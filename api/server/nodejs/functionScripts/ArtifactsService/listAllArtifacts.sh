@@ -12,6 +12,11 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"GetAllContent\"]}" | tr -d "\n")
 
+if [ "$result" == "" ]
+then
+      result="\"\""
+fi
+
 duration=$(( SECONDS - start ))
 
 echo "{ \"durationInSeconds\": \"$duration\", \"result\": $result }"

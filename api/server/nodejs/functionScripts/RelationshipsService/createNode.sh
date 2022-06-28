@@ -19,6 +19,11 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateNode\",\"${nodeid}\",\"${fileid}\"]}")
 
+if [ "$result" == "" ]
+then
+      result="\"\""
+fi
+
 duration=$(( SECONDS - start ))
 
 echo "{ \"file\" : \"$filename\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
