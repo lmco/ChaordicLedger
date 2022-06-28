@@ -18,6 +18,6 @@ public class ArtifactsApiExample {
         //     System.err.println("Exception when calling ArtifactsApi#getAllArtifactMetadata");
         //     e.printStackTrace();
         // }
-        System.out.println("")
+        System.out.println("");
     }
 }
