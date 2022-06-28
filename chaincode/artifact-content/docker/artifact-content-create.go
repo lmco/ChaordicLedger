@@ -310,7 +310,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	contentJSON, err := json.Marshal(content)
 	if err != nil {
-		return err
+		return "{}", err
 	}
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
