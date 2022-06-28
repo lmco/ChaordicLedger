@@ -319,5 +319,5 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
 
-	return content, ctx.GetStub().PutState(ipfsName, contentJSON)
+	return &content, ctx.GetStub().PutState(ipfsName, contentJSON)
 }
