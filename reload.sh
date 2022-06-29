@@ -158,7 +158,7 @@ else
   then
     syslog "No known artifacts."
   else
-    ipfsNames=$(echo $result | jq .[].IPFSName | sed "s|\"||g"))
+    ipfsNames=$(echo $result | jq .[].IPFSName | sed "s|\"||g")
     
     for name in $ipfsNames
     do

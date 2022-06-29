@@ -31,6 +31,13 @@ function getAllKnownArtifacts() {
   testlog $(echo $allArtifacts | tr -d '[:space:]')
 }
 
+function getIPFSNames() {
+  testlog "Getting the IPFS names of all known artifacts."
+  export ipfsNames=$(echo $allArtifacts | jq .result | jq .[].IPFSName | sed "s|\"||g")
+  oneline=$(echo $ipfsNames | tr '\n\t' ' ')
+  testlog "$oneline"
+}
+
 function createAndUploadRandomFile() {
   index=$1
   filesdir=$2

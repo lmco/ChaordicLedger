@@ -6,11 +6,10 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-# TODO: Update the interface to allow the user to provide a friendly name.
-friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
-
 filename=${friendlyName}_artifact.json
 echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
+
+friendlyName=$(cat $filename | jq .originalname | tr -d '"')
 
 content=$(cat $filename | sed 's|"|\\"|g')
 

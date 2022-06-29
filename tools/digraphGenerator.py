@@ -17,9 +17,15 @@ node_color_defaults = {
 log = logging.getLogger(__name__)
 
 
-def add_node(artifact: str, dotgraph: Digraph):
+def add_node(artifactInfo: dict, dotgraph: Digraph):
     # Ref: https://web.mit.edu/spin_v4.2.5/share/graphviz/doc/html/info/shapes.html
-    dotgraph.node(artifact, shape='box', style='filled',
+
+    artifactNodeID = artifactInfo["NodeID"]
+    artifactFileID = artifactInfo["FileID"]
+
+    nodelabel = f'{artifactFileID}\\n(Object ID: {artifactNodeID}'
+
+    dotgraph.node(artifactNodeID, label=nodelabel, shape='box', style='filled',
                   color="black", fillcolor="gray", fontcolor="black")
 
 
@@ -68,7 +74,7 @@ if __name__ == "__main__":
     data = json.loads(response.text)["result"]
 
     for node in data["nodes"]:
-        add_node(node["NodeID"], dotgraph)
+        add_node(node, dotgraph)
 
     for edge in data["edges"]:
         add_edge(edge["NodeIDA"], edge["NodeIDB"], dotgraph)

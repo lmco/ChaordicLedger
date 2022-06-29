@@ -20,9 +20,7 @@ getGraphState
 
 getAllKnownArtifacts
 
-testlog "Getting the IPFS names of all known artifacts."
-ipfsNames=$(echo $allArtifacts | jq .[].IPFSName | sed "s|\"||g")
-testlog $ipfsNames
+getIPFSNames
 
 # Create relationships between each file
 # Allow an artifact to relates to itself to demonstrate support for that case.

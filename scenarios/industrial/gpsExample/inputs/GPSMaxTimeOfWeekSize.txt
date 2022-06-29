@@ -1,0 +1,1 @@
+Time of Week shall be a binary number represented by the 19 least-significant bits of the Z-count.
