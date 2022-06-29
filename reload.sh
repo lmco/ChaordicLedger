@@ -110,6 +110,7 @@ syslog "Querying metadata chaincode."
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
 syslog "Pull the latest nodejs-server.zip artifact from the latest successful GitHub run."
+
 #   Note: Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
 #   TODO: Once the org exists, look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
 . githubReadToken.sh
