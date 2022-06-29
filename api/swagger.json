@@ -125,7 +125,7 @@
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
-        "operationId": "getArtifact",
+        "operationId": "getArtifactObject",
         "tags": [
           "Artifacts"
         ],

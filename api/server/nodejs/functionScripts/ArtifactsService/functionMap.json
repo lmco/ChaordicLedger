@@ -1,9 +1,10 @@
 {
-  "getArtifact": {
-    "script": "getArtifact.sh",
+  "getArtifactObject": {
+    "script": "getArtifactObject.sh",
     "parameters": [
       "artifactID"
     ],
+    "directResult": "true",
     "target": "deploy/chaordicledger-ipfs"
   },
   "getArtifactAtPath": {

@@ -1,6 +1,7 @@
 {
   "getLatestBlock": {
     "script": "getLatestBlock.sh",
+    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   },
   "getNumberedBlock": {
@@ -8,6 +9,7 @@
     "parameters": [
       "blocknumber"
     ],
+    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   }
 }

@@ -17,4 +17,4 @@ result=$(echo $retval | tr -d "\n")
 
 duration=$(( SECONDS - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": $result }"
