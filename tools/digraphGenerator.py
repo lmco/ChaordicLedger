@@ -65,7 +65,7 @@ if __name__ == "__main__":
     dotgraph = Digraph(name=title,
                        graph_attr=graphattributes)
 
-    data = json.loads(response.text)["results"]
+    data = json.loads(response.text)["result"]
 
     for node in data["nodes"]:
         add_node(node["NodeID"], dotgraph)

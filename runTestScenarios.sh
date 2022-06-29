@@ -3,13 +3,13 @@ set -e
 
 export ROOT_DIR=$(pwd)
 
-pushd scenarios/randomArtifacts
+pushd scenarios
 
-#./createOneArtifact.sh
+#./generatedArtifacts/createOneArtifact.sh
 #./testCleanup.sh
-#./createTenRandomlyRelatedArtifacts.sh
+#./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
 #./testCleanup.sh
-./createTwentyRelatedArtifacts.sh
+./generatedArtifacts/createTwentyRelatedArtifacts.sh
 #./testCleanup.sh
 
 popd

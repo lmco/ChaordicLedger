@@ -1,7 +1,7 @@
 #/bin/sh
-. ../env.sh
+. ${ROOT_DIR}/env.sh
 API_ROOT_URL="http://localhost:8080/v1"
-OUT_DIR=/tmp/chaordicledger/generated
+OUT_DIR=/tmp/chaordicledger/scenarios
 
 function setTestOutdir() {
   export TEST_OUT_DIR="$OUT_DIR/${SCENARIO_NAME// /}"
@@ -55,8 +55,8 @@ function generateRelationshipGraph() {
   testlog "Generating relationship DOT file to ${graphOutputDir} with prefix ${filenamePrefix}"
   python3 ${ROOT_DIR}/tools/digraphGenerator.py -t "${SCENARIO_NAME}" -p ${filenamePrefix} -o ${graphOutputDir}
 
-  testlog "Generated relationship DOT file is in $graphsdir"
-  ls -rotl $graphsdir
+  testlog "Generated relationship DOT file is in $graphOutputDir"
+  ls -rotl $graphOutputDir
 }
 
 function testComplete() {

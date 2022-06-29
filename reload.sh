@@ -150,15 +150,23 @@ syslog "$(echo $allArtifacts | jq .result | tr -d '[:space:]')"
 
 if [ "$allArtifacts" == "" ]
 then
-  syslog "No known artifacts."
+  syserr "No response from system."
 else
-  ipfsNames=$(echo $allArtifacts | jq .result | jq .[].IPFSName | sed "s|\"||g")
-  for name in $ipfsNames
-  do
-    syslog "Getting contents of known artifact with name \"$name\""
-    fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifacts/getArtifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
-    syslog $fileData
-  done
+  result=$(echo $allArtifacts | jq .result)
+
+  if [ "$result" == '""' ]
+  then
+    syslog "No known artifacts."
+  else
+    ipfsNames=$(echo $result | jq .[].IPFSName | sed "s|\"||g"))
+    
+    for name in $ipfsNames
+    do
+      syslog "Getting contents of known artifact with name \"$name\""
+      fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifacts/getArtifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
+      syslog $fileData
+    done
+  fi
 fi
 
 duration=$(( SECONDS - start ))
