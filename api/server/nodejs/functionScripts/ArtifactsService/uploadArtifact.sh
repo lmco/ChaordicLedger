@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 
 now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 defaultFileName=$(echo $now | sed "s|[:-]||g")
@@ -10,6 +10,7 @@ defaultFilePath=/tmp/$defaultFileName.txt
 result=$(echo "$now The quick brown fox jumps over the lazy dog." | ipfs files write --create --parents $defaultFilePath)
 echo $defaultFilePath
 
-duration=$(( SECONDS - start ))
+end=$(date +%s%N)
+duration=$(( end - start ))
 
-echo "{ \"file\" : \"$defaultFileName\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$defaultFileName\", \"durationInNanoseconds\": \"$duration\", \"result\": \"$result\" }"

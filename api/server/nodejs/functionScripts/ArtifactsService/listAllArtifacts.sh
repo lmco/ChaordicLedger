@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
@@ -17,6 +17,7 @@ then
       result="\"\""
 fi
 
-duration=$(( SECONDS - start ))
+end=$(date +%s%N)
+duration=$(( end - start ))
 
-echo "{ \"durationInSeconds\": \"$duration\", \"result\": $result }"
+echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"

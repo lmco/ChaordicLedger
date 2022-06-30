@@ -9,11 +9,11 @@ pushd scenarios
 #./testCleanup.sh
 #./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
 #./testCleanup.sh
-./generatedArtifacts/createTwentyRelatedArtifacts.sh
+#./generatedArtifacts/createTwentyRelatedArtifacts.sh
 #./testCleanup.sh
-#pushd industrial/gpsExample
-#./gpsExample.sh
-#popd
+pushd industrial/gpsExample
+./gpsExample.sh
+popd
 #./testCleanup.sh
 
 popd

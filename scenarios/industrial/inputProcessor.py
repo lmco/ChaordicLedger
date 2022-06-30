@@ -22,6 +22,9 @@ if __name__ == "__main__":
 
     artifactUrl = f"{apiRoot}/artifacts/createArtifact"
     relationshipUrl = f"{apiRoot}/relationships/createRelationship"
+
+    responseMap = {}
+
     for file in inputMap.keys():
         print(f"Uploading artifact \"{file}\" to {artifactUrl}.")
 
@@ -36,11 +39,18 @@ if __name__ == "__main__":
             response = session.post(
                 artifactUrl, headers=headers, data=form.to_string())
             print(f"Code: {response.status_code} - {response.text}")
+
+            data = json.loads(response.text)["result"]
+            print(data)
+
+            responseMap[file] = data
         session.close()
 
         for relation in inputMap[file]:
+            sourceName = responseMap[file]["IPFSName"]
+            targetName = responseMap[relation]["IPFSName"]
             print(
-                f"Submitting relationship between \"{file}\" and \"{relation}\" to {relationshipUrl}.")
+                f"Submitting relationship between \"{file}\" (\"{sourceName}\") and \"{relation}\" (\"{targetName}\") to {relationshipUrl}.")
 
             response = requests.post(relationshipUrl, json={
                 "nodeida": file,

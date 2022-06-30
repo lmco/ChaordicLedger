@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
 friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
@@ -19,6 +19,7 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateNode\",\"${nodeid}\",\"${fileid}\"]}")
 
-duration=$(( SECONDS - start ))
+end=$(date +%s%N)
+duration=$(( end - start ))
 
-echo "{ \"file\" : \"$filename\", \"durationInSeconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$filename\", \"durationInNanoseconds\": \"$duration\", \"result\": \"$result\" }"

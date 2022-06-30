@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 
 result=$(ipfs object get {{artifactID}})
 
@@ -11,4 +11,7 @@ then
   result="{}"
 fi
 
-echo "{ \"durationInSeconds\": \"$duration\", \"result\": $result }"
+end=$(date +%s%N)
+duration=$(( end - start ))
+
+echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"

@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 
 result=$(ipfs files read "/graph.json")
 
@@ -9,5 +9,7 @@ then
       result="\"\""
 fi
 
-duration=$(( SECONDS - start ))
-echo "{ \"durationInSeconds\": \"$duration\", \"result\": $result }"
+end=$(date +%s%N)
+duration=$(( end - start ))
+
+echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"

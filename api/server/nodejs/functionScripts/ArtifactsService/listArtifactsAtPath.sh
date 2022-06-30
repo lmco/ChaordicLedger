@@ -1,6 +1,6 @@
 #!/bin/sh
 set -x
-start=$SECONDS
+start=$(date +%s%N)
 
 path="{{path}}"
 files=$(ipfs files ls $path)
@@ -15,6 +15,7 @@ done
 retval="${retval%?}]}"
 result=$(echo $retval | tr -d "\n")
 
-duration=$(( SECONDS - start ))
+end=$(date +%s%N)
+duration=$(( end - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"durationInSeconds\": \"$duration\", \"result\": $result }"
+echo "{ \"file\" : \"$friendlyName\", \"durationInNanoseconds\": \"$duration\", \"result\": $result }"
