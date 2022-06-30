@@ -255,7 +255,8 @@ func PostToGraph(nodedata NodeData, url string) {
 // }
 
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) ([]*Content, error) {
+//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) ([]*Content, error) {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (*Content, error) {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
 		return nil, err
@@ -322,5 +323,5 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	var contentArray []*Content
 	contentArray = append(contentArray, &content)
 
-	return contentArray, ctx.GetStub().PutState(ipfsName, contentJSON)
+	return &content, ctx.GetStub().PutState(ipfsName, contentJSON)
 }
