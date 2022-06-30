@@ -14,7 +14,7 @@ friendlyName=$(cat $filename | jq .originalname | tr -d '"')
 content=$(cat $filename | sed 's|"|\\"|g')
 
 result=$(peer chaincode \
-      invoke \
+      query \
       -o org0-orderer1:6050 \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \

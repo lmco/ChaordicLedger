@@ -25,7 +25,7 @@ def add_node(artifactInfo: dict, dotgraph: Digraph):
 
     nodelabel = f'{artifactFileID}\\n(Object ID: {artifactNodeID}'
 
-    dotgraph.node(artifactFileID, label=nodelabel, shape='box', style='filled',
+    dotgraph.node(artifactNodeID, label=nodelabel, shape='box', style='filled',
                   color="black", fillcolor="gray", fontcolor="black")
 
 
