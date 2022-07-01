@@ -31,12 +31,11 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Creation of hybrid Hyperledger/IPFS Cluster|✔️|✔️|✔️|
 |Creation of RESTful API|✔️|✔️|✔️|
 |Creation of Chaincode|✔️|✔️|✔️|
-|Enable Communication of Multiple Nodes on a common Network|⏸|⏸|➖|
-|Defining and Executing Simulations|⏩|⏸|➖|
-|Gathering Key Performance Indicators (KPIs)|⏸|⏸|➖|
+|Defining and Executing Simulations|✔️|✔️|➖|
+|Gathering Key Performance Indicators (KPIs)|⏩|⏩|➖|
 
 ## Near-Term Items
-1. Return artifact-to-IPFS-name mapping in createArtifact API return value.
+1. Look closer at timing metrics from API methods.
 1. Add Infrastructure as Code (IaC) configuration.
 
 ## Future Development Goals
