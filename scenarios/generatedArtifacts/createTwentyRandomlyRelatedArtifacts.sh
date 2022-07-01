@@ -1,9 +1,10 @@
 #/bin/sh
 . ${ROOT_DIR}/scenarios/testenv.sh
-SCENARIO_NAME="Create One Artifact"
+SCENARIO_NAME="Create Twenty Randomly-Related Artifacts"
 setTestOutdir
 
-FILE_COUNT_TO_GENERATE=1
+FILE_COUNT_TO_GENERATE=20
+RANDOM_RANGE=20
 
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files
@@ -31,11 +32,17 @@ for a in "${ipfsNames[@]}"
 do
   for b in "${ipfsNames[@]}"
   do
-    data='{ "nodeida": "'${a}'", "nodeidb": "'${b}'"}'
-    testlog "Relationship $relationshipCount: Relating artifact \"${a}\" to artifact \"${b}\" by posting ${data} to $url"
-    result=$(curl -s -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d "${data}" "${url}")
-    testlog $(echo $result | tr -d '[:space:]')
-    relationshipCount=$((relationshipCount+1))
+    randomNumber=$(( ( RANDOM % $RANDOM_RANGE )  + 1 ))
+    if [ "$randomNumber" == "1" ]
+    then
+      data='{ "nodeida": "'${a}'", "nodeidb": "'${b}'"}'
+      testlog "Relationship $relationshipCount: Relating artifact \"${a}\" to artifact \"${b}\" by posting ${data} to $url"
+      result=$(curl -s -X POST --header 'Content-Type: application/json' --header 'Accept: application/json' -d "${data}" "${url}")
+      testlog $(echo $result | tr -d '[:space:]')
+      relationshipCount=$((relationshipCount+1))
+    else
+      testlog "NOT relating artifact \"${a}\" to artifact \"${b}\""
+    fi
   done
 done
 

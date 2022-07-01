@@ -5,15 +5,15 @@ export ROOT_DIR=$(pwd)
 
 pushd scenarios
 
-#./generatedArtifacts/createOneArtifact.sh
-#./testCleanup.sh
-#./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
-#./testCleanup.sh
-#./generatedArtifacts/createTwentyRelatedArtifacts.sh
-#./testCleanup.sh
+./generatedArtifacts/createOneArtifact.sh
+./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
+./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
+./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
+
 pushd industrial/gpsExample
-./gpsExample.sh
+ ./gpsExample.sh
 popd
+
 #./testCleanup.sh
 
 popd

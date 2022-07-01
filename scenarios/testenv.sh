@@ -4,7 +4,8 @@ API_ROOT_URL="http://localhost:8080/v1"
 OUT_DIR=/tmp/chaordicledger/scenarios
 
 function setTestOutdir() {
-  export TEST_OUT_DIR="$OUT_DIR/${SCENARIO_NAME// /}"
+
+  export TEST_OUT_DIR=$(echo "$OUT_DIR/${SCENARIO_NAME// /}" | sed "s|-||")
 }
 
 function testlog() {
@@ -49,8 +50,8 @@ function createAndUploadRandomFile() {
   now=`date -u +"%Y%m%dT%H%M%SZ"`
   randomFile=$filesdir/randomArtifact${index}_${now}.bin
   head -c $size /dev/urandom > $randomFile
-  result=$(curl -s -X POST -F "upfile=@${randomFile}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' "${url}")
-  testlog $(echo $result | tr -d '[:space:]')
+  export UPLOAD_RESULT=$(curl -s -X POST -F "upfile=@${randomFile}" --header 'Content-Type: multipart/form-data' --header 'Accept: application/json' "${url}")
+  testlog $(echo $UPLOAD_RESULT | tr -d '[:space:]')
   sleep 1
   testlog "Uploaded random local file \"${randomFile}\" of size $size."
 }

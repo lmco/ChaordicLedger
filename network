@@ -7,13 +7,6 @@ TEMP_DIR=${TEMP_DIR:-/tmp/${CLUSTER_NAME}}
 
 . env.sh
 
-if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
-  syslog "Purging contents of $TEMP_DIR to get a clean set of results."
-  rm -rf $TEMP_DIR/*
-else
-  syslog "NOT purging contents of $TEMP_DIR"
-fi
-
 syslog "Sourcing multiple scripts to allow access to the necessary setup functions."
 . hyperledger/scripts/utilities.sh
 . hyperledger/scripts/check_prerequisites.sh
@@ -200,6 +193,13 @@ elif [ "${MODE}" == "term" ]; then
   
   syslog "🏁 - Cluster \"${CLUSTER_NAME}\" is gone."
 elif [ "${MODE}" == "purge" ]; then
+  if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
+    syslog "Purging contents of $TEMP_DIR to get a clean set of results."
+    rm -rf $TEMP_DIR/*
+  else
+    syslog "NOT purging contents of $TEMP_DIR"
+  fi
+
   syslog "Purging cluster \"${CLUSTER_NAME}\":"
   
   pushd cleanup/agnostic

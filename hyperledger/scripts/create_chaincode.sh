@@ -191,7 +191,7 @@ function invoke_chaincode() {
 
   export CHAINCODE_NAME=$ccname
   timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-  populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/${timestamp}_invoke_chaincode_${ccname}_${CHANNEL_NAME}_.sh
+  populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/${timestamp}_invoke_chaincode_${ccname}_${CHANNEL_NAME}.sh
   cat ${populatedTemplate} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
 }
 

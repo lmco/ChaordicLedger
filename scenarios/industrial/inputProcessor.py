@@ -53,8 +53,8 @@ if __name__ == "__main__":
                 f"Submitting relationship between \"{file}\" (\"{sourceName}\") and \"{relation}\" (\"{targetName}\") to {relationshipUrl}.")
 
             response = requests.post(relationshipUrl, json={
-                "nodeida": file,
-                "nodeidb": relation
+                "nodeida": sourceName,
+                "nodeidb": targetName
             })
 
             print(f"Code: {response.status_code} - {response.text}")
