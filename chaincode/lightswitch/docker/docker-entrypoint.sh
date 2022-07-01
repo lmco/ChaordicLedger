@@ -10,7 +10,7 @@ env | sort
 
 if [ "${DEBUG,,}" = "true" ]; then
    echo "DEBUG"
-   exec java -Djava.util.logging.config.file=logging.properties -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=0.0.0.0:8000 -jar /chaincode.jar
+   exec java -Djava.util.logging.config.file=logging.properties -agentlib:jdwp=transport=dt_socket,server=y,suspend=n,address=localhost:8000 -jar /chaincode.jar
 elif [ "${CORE_PEER_TLS_ENABLED,,}" = "true" ]; then
    echo "CORE_PEER_TLS_ENABLED=true"
    exec java -Djava.util.logging.config.file=logging.properties -jar /chaincode.jar # todo

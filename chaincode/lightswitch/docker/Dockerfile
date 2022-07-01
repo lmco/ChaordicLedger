@@ -26,9 +26,9 @@ LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
 # Setup tini to work better handle signals
-# ENV TINI_VERSION v0.19.0
-# ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
-# RUN chmod +x /tini
+ENV TINI_VERSION v0.19.0
+ADD https://github.com/krallin/tini/releases/download/${TINI_VERSION}/tini /tini
+RUN chmod +x /tini
 
 RUN addgroup --system javauser && useradd -g javauser javauser
 
@@ -55,5 +55,5 @@ ENV CORE_PEER_ADDRESS org1-peer1:7051
 ENV CORE_PEER_CHAINCODEADDRESS org1-peer1:7052
 ENV CORE_CHAINCODE_LOGGING_LEVEL DEBUG
 ENV CORE_CHAINCODE_LOGGING_SHIM DEBUG
-#ENTRYPOINT [ "/tini", "--", "/docker-entrypoint.sh" ]
-ENTRYPOINT [ "/docker-entrypoint.sh" ]
+ENTRYPOINT [ "/tini", "--", "/docker-entrypoint.sh" ]
+#ENTRYPOINT [ "/docker-entrypoint.sh" ]
