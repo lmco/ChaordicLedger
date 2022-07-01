@@ -138,6 +138,13 @@ elif [ "${MODE}" == "chaincode" ]; then
   popd
 
   syslog "🏁 - Chaincode deployed."
+elif [ "${MODE}" == "redeploy" ]; then
+  syslog "Redeploying chaincode $@"
+  pushd hyperledger/scripts
+  export CHAINCODE_ID=basic_1.0:0262396ccaffaa2174bc09f750f742319c4f14d60b16334d2c8921b6842c090c
+  launch_chaincode_service $@
+  popd
+  syslog "🏁 - Chaincode redeployed."
 elif [ "${MODE}" == "invoke" ]; then
   syslog "Invoking chaincode \"$1\""
   pushd hyperledger/scripts

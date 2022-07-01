@@ -6,7 +6,9 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
-filename=${friendlyName}_artifact.json
+friendlytimestamp=$(date -u +%Y%m%d%H%M%S)
+
+filename=${friendlytimestamp}_artifact.json
 echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 friendlyName=$(cat $filename | jq .originalname | tr -d '"')
@@ -14,7 +16,8 @@ friendlyName=$(cat $filename | jq .originalname | tr -d '"')
 content=$(cat $filename | sed 's|"|\\"|g')
 
 result=$(peer chaincode \
-      query \
+      invoke \
+      --waitForEvent \
       -o org0-orderer1:6050 \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \
