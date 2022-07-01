@@ -1,6 +1,9 @@
 #!/bin/sh
 set -x
-start=$(date +%s%N)
+# This runs on the org admin image, which uses BusyBox's date function, which doesn't support nanoseconds.
+#start=$(date +%s%N)
+start=${EPOCHREALTIME/./}
+
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
 friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
@@ -19,7 +22,8 @@ result=$(peer chaincode \
       -C cl \
       -c "{\"Args\":[\"CreateNode\",\"${nodeid}\",\"${fileid}\"]}")
 
-end=$(date +%s%N)
+#end=$(date +%s%N)
+end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"file\" : \"$filename\", \"durationInNanoseconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$filename\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"

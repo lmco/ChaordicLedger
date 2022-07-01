@@ -264,6 +264,7 @@
         "summary": "Creates a new metadata item.",
         "description": "Creates a new metadata item.",
         "operationId": "createArtifactMetadata",
+        "deprecated": true,
         "tags": [
           "Metadata"
         ],
@@ -296,6 +297,7 @@
         "summary": "Retrieves all known metadata.",
         "description": "Retrieves all known metadata.",
         "operationId": "getAllArtifactMetadata",
+        "deprecated": true,
         "tags": [
           "Metadata"
         ],
@@ -323,6 +325,7 @@
         "summary": "Deletes an existing metadata item.",
         "description": "Deletes an existing metadata item.",
         "operationId": "deleteArtifactMetadata",
+        "deprecated": true,
         "tags": [
           "Metadata"
         ],

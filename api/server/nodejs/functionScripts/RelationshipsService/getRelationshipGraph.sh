@@ -9,7 +9,7 @@ result=$(ipfs files read "/graph.json")
 
 if [ "$result" == "" ]
 then
-      result="\"\""
+  result="\"\""
 fi
 
 #end=$(date +%s%N)

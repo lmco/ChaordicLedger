@@ -1,6 +1,8 @@
 #!/bin/sh
 set -x
-start=$(date +%s%N)
+# This runs on the org admin image, which uses BusyBox's date function, which doesn't support nanoseconds.
+#start=$(date +%s%N)
+start=${EPOCHREALTIME/./}
 
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
@@ -8,10 +10,11 @@ result=$(peer chaincode query -n artifact-metadata -C cl -c '{"Args":["GetAllMet
 
 if [ "$result" == "" ]
 then
-      result="\"\""
+  result="\"\""
 fi
 
-end=$(date +%s%N)
+#end=$(date +%s%N)
+end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"
+echo "{ \"durationInMicroseconds\": \"$duration\", \"result\": $result }"

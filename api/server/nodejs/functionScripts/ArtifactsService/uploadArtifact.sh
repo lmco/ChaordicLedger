@@ -1,6 +1,8 @@
 #!/bin/sh
 set -x
-start=$(date +%s%N)
+# This runs on the org admin image, which uses BusyBox's date function, which doesn't support nanoseconds.
+#start=$(date +%s%N)
+start=${EPOCHREALTIME/./}
 
 now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
 defaultFileName=$(echo $now | sed "s|[:-]||g")
@@ -10,7 +12,8 @@ defaultFilePath=/tmp/$defaultFileName.txt
 result=$(echo "$now The quick brown fox jumps over the lazy dog." | ipfs files write --create --parents $defaultFilePath)
 echo $defaultFilePath
 
-end=$(date +%s%N)
+#end=$(date +%s%N)
+end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"file\" : \"$defaultFileName\", \"durationInNanoseconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"file\" : \"$defaultFileName\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"

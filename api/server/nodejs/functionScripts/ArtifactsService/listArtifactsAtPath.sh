@@ -7,6 +7,7 @@ start=${EPOCHREALTIME/./}
 path="{{path}}"
 files=$(ipfs files ls $path)
 
+# Build JSON list of results
 retval="{ \"path\": \"$path\",\"files\":["
 for file in $files
 do

@@ -18,4 +18,4 @@ end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
 #echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"
-echo "{ \"durationInMicroseconds\": \"$duration\", \"result\": $result }"
+echo "{ \"artifactID\" : \"{{artifactID}}, \"durationInMicroseconds\": \"$duration\", \"result\": $result }"
