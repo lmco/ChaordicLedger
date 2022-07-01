@@ -23,6 +23,7 @@ func (s *SmartContract) GetAllContent(ctx contractapi.TransactionContextInterfac
 	// open-ended query of all content in the chaincode namespace.
 	resultsIterator, err := ctx.GetStub().GetStateByRange("", "")
 	if err != nil {
+		fmt.Println("Returning nil 1")
 		return nil, err
 	}
 	defer resultsIterator.Close()
@@ -31,14 +32,17 @@ func (s *SmartContract) GetAllContent(ctx contractapi.TransactionContextInterfac
 	for resultsIterator.HasNext() {
 		queryResponse, err := resultsIterator.Next()
 		if err != nil {
+			fmt.Println("Returning nil 2")
 			return nil, err
 		}
 
 		var content Content
 		err = json.Unmarshal(queryResponse.Value, &content)
 		if err != nil {
+			fmt.Println("Returning nil 3")
 			return nil, err
 		}
+		fmt.Println("Appending content to array.")
 		contentArray = append(contentArray, &content)
 	}
 

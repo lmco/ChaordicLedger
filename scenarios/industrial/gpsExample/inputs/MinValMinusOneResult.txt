@@ -1,0 +1,1 @@
+A value of negative one was not accepted as a Time of Week value as it exceeds the minimum of zero.

@@ -1,11 +1,17 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger MSP creation functions."
+fi
+
 # Reference: test-network-k8s/scripts/test_network.sh
 MSP_TMP_DIR=${TEMP_DIR}/msp
 mkdir -p ${MSP_TMP_DIR}
 
 function init_namespace() {
-  echo "Creating namespace \"$NS\""
+  syslog "Creating namespace \"$NS\""
 
   kubectl create namespace $NS || true
 }
@@ -15,7 +21,7 @@ function provision_persistent_volume()
   export ORG_NUMBER=$1
   local pv_config=$MSP_TMP_DIR/pv-fabric-org${ORG_NUMBER}.yaml
 
-  echo "Provisioning volume storage for Org ${ORG_NUMBER}"
+  syslog "Provisioning volume storage for Org ${ORG_NUMBER}"
 
   # Provisions are special for org 0, others are consistent.
 
@@ -38,7 +44,7 @@ function claim_persistant_volume()
   local pvc_config=$MSP_TMP_DIR/pvc-fabric-org${ORG_NUMBER}.yaml
 
   # Claims are consistent across orgs.
-  echo "Claiming volume for Org ${ORG_NUMBER}"
+  syslog "Claiming volume for Org ${ORG_NUMBER}"
 
   populateTemplate ../config/org/msp-pvc-template.yaml ${pvc_config}
   # cat ../config/org/msp-pvc-template.yaml |
@@ -50,7 +56,7 @@ function claim_persistant_volume()
 function init_storage_volumes() {
   local orgcount=$1
 
-  echo "Provisioning volume storage for ${orgcount} org(s)"
+  syslog "Provisioning volume storage for ${orgcount} org(s)"
 
   for ((i=0; i<${orgcount}; i++))
   do
@@ -62,14 +68,14 @@ function init_storage_volumes() {
 function load_org_config() {
   local orgcount=$1
 
-  echo "Creating fabric config maps for ${orgcount} org(s)"
+  syslog "Creating fabric config maps for ${orgcount} org(s)"
 
   for ((i=0; i<${orgcount}; i++))
   do
     local dir=$MSP_TMP_DIR/config/org${i}
     mkdir -p ${dir}
     local caconfig=${dir}/fabric-ca-server-config.yaml
-    echo "Creating fabric CA server config for org ${i}"
+    syslog "Creating fabric CA server config for org ${i}"
     export ORG_NUMBER=${i}
     populateTemplate ../config/org/fabric-ca-server-config-template.yaml ${caconfig}
     # cat ../config/org/fabric-ca-server-config-template.yaml |
@@ -85,7 +91,7 @@ function load_org_config() {
 
 function init_tls_cert_issuers()
 {
-  echo "Initializing Root TLS certificate Issuers"
+  syslog "Initializing Root TLS certificate Issuers"
 
   local orgcount=$1
 
@@ -94,14 +100,14 @@ function init_tls_cert_issuers()
   kubectl -n $NS apply -f ../config/root-tls-cert-issuer.yaml
   kubectl -n $NS wait --timeout=30s --for=condition=Ready issuer/root-tls-cert-issuer
 
-  echo "Creating TLS cert issuer for each of ${orgcount} org(s)"
+  syslog "Creating TLS cert issuer for each of ${orgcount} org(s)"
 
   for ((i=0; i<${orgcount}; i++))
   do
     local msp_dir=${MSP_TMP_DIR}/kube/org${i}
     mkdir -p ${msp_dir}
     local issuer_config=${msp_dir}/org${i}-tls-cert-issuer.yaml
-    echo "Creating org ${i} TLS cert issuer"
+    syslog "Creating org ${i} TLS cert issuer"
     export ORG_NUMBER=${i}
     populateTemplate ../config/org/tls-cert-issuer-template.yaml ${issuer_config}
     # cat ../config/org/tls-cert-issuer-template.yaml |
@@ -138,7 +144,7 @@ function launch_ECert_CAs()
 {
   local orgcount=$1
 
-  echo "Launching Fabric CAs for each of ${orgcount} org(s)"
+  syslog "Launching Fabric CAs for each of ${orgcount} org(s)"
 
   for ((i=0; i<${orgcount}; i++))
   do
@@ -150,7 +156,7 @@ function launch_ECert_CAs()
 function enroll_bootstrap_ECert_CA_users() {
   orgcount=$1
 
-  echo "Enrolling bootstrap ECert CA users for ${orgcount} org(s)"
+  syslog "Enrolling bootstrap ECert CA users for ${orgcount} org(s)"
 
   for ((i=0; i<${orgcount}; i++))
   do
@@ -173,7 +179,7 @@ function create_local_MSPs()
   local orderercount=$2
   local peercount=$3
 
-  echo "Creating an MSP for each of ${orgcount} org(s)"
+  syslog "Creating an MSP for each of ${orgcount} org(s)"
 
   local i=0
 
@@ -196,7 +202,7 @@ function create_local_MSPs()
   for ((j=1; j<=${orderercount}; j++))
   do
     export ORDERER_NUMBER=${j}
-    echo "Registering and Enrolling Org ${i} Orderer ${j}"
+    syslog "Registering and Enrolling Org ${i} Orderer ${j}"
     local config_file=${msp_dir}/enroll_msp_org${i}_orderer${j}_with_ca_client.sh
     populateTemplate ../config/enroll_msp_orderer_with_ca_client_template.sh ${config_file}
     cat ${config_file} | exec kubectl -n $NS exec deploy/org0-ca -i -- /bin/sh
@@ -204,7 +210,7 @@ function create_local_MSPs()
 
   for ((i=1; i<${orgcount}; i++))
   do
-    echo "Creating MSP for Org ${i}"
+    syslog "Creating MSP for Org ${i}"
     local msp_dir=$MSP_TMP_DIR/org${i}
     mkdir -p $msp_dir
     
@@ -260,7 +266,7 @@ function launch() {
 function launch_orderers() {
   local orgcount=$1
   local orderercount=$2
-  echo "Launching ${orderercount} orderer(s) for each of ${orgcount} org(s)"
+  syslog "Launching ${orderercount} orderer(s) for each of ${orgcount} org(s)"
 
   #for ((i=0; i<${orgcount}; i++))
   #Only launch orderers for Org 0
@@ -278,7 +284,7 @@ function launch_peers() {
   local orgcount=$1
   local peercount=$2
   local nonroot=$((${orgcount}-1))
-  echo "Launching ${peercount} peer(s) for each of ${nonroot} non-root org(s)"
+  syslog "Launching ${peercount} peer(s) for each of ${nonroot} non-root org(s)"
 
   # Launch no peers for Org 0
   for ((i=1; i<${orgcount}; i++))
@@ -289,7 +295,7 @@ function launch_peers() {
       mkdir -p ${msp_dir}
       local peer_config_file=${msp_dir}/org${i}-peer${j}.yaml
 
-      echo "Creating config for Org ${i} Peer ${j} as ${peer_config_file}"
+      syslog "Creating config for Org ${i} Peer ${j} as ${peer_config_file}"
 
       export ORG_NUMBER=${i}
       export PEER_NUMBER=${j}
@@ -303,7 +309,7 @@ function launch_peers() {
 
       cat ${peer_config_file} | kubectl -n $NS apply -f -
       
-      echo "Creating config for Org ${i} Peer ${j}"
+      syslog "Creating config for Org ${i} Peer ${j}"
       kubectl -n $NS rollout status deploy/org${i}-peer${j}
     done
 
@@ -339,7 +345,7 @@ function extract_orderer_tls_cert() {
 }
 
 function extract_orderer_tls_certs() {
-  echo "Extracting orderer TLS certs to local MSP folder"
+  syslog "Extracting orderer TLS certs to local MSP folder"
   orgcount=$1
   orderercount=$2
 

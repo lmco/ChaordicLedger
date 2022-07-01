@@ -27,6 +27,10 @@
     {
       "name": "Relationships",
       "description": "Operations regarding relationships between artifacts."
+    },
+    {
+      "name": "SystemTest",
+      "description": "Operations applicable only to system testing."
     }
   ],
   "schemes": [
@@ -36,7 +40,7 @@
     "application/json"
   ],
   "paths": {
-    "/latestblock": {
+    "/blockchain/getLatestBlock": {
       "get": {
         "summary": "Gets the details from the latest block in the chain.",
         "description": "Gets the details from the latest block in the chain.",
@@ -57,7 +61,7 @@
         }
       }
     },
-    "/numberedblock/{blocknumber}": {
+    "/blockchain/getNumberedBlock/{blocknumber}": {
       "get": {
         "summary": "Gets the details from a block in the chain.",
         "description": "Gets the details from a block in the chain.",
@@ -88,37 +92,7 @@
         }
       }
     },
-    "/artifactObject": {
-      "get": {
-        "summary": "Gets an existing artifact.",
-        "description": "Gets an existing artifact.",
-        "operationId": "getArtifact",
-        "tags": [
-          "Artifacts"
-        ],
-        "produces": [
-          "application/json"
-        ],
-        "parameters": [
-          {
-            "name": "artifactID",
-            "in": "query",
-            "description": "ID of artifact to get",
-            "required": true,
-            "type": "string"
-          }
-        ],
-        "responses": {
-          "400": {
-            "description": "Invalid ID supplied"
-          },
-          "404": {
-            "description": "Artifact not found"
-          }
-        }
-      }
-    },
-    "/artifact": {
+    "/artifacts/createArtifact": {
       "post": {
         "summary": "Creates a new artifact.",
         "description": "Creates a new artifact.",
@@ -145,7 +119,39 @@
             "description": "Invalid input"
           }
         }
-      },
+      }
+    },
+    "/artifacts/getArtifactObject": {
+      "get": {
+        "summary": "Gets an existing artifact.",
+        "description": "Gets an existing artifact.",
+        "operationId": "getArtifactObject",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "artifactID",
+            "in": "query",
+            "description": "ID of artifact to get",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact not found"
+          }
+        }
+      }
+    },
+    "/artifacts/getArtifactAtPath": {
       "get": {
         "summary": "Gets an existing artifact.",
         "description": "Gets an existing artifact.",
@@ -173,7 +179,9 @@
             "description": "Artifact not found"
           }
         }
-      },
+      }
+    },
+    "/artifacts/deleteArtifactAtPath": {
       "delete": {
         "summary": "Deletes an existing artifact.",
         "description": "Deletes an existing artifact.",
@@ -203,7 +211,7 @@
         }
       }
     },
-    "/artifacts": {
+    "/artifacts/listArtifactsAtPath": {
       "get": {
         "summary": "Gets the list of artifacts at the given path.",
         "description": "Gets the list of artifacts at the given path.",
@@ -233,7 +241,7 @@
         }
       }
     },
-    "/artifacts/all": {
+    "/artifacts/listAllArtifacts": {
       "get": {
         "summary": "Gets the list of existing artifacts",
         "description": "Gets the list of existing artifacts",
@@ -251,11 +259,12 @@
         }
       }
     },
-    "/artifact/metadata": {
+    "/metadata/createArtifactMetadata": {
       "post": {
         "summary": "Creates a new metadata item.",
         "description": "Creates a new metadata item.",
         "operationId": "createArtifactMetadata",
+        "deprecated": true,
         "tags": [
           "Metadata"
         ],
@@ -281,13 +290,16 @@
             "description": "Invalid input"
           }
         }
-      },
+      }
+    },
+    "/metadata/getAllArtifactMetadata": {
       "get": {
         "summary": "Retrieves all known metadata.",
         "description": "Retrieves all known metadata.",
         "operationId": "getAllArtifactMetadata",
+        "deprecated": true,
         "tags": [
-          "Artifacts"
+          "Metadata"
         ],
         "consumes": [
           "application/json"
@@ -308,11 +320,12 @@
         }
       }
     },
-    "/artifact/metadata/{metadataID}": {
+    "/metadata/deleteArtifactMetadata/{metadataID}": {
       "delete": {
         "summary": "Deletes an existing metadata item.",
         "description": "Deletes an existing metadata item.",
         "operationId": "deleteArtifactMetadata",
+        "deprecated": true,
         "tags": [
           "Metadata"
         ],
@@ -338,7 +351,7 @@
         }
       }
     },
-    "/relationships": {
+    "/relationships/getRelationshipGraph": {
       "get": {
         "summary": "Gets the relationships between artifacts.",
         "description": "Gets the relationships between artifacts.",
@@ -416,6 +429,42 @@
         "responses": {
           "405": {
             "description": "Invalid input"
+          }
+        }
+      }
+    },
+    "/systemtest/resetArtifacts": {
+      "delete": {
+        "summary": "Clears all artifacts.",
+        "description": "Clears artifacts.",
+        "operationId": "resetArtifacts",
+        "tags": [
+          "SystemTest"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
+          }
+        }
+      }
+    },
+    "/systemtest/resetRelationships": {
+      "delete": {
+        "summary": "Clears all nodes and relationships.",
+        "description": "Clears all nodes and relationships.",
+        "operationId": "resetRelationships",
+        "tags": [
+          "SystemTest"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "Ok"
           }
         }
       }

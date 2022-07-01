@@ -11,11 +11,13 @@ public class ArtifactsApiExample {
     public static void main(String[] args) {
 
         ArtifactsApi apiInstance = new ArtifactsApi();
-        try {
-            apiInstance.getAllArtifactMetadata();
-        } catch (ApiException e) {
-            System.err.println("Exception when calling ArtifactsApi#getAllArtifactMetadata");
-            e.printStackTrace();
-        }
+        // try {
+        //     // Invoke a method here.
+        //     //apiInstance.getAllArtifactMetadata();
+        // } catch (ApiException e) {
+        //     System.err.println("Exception when calling ArtifactsApi#getAllArtifactMetadata");
+        //     e.printStackTrace();
+        // }
+        System.out.println("");
     }
 }

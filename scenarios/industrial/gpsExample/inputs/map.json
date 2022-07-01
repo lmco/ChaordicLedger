@@ -1,0 +1,28 @@
+{
+  "IS-GPS-200G.txt": [],
+  "GPSMaxTimeOfWeekSize.txt": [
+    "IS-GPS-200G.txt"
+  ],
+  "GPSTimeOfWeekValueRange.txt": [
+    "IS-GPS-200G.txt"
+  ],
+  "MinValResult.txt": [
+    "GPSTimeOfWeekValueRange.txt",
+    "GPSMaxTimeOfWeekSize.txt"
+  ],
+  "MinValMinusOneResult.txt": [
+    "GPSTimeOfWeekValueRange.txt",
+    "GPSMaxTimeOfWeekSize.txt"
+  ],
+  "MaxValResult.txt": [
+    "GPSTimeOfWeekValueRange.txt",
+    "GPSMaxTimeOfWeekSize.txt"
+  ],
+  "MaxValPlusOneResult.txt": [
+    "GPSTimeOfWeekValueRange.txt",
+    "GPSMaxTimeOfWeekSize.txt"
+  ],
+  "random25KiBfile.bin": [
+    "MaxValPlusOneResult.txt"
+  ]
+}

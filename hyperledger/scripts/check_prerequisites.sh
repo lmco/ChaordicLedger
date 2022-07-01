@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger prerequisite checks."
+fi
+
 function check_return_code() {
   app=$1
   params=$2
@@ -7,7 +13,7 @@ function check_return_code() {
   $app $params > /dev/null 2>&1
 
   if [[ $? -ne 0 ]]; then
-    echo "Application '${app}' is not available."
+    syserr "Application '${app}' is not available."
     return 1
   fi
 }

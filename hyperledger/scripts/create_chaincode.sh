@@ -1,5 +1,11 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger chaincode creation functions."
+fi
+
 CHAINCODE_TMP_DIR=${TEMP_DIR}/chaincode
 mkdir -p $CHAINCODE_TMP_DIR
 
@@ -12,7 +18,7 @@ function package_chaincode_for() {
   if [ -d "$cc_folder" ]; then
     local build_folder="build/chaincode"
     local cc_archive="${build_folder}/${ccname}.tgz"
-    echo "Packaging chaincode folder ${cc_folder}"
+    syslog "Packaging chaincode folder ${cc_folder}"
 
     mkdir -p ${build_folder}
 
@@ -26,7 +32,7 @@ function package_chaincode_for() {
 
     rm ${cc_folder}/code.tar.gz
   else
-    echo "Error: ${cc_folder} not found. Can not continue."
+    syserr "Error: ${cc_folder} not found. Cannot continue."
     exit 1
   fi
 }
@@ -44,7 +50,7 @@ function transfer_chaincode_archive_for() {
   local org=$1
   local ccname=$2
   local cc_archive="build/chaincode/${ccname}.tgz"
-  echo "Transferring chaincode archive to ${org}"
+  syslog "Transferring chaincode archive to ${org}"
 
   # Like kubectl cp, but targeted to a deployment rather than an individual pod.
   tar cf - ${cc_archive} | kubectl -n $NS exec -i deploy/${org}-admin-cli -c main -- tar xvf -
@@ -54,7 +60,7 @@ function install_chaincode_for() {
   local org=$1
   local peer=$2
   local ccname=$3
-  echo "Installing chaincode ${ccname} for ${org} ${peer}"
+  syslog "Installing chaincode ${ccname} for ${org} ${peer}"
 
   # Install the chaincode
   echo 'set -x
@@ -110,7 +116,7 @@ function launch_chaincode_service() {
   export PEER_NAME=$2
   local ccimage=$3
   local ccname=$4
-  echo "Launching chaincode container \"${ccimage}\""
+  syslog "Launching chaincode container \"${ccimage}\""
 
   # The chaincode endpoint needs to have the generated chaincode ID available in the environment.
   # This could be from a config map, a secret, or by directly editing the deployment spec.  Here we'll keep
@@ -136,7 +142,7 @@ function activate_chaincode_for() {
   local org=$1
   local cc_id=$2
   local ccname=$3
-  echo "Activating chaincode ${cc_id}"
+  syslog "Activating chaincode ${cc_id}"
 
   echo 'set -x 
   export CORE_PEER_ADDRESS='${org}'-peer1:7051
@@ -180,12 +186,12 @@ function invoke_chaincode() {
   local ccname=$1
   export parameters=$2
 
-  echo "Chaincode Name=$ccname"
-  echo "Parameters=$parameters"
+  syslog "Chaincode Name=$ccname"
+  syslog "Parameters=$parameters"
 
   export CHAINCODE_NAME=$ccname
   timestamp=$(date -u +%Y%m%dT%H%M%SZ)
-  populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/${timestamp}_invoke_chaincode_${ccname}_${CHANNEL_NAME}_.sh
+  populateTemplate invoke_chaincode_template.sh ${CHANNEL_TMP_DIR}/${timestamp}_invoke_chaincode_${ccname}_${CHANNEL_NAME}.sh
   cat ${populatedTemplate} | exec kubectl -n $NS exec deploy/org1-admin-cli -c main -i -- /bin/bash
 }
 

@@ -2,6 +2,12 @@
 
 set -o errexit
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing monitoring functions."
+fi
+
 MONITORING_TMP=${TEMP_DIR}/monitoring
 mkdir -p $MONITORING_TMP
 
@@ -20,7 +26,7 @@ function enable_monitoring() {
   helm install elasticsearch $MONITORING_TMP/elasticsearch -n dapr-monitoring --set replicas=1
   #helm install elasticsearch elastic/elasticsearch -n dapr-monitoring --set replicas=1
 
-  echo "Waiting for elasticsearch start-up..."
+  syslog "Waiting for elasticsearch start-up..."
   # One replica, so only wait for index 0
   kubectl wait --namespace=dapr-monitoring --for=condition=ready pod --timeout=600s -l statefulset.kubernetes.io/pod-name=elasticsearch-master-0
 
@@ -29,7 +35,7 @@ function enable_monitoring() {
   helm install kibana $MONITORING_TMP/kibana -n dapr-monitoring
   #helm install kibana elastic/kibana -n dapr-monitoring
 
-  echo "Waiting for kibana start-up..."
+  syslog "Waiting for kibana start-up..."
   kubectl wait --for=condition=Ready pods -l=app=kibana -n dapr-monitoring --timeout=600s
 
   # Load metricbeat via helm chart.
@@ -65,15 +71,8 @@ function enable_monitoring() {
   REGISTRY=${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}
   REGISTRY=${REGISTRY:-docker.io/}
   
-  echo "Waiting for dapr-system installation and start-up..."
+  syslog "Waiting for dapr-system installation and start-up..."
   helm install dapr dapr/dapr --namespace dapr-system --set global.logAsJson=true --set global.registry="${REGISTRY}daprio" --wait
-
-  # echo "Waiting for dapr-system start-up..."
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-dashboard -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-operator -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-placement-server -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-sentry -n dapr-system --timeout=120s
-  # kubectl wait --for=condition=Ready pods -l=app=dapr-sidecar-injector -n dapr-system --timeout=120s
 
   nohup kubectl port-forward svc/kibana-kibana 5601 -n dapr-monitoring > ${MONITORING_TMP}/port-forward.log 2>&1 &
 }

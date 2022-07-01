@@ -1,10 +1,16 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger channel creation functions."
+fi
+
 CHANNEL_TMP_DIR=${TEMP_DIR}/channel
 mkdir -p ${CHANNEL_TMP_DIR}
 
 function launch_admin_clis() {
-  echo "Launching admin CLIs"
+  syslog "Launching admin CLIs"
 
   local i="0"
 
@@ -44,7 +50,7 @@ function launch_admin_clis() {
 }
 
 function aggregate() {
-  echo "Aggregating channel MSP"
+  syslog "Aggregating channel MSP"
 
   local orgcount=$1
 
@@ -98,7 +104,7 @@ function create_channel_for_org() {
 
 # TODO: Needs to be genericized
 function create_genesis_block() {
-  echo "Creating channel \"${CHANNEL_NAME}\""
+  syslog "Creating channel \"${CHANNEL_NAME}\""
 
   echo 'set -x
   configtxgen -profile TwoOrgsApplicationGenesis -channelID '${CHANNEL_NAME}' -outputBlock genesis_block.pb
@@ -117,7 +123,7 @@ function join_org_peers()
 {
   local org=$1
   local peer=$2
-  echo "Fetching genesis block for admin CLI for ${org} from channel \"${CHANNEL_NAME}\""
+  syslog "Fetching genesis block for admin CLI for ${org} from channel \"${CHANNEL_NAME}\""
 
   echo 'set -x
   # Fetch the genesis block from an orderer
@@ -125,7 +131,7 @@ function join_org_peers()
   ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -i -- /bin/bash
 
   # TODO: Refactor to not assume two peers per org
-  echo "Joining peers in ${org} to channel \"${CHANNEL_NAME}\""
+  syslog "Joining peers in ${org} to channel \"${CHANNEL_NAME}\""
   echo 'set -x
   # Join peer2 to the channel.
   echo "Joining '${org}' peer 2 to channel '${CHANNEL_NAME}'"

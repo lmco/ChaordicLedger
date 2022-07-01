@@ -32,7 +32,7 @@ function create_storage_type() {
 }
 
 function create_sample_file() {
-  echo "Creating sample file"
+  syslog "Creating sample file"
   result=$(cat create_default_files.sh | exec kubectl -n $NS exec deploy/chaordicledger-ipfs -i -- /bin/sh)
   # sleep 10
   # echo "Parsing identifier \"$result\""
@@ -40,9 +40,9 @@ function create_sample_file() {
   # sleep 10
   #echo "Retrieving file $identifier"
   #fileContents=$(curl localhost/ipfs/$identifier)
-  echo $result
+  syslog $result
   fileContents=$(curl localhost/ipfs/$result)
-  echo $fileContents
+  syslog $fileContents
 }
 
 function create_ipfs() {
@@ -55,8 +55,8 @@ function create_ipfs() {
 }
 
 function delete_ipfs() {
-  kubectl delete -f ../config/ipfs_service.yaml
+  kubectl delete -f ../config/ipfs_service.yaml -n $NS
   kubectl delete -f ../config/ipfs_pvc.yaml -n $NS
   kubectl delete -f ../config/ipfs_pv.yaml -n $NS
-  kubectl delete -f ../config/ipfs_storage_type.yaml -n $NS
+  kubectl delete -f ../config/ipfs_storage_type.yaml
 }

@@ -1,0 +1,11 @@
+This file is a stand-in for the full PDF.
+
+Uploading files via the API caps-out the NodeJS spawned child process at just over 35 KiB, and the spec document is 2.34 MiB.
+
+The encountered error is:
+
+{
+  "errno": -7,
+  "code": "E2BIG",
+  "syscall": "spawn"
+}

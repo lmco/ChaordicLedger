@@ -99,6 +99,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                     functionExpressions.append(getReplacementExpression(param))
                     divider = " | "
 
+            directResult = False
+            if "directResult" in mapfile[key]:
+                directResult = (mapfile[key]["directResult"] == "true")
+
             scriptname = mapfile[key]["script"]
             target = mapfile[key]["target"]
             inputscript = os.path.join(inputdir, scriptname)
@@ -106,7 +110,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             log.info("Copying %s to %s for %s", inputscript, outputscript, key)
             shutil.copy(inputscript, outputscript)
 
-            expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
+            if "local" == target:
+                expression = f"/bin/sh ./service/{scriptname}"
+            else:
+                expression = f'cat ./service/{scriptname}{divider}{" | ".join(functionExpressions)} | exec kubectl -n {namespace} exec {target} -i -- /bin/sh'
 
             log.info('Expression for operation "%s" is "%s"', key, expression)
 
@@ -121,10 +128,12 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
             f.write(
-                f'      {closebrace} else if (stdout) {openbrace}{os.linesep}')
-            f.write('        resolve({ "result": stdout })' + f'{os.linesep}')
-            f.write(f'      {closebrace} else {openbrace}{os.linesep}')
-            f.write('        resolve({ "unknown": stdout })' + f'{os.linesep}')
+                f'      {closebrace} else {openbrace}{os.linesep}')
+            if directResult:
+                f.write('        resolve(stdout)' + f'{os.linesep}')
+            else:
+                f.write(
+                    '        resolve({ "result": stdout })' + f'{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')

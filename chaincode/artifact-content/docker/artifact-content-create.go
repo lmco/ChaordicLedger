@@ -249,15 +249,20 @@ func PostToGraph(nodedata NodeData, url string) {
 	}
 }
 
+// func (s *SmartContract) Invoke(stub shim.ChaincodeStubInterface) peer.Response {
+// 	// Return the result as success payload
+// 	return shim.Success([]byte("Hello, world!"))
+// }
+
 // CreateContent issues a new content to the world state with given details.
-func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) error {
-	//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, localFilePath string) error {
+//func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) ([]*Content, error) {
+func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterface, creationTimestamp time.Time, id string, formContent string) (*Content, error) {
 	exists, err := s.ContentExists(ctx, id)
 	if err != nil {
-		return err
+		return nil, err
 	}
 	if exists {
-		return fmt.Errorf("Content %s already exists", id)
+		return nil, fmt.Errorf("Content %s already exists", id)
 	}
 
 	fmt.Println("Timestamp: ", creationTimestamp)
@@ -310,10 +315,13 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 
 	contentJSON, err := json.Marshal(content)
 	if err != nil {
-		return err
+		return nil, err
 	}
 
 	fmt.Println("Adding record to the ledger: ", string(contentJSON))
 
-	return ctx.GetStub().PutState(ipfsName, contentJSON)
+	// var contentArray []*Content
+	// contentArray = append(contentArray, &content)
+
+	return &content, ctx.GetStub().PutState(ipfsName, contentJSON)
 }

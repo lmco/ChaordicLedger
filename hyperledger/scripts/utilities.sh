@@ -1,19 +1,25 @@
 #!/bin/sh
 
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    syslog "Sourcing hyperledger utilities."
+fi
+
 # Performs substitutions in a template based on known global variables.
 function populateTemplate() {
   local templateFile=$1
   local outputPath=$2
 
   if [ -z "${templateFile}" ]; then
-    echo "ERROR: Failed to populate template. Template File is empty."
+    syslog "ERROR: Failed to populate template. Template File is empty."
     return 1
   elif [ -z "${outputPath}" ]; then
-    echo "ERROR: Failed to populate template. Output Path is empty."
+    syslog "ERROR: Failed to populate template. Output Path is empty."
     return 1
   fi
 
-  echo "Processing template \"${templateFile}\" to create \"${outputPath}\""
+  syslog "Processing template \"${templateFile}\" to create \"${outputPath}\""
 
   # Note: envsubst only works with exported variables or variables set and then chained into an invocation.
   envsubst < ${templateFile} > ${outputPath}

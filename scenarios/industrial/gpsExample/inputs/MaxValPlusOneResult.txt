@@ -1,0 +1,1 @@
+A value of 403200 one was not accepted as a Time of Week value as it exceeds the maximum of 403199.

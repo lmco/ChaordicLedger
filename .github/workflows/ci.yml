@@ -111,6 +111,11 @@ jobs:
           RelationshipsServiceFunctionMapFile="$RelationshipsServiceInputDir/functionMap.json"
           python ./api/server/nodejs/overlayServerImplementation.py -i $RelationshipsServiceInputDir -m $RelationshipsServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f RelationshipsService.js
 
+          SystemTestServiceInputDir="./api/server/nodejs/functionScripts/SystemTestService"
+          ls -rotl $SystemTestServiceInputDir
+          SystemTestServiceFunctionMapFile="$SystemTestServiceInputDir/functionMap.json"
+          python ./api/server/nodejs/overlayServerImplementation.py -i $SystemTestServiceInputDir -m $SystemTestServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f SystemTestService.js
+
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code
@@ -159,7 +164,7 @@ jobs:
       - name: Build Java API
         run: |
           cd java-api
-          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build test --debug
+          docker run --rm -u root -v "$PWD":/home/gradle/project -w /home/gradle/project ${{ env.DOCKER_REGISTRY }}/${{ env.CUSTOM_BUILDER_IMAGE_NAME }}:${{ env.CUSTOM_BUILDER_IMAGE_VERSION }} gradle build test --no-daemon
           ls -rotl
           echo "buildRoot=${PWD}" >> $GITHUB_ENV
 

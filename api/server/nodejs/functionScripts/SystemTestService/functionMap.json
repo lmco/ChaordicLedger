@@ -1,0 +1,10 @@
+{
+  "resetArtifacts": {
+    "script": "resetArtifacts.sh",
+    "target": "local"
+  },
+  "resetRelationships": {
+    "script": "resetRelationships.sh",
+    "target": "local"
+  }
+}

@@ -31,21 +31,20 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Creation of hybrid Hyperledger/IPFS Cluster|✔️|✔️|✔️|
 |Creation of RESTful API|✔️|✔️|✔️|
 |Creation of Chaincode|✔️|✔️|✔️|
-|Enable Communication of Multiple Nodes on a common Network|⏸|⏸|➖|
-|Defining and Executing Simulations|⏩|⏸|➖|
-|Gathering Key Performance Indicators (KPIs)|⏸|⏸|➖|
+|Defining and Executing Simulations|✔️|✔️|➖|
+|Gathering Key Performance Indicators (KPIs)|⏩|⏩|➖|
 
 ## Near-Term Items
-1. Clean up the form of API return values.
-1. Include KPI values in API return values.
+1. Look closer at timing metrics from API methods.
+1. Add Infrastructure as Code (IaC) configuration.
 
 ## Future Development Goals
-1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.
 1. Enable role-based authorization.
 1. Enable TLS for chaincode.
 1. Enable use of specified Certificate Authority.
+1. Add served rendering of relationship graphs. Possible starting point [https://github.com/wangkuiyi/graphviz-server](https://github.com/wangkuiyi/graphviz-server)
 
 ## References
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
@@ -65,9 +64,12 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 * Kubernetes Dashboard: [https://github.com/kubernetes/dashboard](https://github.com/kubernetes/dashboard)
 * Kubernetes Metrics Server: [https://github.com/kubernetes-sigs/metrics-server](https://github.com/kubernetes-sigs/metrics-server)
 * YAML Lint: [http://www.yamllint.com/](http://www.yamllint.com/)
-* Graphviz Online [https://dreampuf.github.io/GraphvizOnline/] (https://dreampuf.github.io/GraphvizOnline/)
-* Examples -- graphviz 0.20 documentation [https://graphviz.readthedocs.io/en/stable/examples.html] (https://graphviz.readthedocs.io/en/stable/examples.html)
-* Drawing graphs with dot [https://www.graphviz.org/pdf/dotguide.pdf] (https://www.graphviz.org/pdf/dotguide.pdf)
-* Emojipedia [https://emojipedia.org/](https://emojipedia.org/)
-* Unicode Character Table [https://unicode-table.com/en/2714/](https://unicode-table.com/en/2714/)
+* Graphviz Online: [https://dreampuf.github.io/GraphvizOnline/] (https://dreampuf.github.io/GraphvizOnline/)
+* Examples -- graphviz 0.20 documentation: [https://graphviz.readthedocs.io/en/stable/examples.html] (https://graphviz.readthedocs.io/en/stable/examples.html)
+* Drawing graphs with dot: [https://www.graphviz.org/pdf/dotguide.pdf] (https://www.graphviz.org/pdf/dotguide.pdf)
+* Dapr Docs: [https://docs.dapr.io/operations/monitoring/logging/fluentd/](https://docs.dapr.io/operations/monitoring/logging/fluentd/)
+* Fluentd: [https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd](https://docs.fluentd.org/v/0.12/articles/kubernetes-fluentd)
+* Emojipedia: [https://emojipedia.org/](https://emojipedia.org/)
+* Unicode Character Table: [https://unicode-table.com/en/2714/](https://unicode-table.com/en/2714/)
     * *Note: The HTML code for ✔️is \&#10004;*
+* Terraform OpenStack Provide: [https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs](https://registry.terraform.io/providers/terraform-provider-openstack/openstack/latest/docs)
