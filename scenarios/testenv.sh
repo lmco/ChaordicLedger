@@ -29,7 +29,7 @@ function getAllKnownArtifacts() {
   url="${API_ROOT_URL}/artifacts/listAllArtifacts"
   testlog "Getting all known artifacts from ${url}"
   export allArtifacts=$(curl -s -X GET --header 'Accept: application/json' "${url}")
-  testlog $(echo $allArtifacts | tr -d '[:space:]')
+  testlog $(echo $allArtifacts | jq .result | tr -d '[:space:]')
 }
 
 function getIPFSNames() {

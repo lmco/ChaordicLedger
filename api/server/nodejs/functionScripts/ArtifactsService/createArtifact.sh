@@ -2,7 +2,7 @@
 set -x
 # This runs on the org admin image, which uses BusyBox's date function, which doesn't support nanoseconds.
 #start=$(date +%s%N)
-start=${EPOCHREALTIME/./}
+# start=${EPOCHREALTIME/./}
 
 export CORE_PEER_ADDRESS=org1-peer1:7051
 
@@ -34,11 +34,11 @@ payload=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*result: ||g" 
 
 if [ "$payload" == "" ]
 then
-  payload="\"\""
+  payload="{}"
 fi
 
 #end=$(date +%s%N)
-end=${EPOCHREALTIME/./}
-duration=$(( end - start ))
+# end=${EPOCHREALTIME/./}
+# duration=$(( end - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"durationInMicroseconds\": \"$duration\", \"result\": $payload }"
+echo "{ \"file\" : \"$friendlyName\", \"result\": $payload }"

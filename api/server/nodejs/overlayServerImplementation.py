@@ -153,7 +153,9 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                 f.write('        resolve(stdout)' + f'{os.linesep}')
             else:
                 f.write(
-                    '        resolve({ "result": stdout, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                    '        const obj = JSON.parse(stdout)' + f'{os.linesep}')
+                f.write(
+                    '        resolve({ "result": obj, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')
