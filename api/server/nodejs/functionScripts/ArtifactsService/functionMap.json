@@ -4,7 +4,6 @@
     "parameters": [
       "artifactID"
     ],
-    "directResult": "true",
     "target": "deploy/chaordicledger-ipfs"
   },
   "getArtifactAtPath": {
@@ -12,7 +11,6 @@
     "parameters": [
       "artifactPath"
     ],
-    "directResult": "true",
     "target": "deploy/chaordicledger-ipfs"
   },
   "deleteArtifactAtPath": {
@@ -27,7 +25,6 @@
     "parameters": [
       "formData"
     ],
-    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   },
   "uploadArtifact": {
@@ -43,7 +40,6 @@
     "parameters": [
       "path"
     ],
-    "directResult": "true",
     "target": "deploy/chaordicledger-ipfs"
   },
   "listAllArtifacts": {

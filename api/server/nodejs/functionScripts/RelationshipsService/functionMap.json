@@ -2,14 +2,12 @@
   "getRelationshipGraph": {
     "script": "getRelationshipGraph.sh",
     "target": "deploy/chaordicledger-ipfs",
-    "directResult": "true"
   },
   "createNode": {
     "script": "createNode.sh",
     "parameters": [
       "body"
     ],
-    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   },
   "createRelationship": {
@@ -17,7 +15,6 @@
     "parameters": [
       "body"
     ],
-    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   }
 }

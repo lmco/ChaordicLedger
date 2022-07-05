@@ -84,7 +84,6 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
 
         f.write(f"'use strict';{os.linesep}")
         f.write(f'{os.linesep}')
-        f.write(f'{os.linesep}')
 
         # Reference: https://stackoverflow.com/questions/11725691/how-to-get-a-microtime-in-node-js
         f.write(f'const now = (unit) => {openbrace}{os.linesep}')
@@ -102,6 +101,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f'      return hrTime[0] * 1000000000 + hrTime[1];{os.linesep}')
         f.write(f'  {closebrace}{os.linesep}')
         f.write(f'{closebrace};{os.linesep}')
+        f.write(f'{os.linesep}')
 
         for key in mapfile:
             log.info("Processing key \"%s\"", key)
@@ -143,17 +143,17 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
             f.write(
                 f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
-            f.write(f"  var end = now('nano'){os.linesep}")
+            f.write(f"      var end = now('nano'){os.linesep}")
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write(
-                '        resolve({ "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                '        resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             f.write(
                 f'      {closebrace} else {openbrace}{os.linesep}')
             if directResult:
                 f.write('        resolve(stdout)' + f'{os.linesep}')
             else:
                 f.write(
-                    '        resolve({ "result": stdout, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                    '        resolve({ "result": stdout, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')
