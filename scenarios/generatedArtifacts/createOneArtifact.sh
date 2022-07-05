@@ -16,7 +16,7 @@ testlog "Generating ${FILE_COUNT_TO_GENERATE} file(s)"
 for i in $(seq 1 $FILE_COUNT_TO_GENERATE)
 do
   createAndUploadRandomFile ${i} $filesdir
-  ipfsName=$(echo $UPLOAD_RESULT | jq .result.IPFSName | tr -d '"')
+  ipfsName=$(echo $UPLOAD_RESULT | jq .result.result.IPFSName | tr -d '"')
   testlog "IPFS name for random file ${i} is ${ipfsName}"
   ipfsNames+=($ipfsName)
 done
