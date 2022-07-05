@@ -86,6 +86,23 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
         f.write(f'{os.linesep}')
         f.write(f'{os.linesep}')
 
+        # Reference: https://stackoverflow.com/questions/11725691/how-to-get-a-microtime-in-node-js
+        f.write(f'const now = (unit) => {openbrace}{os.linesep}')
+        f.write(f'  const hrTime = process.hrtime();{os.linesep}')
+        f.write(f'  switch (unit) {openbrace}{os.linesep}')
+        f.write(f"    case 'milli':{os.linesep}")
+        f.write(
+            f'      return hrTime[0] * 1000 + hrTime[1] / 1000000;{os.linesep}')
+        f.write(f"    case 'micro':{os.linesep}")
+        f.write(
+            f'      return hrTime[0] * 1000000 + hrTime[1] / 1000;{os.linesep}')
+        f.write(f"    case 'nano':{os.linesep}")
+        f.write(f'    default:{os.linesep}')
+        f.write(
+            f'      return hrTime[0] * 1000000000 + hrTime[1];{os.linesep}')
+        f.write(f'  {closebrace}{os.linesep}')
+        f.write(f'{closebrace};{os.linesep}')
+
         for key in mapfile:
             log.info("Processing key \"%s\"", key)
             functionParams = []
@@ -119,21 +136,24 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
 
             f.write(
                 f'exports.{key} = function ({",".join(functionParams)}) {openbrace}{os.linesep}')
+            f.write(f"  var start = now('nano')" + f'{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
             f.write(
                 f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+            f.write(f"  var end = now('nano'){os.linesep}")
             f.write(f'      if (error) {openbrace}{os.linesep}')
-            f.write('        resolve({ "error": stderr })' + f'{os.linesep}')
+            f.write(
+                '        resolve({ "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             f.write(
                 f'      {closebrace} else {openbrace}{os.linesep}')
             if directResult:
                 f.write('        resolve(stdout)' + f'{os.linesep}')
             else:
                 f.write(
-                    '        resolve({ "result": stdout })' + f'{os.linesep}')
+                    '        resolve({ "result": stdout, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')
