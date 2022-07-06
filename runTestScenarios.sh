@@ -15,8 +15,8 @@ pushd industrial/gpsExample
  ./gpsExample.sh
 popd
 
-./getAllBlocks.sh
-
 #./testCleanup.sh
 
 popd
+
+./getAllBlocks.sh
