@@ -121,6 +121,35 @@
         }
       }
     },
+    "/artifacts/createArtifactAsync": {
+      "post": {
+        "summary": "Creates a new artifact asynchronously.",
+        "description": "Creates a new artifact asynchronously.",
+        "operationId": "createArtifactAsync",
+        "tags": [
+          "Artifacts"
+        ],
+        "consumes": [
+          "multipart/form-data"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "upfile",
+            "type": "file",
+            "description": "The file to upload."
+          }
+        ],
+        "responses": {
+          "405": {
+            "description": "Invalid input"
+          }
+        }
+      }
+    },
     "/artifacts/getArtifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",
