@@ -92,6 +92,37 @@
         }
       }
     },
+    "/blockchain/getTransactionDetails/{transactionID}": {
+      "get": {
+        "summary": "Gets the details from a block in the chain.",
+        "description": "Gets the details from a block in the chain.",
+        "operationId": "getTransactionDetails",
+        "tags": [
+          "Blockchain"
+        ],
+        "parameters": [
+          {
+            "name": "transactionID",
+            "in": "path",
+            "description": "The transaction's ID",
+            "required": true,
+            "type": "integer",
+            "minimum": 0
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "responses": {
+          "200": {
+            "description": "A JSON representation of the transaction.",
+            "schema": {
+              "$ref": "#/definitions/TransactionData"
+            }
+          }
+        }
+      }
+    },
     "/artifacts/createArtifact": {
       "post": {
         "summary": "Creates a new artifact.",
@@ -514,6 +545,9 @@
       }
     },
     "BlockData": {
+      "type": "string"
+    },
+    "TransactionData": {
       "type": "string"
     },
     "ArtifactMetadata": {
