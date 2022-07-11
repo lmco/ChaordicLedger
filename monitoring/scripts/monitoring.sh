@@ -28,7 +28,7 @@ function enable_monitoring() {
 
   syslog "Waiting for elasticsearch start-up..."
   # One replica, so only wait for index 0
-  kubectl wait --namespace=dapr-monitoring --for=condition=ready pod --timeout=600s -l statefulset.kubernetes.io/pod-name=elasticsearch-master-0
+  kubectl wait --namespace=dapr-monitoring --for=condition=ready pod --timeout=3600s -l statefulset.kubernetes.io/pod-name=elasticsearch-master-0
 
   helm pull elastic/kibana --untar --untardir $MONITORING_TMP
   sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/kibana/values.yaml
@@ -36,7 +36,7 @@ function enable_monitoring() {
   #helm install kibana elastic/kibana -n dapr-monitoring
 
   syslog "Waiting for kibana start-up..."
-  kubectl wait --for=condition=Ready pods -l=app=kibana -n dapr-monitoring --timeout=600s
+  kubectl wait --for=condition=Ready pods -l=app=kibana -n dapr-monitoring --timeout=3600s
 
   # Load metricbeat via helm chart.
   helm pull elastic/metricbeat --untar --untardir $MONITORING_TMP

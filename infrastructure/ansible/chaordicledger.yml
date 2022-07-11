@@ -1,0 +1,25 @@
+- hosts: all
+  become: no
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Check out ChaordicLedger Git repository
+      ansible.builtin.git:
+        repo: 'https://github.com/lmco/ChaordicLedger.git'
+        dest: ~/git/lmco/ChaordicLedger
+        version: main
+
+    - name: Execute the setup.
+      shell: |
+        pushd ~/git/lmco/ChaordicLedger
+        ./reload.sh
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

@@ -10,8 +10,10 @@ mkdir -p $blockinfo
 rm $blockdir/*
 rm $blockinfo/*
 
+latestBlock=$(curl -s -X GET "http://localhost:8080/v1/blockchain/getLatestBlock" -H "accept: application/json" | jq .header.number | tr -d '\"')
 prevFile=""
-while true
+
+while [ $blocknumber -le $latestBlock ]
 do
   echo "Retrieving block number: ${blocknumber}"
   blockname=block`printf %03d ${blocknumber}`
@@ -28,13 +30,17 @@ do
   if [ "$(echo $currentResult | jq .unknown)" == "null" ] && [ "$(echo $currentResult | jq .error)" == "null" ]
   then
     echo "Writing block file $currentFile"
-    echo $currentResult | jq .result | tr -d '\"' | tr '\\' '\"' | jq > $currentFile
+    echo $currentResult | jq > $currentFile
     cat $currentFile | jq .data.data[0].payload.header.channel_header > $blockinfo/${blockname}_info.json
   else
-    echo "Block $blocknumber does not exist. End of blocks."
+    echo "Block $blocknumber does not exist."
     break
   fi
 
   prevFile=$currentFile
   blocknumber=$((blocknumber+1))
 done
+
+totalblocks=$(($latestBlock + 1)) # Adjust for zero-based indexing.
+
+echo "Retrieved $blocknumber of $totalblocks blocks."

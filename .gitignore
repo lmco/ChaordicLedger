@@ -20,3 +20,7 @@ outputs
 **/rebuildReload.sh
 randomArtifact*
 **/outdir
+terraform/env
+*tfstate*
+infrastructure/.lmcoenv
+.terraform*

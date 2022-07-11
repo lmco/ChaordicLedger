@@ -22,7 +22,6 @@ content=$(cat $filename | sed 's|"|\\"|g')
 resultfile="${friendlytimestamp}_${friendlyName}_result.txt"
 peer chaincode \
       invoke \
-      --waitForEvent \
       -o org0-orderer1:6050 \
       --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
       -n artifact-content \

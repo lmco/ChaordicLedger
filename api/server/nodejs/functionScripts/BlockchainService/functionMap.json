@@ -11,5 +11,13 @@
     ],
     "directResult": "true",
     "target": "deploy/org1-admin-cli"
+  },
+  "getTransactionDetails": {
+    "script": "getTransactionDetails.sh",
+    "parameters": [
+      "transactionID"
+    ],
+    "directResult": "true",
+    "target": "deploy/org1-admin-cli"
   }
 }

@@ -1,10 +1,10 @@
 #/bin/sh
 . ${ROOT_DIR}/scenarios/testenv.sh
-SCENARIO_NAME="Create Twenty Randomly-Related Artifacts"
+SCENARIO_NAME="Create Two Hundred Randomly-Related Artifacts of Varying Sizes"
 setTestOutdir
 
-FILE_COUNT_TO_GENERATE=20
-RANDOM_RANGE=20
+FILE_COUNT_TO_GENERATE=200
+RANDOM_RANGE=50
 
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files
@@ -16,7 +16,8 @@ ipfsNames=()
 testlog "Generating ${FILE_COUNT_TO_GENERATE} file(s)"
 for i in $(seq 1 $FILE_COUNT_TO_GENERATE)
 do
-  createAndUploadRandomFile ${i} $filesdir
+  randomSize=$(( ( RANDOM % 25 )  + 1 ))
+  createAndUploadRandomFile ${i} $filesdir "${randomSize}KiB"
   ipfsName=$(echo $UPLOAD_RESULT | jq .result.result.IPFSName | tr -d '"')
   testlog "IPFS name for random file ${i} is ${ipfsName}"
   ipfsNames+=($ipfsName)

@@ -9,6 +9,7 @@ pushd scenarios
 ./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
+./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
 
 pushd industrial/gpsExample
  ./gpsExample.sh
@@ -17,3 +18,5 @@ popd
 #./testCleanup.sh
 
 popd
+
+./getAllBlocks.sh

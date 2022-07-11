@@ -1,0 +1,59 @@
+#!/bin/bash
+
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    echo "Sourcing Infrastructure as Code (IaC) environment file."
+fi
+
+if [ -z ${OS_PASSWORD_INPUT+x} ]; then echo "OS_PASSWORD_INPUT is unset! Set the value with 'read -s OS_PASSWORD_INPUT' and source this file again. Exiting."; return 1; fi
+
+#!/usr/bin/env bash
+# To use an OpenStack cloud you need to authenticate against the Identity
+# service named keystone, which returns a **Token** and **Service Catalog**.
+# The catalog contains the endpoints for all services the user/tenant has
+# access to - such as Compute, Image Service, Identity, Object Storage, Block
+# Storage, and Networking (code-named nova, glance, keystone, swift,
+# cinder, and neutron).
+#
+# *NOTE*: Using the 3 *Identity API* does not necessarily mean any other
+# OpenStack API is version 3. For example, your cloud provider may implement
+# Image API v1.1, Block Storage API v2, and Compute API v2.0. OS_AUTH_URL is
+# only for the Identity API served through keystone.
+export OS_AUTH_URL=$CL_IAC_AUTH_URL
+# With the addition of Keystone we have standardized on the term **project**
+# as the entity that owns the resources.
+export OS_PROJECT_ID=$CL_IAC_PROJECT_ID
+export OS_PROJECT_NAME=$CL_IAC_PROJECT_NAME
+export OS_USER_DOMAIN_NAME=$CL_IAC_USER_DOMAIN_NAME
+if [ -z "$OS_USER_DOMAIN_NAME" ]; then unset OS_USER_DOMAIN_NAME; fi
+export OS_PROJECT_DOMAIN_ID=$CL_IAC_PROJECT_DOMAIN_ID
+if [ -z "$OS_PROJECT_DOMAIN_ID" ]; then unset OS_PROJECT_DOMAIN_ID; fi
+# unset v2.0 items in case set
+unset OS_TENANT_ID
+unset OS_TENANT_NAME
+# In addition to the owning entity (tenant), OpenStack stores the entity
+# performing the action as the **user**.
+export OS_USERNAME=$CL_IAC_USERNAME
+# Put OS_PASSWORD in CI/CD variable or manually enter on terminal
+export OS_PASSWORD=$OS_PASSWORD_INPUT
+
+# If your configuration has multiple regions, we set that information here.
+# OS_REGION_NAME is optional and only valid in certain environments.
+export OS_REGION_NAME="regionOne"
+# Don't leave a blank variable, unset it if it was empty
+if [ -z "$OS_REGION_NAME" ]; then unset OS_REGION_NAME; fi
+export OS_INTERFACE=public
+export OS_IDENTITY_API_VERSION=3
+  
+#get infrastructure folder path
+export TF_VAR_ROOT_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
+
+export TERRAFORM_TMP_PATH="/tmp/chaordicledger/terraform"
+export TF_VAR_inventoryFile="$TERRAFORM_TMP_PATH/chaordicledgerhosts_inventory.yml"
+export TERRAFORM_PLAN_FILE="$TERRAFORM_TMP_PATH/tf.plan"
+
+# Packer variables
+export PACKER_NETWORK_ID="d728c2fc-140a-4334-a489-5b03aa8b6fbf"
+export FLOATING_POOL="provider-2430"
+export CHAORDICLEDGER_TERRAFORM_KEYFILE="~/.ssh/ChaordicLedgerTerraform.pem"

@@ -29,7 +29,7 @@ function getAllKnownArtifacts() {
   url="${API_ROOT_URL}/artifacts/listAllArtifacts"
   testlog "Getting all known artifacts from ${url}"
   export allArtifacts=$(curl -s -X GET --header 'Accept: application/json' "${url}")
-  testlog $(echo $allArtifacts | tr -d '[:space:]')
+  testlog $(echo $allArtifacts | jq .result | tr -d '[:space:]')
 }
 
 function getIPFSNames() {
@@ -42,9 +42,16 @@ function getIPFSNames() {
 function createAndUploadRandomFile() {
   index=$1
   filesdir=$2
-  size="1KiB"
+
+  if [ -n "$3" ]
+  then
+    size="$3"
+  else
+    size="1KiB"
+  fi
+  
   url="${API_ROOT_URL}/artifacts/createArtifact"
-  testlog "Creating random file number ${index} and uploading it to ${url}."
+  testlog "Creating random file number ${index} of size ${size} and uploading it to ${url}."
 
   mkdir -p $filesdir
   now=`date -u +"%Y%m%dT%H%M%SZ"`

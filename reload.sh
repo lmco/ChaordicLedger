@@ -19,6 +19,8 @@ function terminateProcess() {
   fi
 }
 
+ls -rotl
+
 . env.sh
 
 syslog "Starting reload."

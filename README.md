@@ -32,10 +32,9 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Creation of RESTful API|✔️|✔️|✔️|
 |Creation of Chaincode|✔️|✔️|✔️|
 |Defining and Executing Simulations|✔️|✔️|➖|
-|Gathering Key Performance Indicators (KPIs)|⏩|⏩|➖|
+|Gathering Key Performance Indicators (KPIs)|✔️|✔️|➖|
 
 ## Near-Term Items
-1. Look closer at timing metrics from API methods.
 1. Add Infrastructure as Code (IaC) configuration.
 
 ## Future Development Goals
@@ -44,6 +43,8 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Enable role-based authorization.
 1. Enable TLS for chaincode.
 1. Enable use of specified Certificate Authority.
+1. Add API method to retrieve a subset of the relationship graph with a specific depth or distance of relationships.
+1. Add API method for drill-down requests.
 1. Add served rendering of relationship graphs. Possible starting point [https://github.com/wangkuiyi/graphviz-server](https://github.com/wangkuiyi/graphviz-server)
 
 ## References
