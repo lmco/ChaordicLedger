@@ -24,15 +24,22 @@ peer chaincode \
       -c "{\"function\":\"GetTransactionByID\",\"Args\":[\"cl\", \"${TX_ID}\"]}" > $resultfile 2>&1
 
 status=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*result: ||g" | cut -d " " -f 1)
-payload=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*result: ||g" | cut -d " " -f 2 | sed "s|payload:||g" | cut -c2- | rev | cut -c2- | rev | tr -d "\\")
+payload=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*payload:||g" | base64 -w 0)
+
+# Note: The payload is a protobuf-encoded peer.ProcessedTransaction.
+#       Unfortunately, using "configtxlator proto_decode --type peer.ProcessedTransaction" on a file with
+#       the encoded contents fails with "configtxlator: error: Error decoding: message of type %!s(<nil>) unknown".
+#
+#       The protobuf format also contains incompatible escape characters for JSON payloads, so
+#       this is being returned as a base64-encoded string.
 
 if [ "$payload" == "" ]
 then
-  payload="{}"
+  payload="\"\""
 fi
 
 #end=$(date +%s%N)
 # end=${EPOCHREALTIME/./}
 # duration=$(( end - start ))
 
-echo "{ \"transaction\" : \"$friendlyName\", \"result\": $payload }"
+echo "{ \"transaction\" : \"$friendlyName\", \"result\": \"$payload\" }"
