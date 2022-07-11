@@ -85,6 +85,12 @@
         gpgcheck: true
         gpgkey: "https://download.docker.com/linux/{{ mydistribution }}/gpg"
 
+    - name: Install jq
+      dnf:
+        name:
+          - jq
+        state: latest
+
     - name: Install docker
       dnf:
         name:

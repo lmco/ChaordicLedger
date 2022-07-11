@@ -7,3 +7,7 @@ variable "instance_count" {
   type = number
   default = 1
 }
+
+variable inventoryFile {
+  type = string
+}

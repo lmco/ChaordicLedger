@@ -45,7 +45,7 @@ data "template_file" "inventory" {
   }
 }
 
-resource "local_file" "inventory_file" {
+resource "local_file" "inventoryFile" {
   content  = data.template_file.inventory.rendered
-  filename = "/tmp/chaordicledger/terraform/inventory/chaordicledgerhosts_inventory.yml"
+  filename = var.inventoryFile
 }

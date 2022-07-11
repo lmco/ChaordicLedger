@@ -49,8 +49,11 @@ export OS_IDENTITY_API_VERSION=3
 #get infrastructure folder path
 export TF_VAR_ROOT_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
 
-export TF_VAR_inventoryFile="/tmp/chaordicledger/terraform/chaordicledgerhosts_inventory.yml"
+export TERRAFORM_TMP_PATH="/tmp/chaordicledger/terraform"
+export TF_VAR_inventoryFile="$TERRAFORM_TMP_PATH/chaordicledgerhosts_inventory.yml"
+export TERRAFORM_PLAN_FILE="$TERRAFORM_TMP_PATH/tf.plan"
 
 # Packer variables
 export PACKER_NETWORK_ID="d728c2fc-140a-4334-a489-5b03aa8b6fbf"
 export FLOATING_POOL="provider-2430"
+export CHAORDICLEDGER_TERRAFORM_KEYFILE="~/.ssh/ChaordicLedgerTerraform.pem"

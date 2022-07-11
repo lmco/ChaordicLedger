@@ -23,3 +23,4 @@ randomArtifact*
 terraform/env
 *tfstate*
 infrastructure/.lmcoenv
+.terraform*
