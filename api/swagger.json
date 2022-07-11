@@ -106,7 +106,7 @@
             "in": "path",
             "description": "The transaction's ID",
             "required": true,
-            "type": "integer",
+            "type": "string",
             "minimum": 0
           }
         ],
