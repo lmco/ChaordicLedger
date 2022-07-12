@@ -14,11 +14,14 @@
         repo: 'https://github.com/lmco/ChaordicLedger.git'
         dest: ~/git/lmco/ChaordicLedger
         version: main
+        force: yes
 
     - name: Execute the setup.
       shell: |
-        pushd ~/git/lmco/ChaordicLedger
+        pwd
         ./reload.sh
+      args:
+        chdir: ~/git/lmco/ChaordicLedger
       register: result
       check_mode: false
       changed_when: false

@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/bash
 set -e
 start=$SECONDS
 
@@ -23,7 +23,7 @@ function terminateProcess() {
 
 ls -rotl
 
-. env.sh
+. ./env.sh
 
 syslog "Starting reload."
 
