@@ -1,3 +1,6 @@
+- import_playbook: roles/kind.yml
+- import_playbook: roles/kubectl.yml
+
 - hosts: all
   become: yes
   gather_facts: no

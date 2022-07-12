@@ -12,12 +12,12 @@ CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 
 function cluster_init() {
+  pull_docker_images
   cluster_create
   apply_proxy_certs
   apply_nginx_ingress
   install_cert_manager
   launch_docker_registry
-  pull_docker_images
   load_docker_images
 }
 
@@ -88,6 +88,7 @@ function launch_docker_registry() {
 function pull_docker_images() {
   syslog "Pulling docker images for Fabric ${FABRIC_VERSION}"
 
+  docker pull ${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}/kindest/base:v20210521-82de8f15 || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:$FABRIC_CA_VERSION || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION || true
