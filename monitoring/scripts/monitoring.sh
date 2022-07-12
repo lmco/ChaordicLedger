@@ -72,7 +72,7 @@ function enable_monitoring() {
   REGISTRY=${REGISTRY:-docker.io/}
   
   syslog "Waiting for dapr-system installation and start-up..."
-  helm install dapr dapr/dapr --namespace dapr-system --set global.logAsJson=true --set global.registry="${REGISTRY}daprio" --wait
+  helm install dapr dapr/dapr --namespace dapr-system --set global.logAsJson=true --set global.registry="${REGISTRY}daprio" --wait --timeout 600s
 
   nohup kubectl port-forward svc/kibana-kibana 5601 -n dapr-monitoring > ${MONITORING_TMP}/port-forward.log 2>&1 &
 }
