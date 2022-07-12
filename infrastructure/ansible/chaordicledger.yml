@@ -20,9 +20,19 @@
       ansible.builtin.copy:
         src: ~/git/ChaordicLedger/cachain.zip
         dest: ~/git/lmco/ChaordicLedger/cachain.zip
-        # owner: ec2-user
-        # group: ec2-user
         mode: '0644'
+
+    - name: Copy registry proxy details
+      ansible.builtin.copy:
+        src: ~/git/ChaordicLedger/docker_registry_proxy_details.sh
+        dest: ~/git/lmco/ChaordicLedger/docker_registry_proxy_details.sh
+        mode: '0555'
+
+    - name: Copy GitHub Read Token details
+      ansible.builtin.copy:
+        src: ~/git/ChaordicLedger/githubReadToken.sh
+        dest: ~/git/lmco/ChaordicLedger/githubReadToken.sh
+        mode: '0555'
 
     - name: Execute the setup.
       shell: |
