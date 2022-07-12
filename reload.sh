@@ -26,11 +26,11 @@ ls -rotl
 syslog "Starting reload."
 
 syslog "Removing corporate Certificate Authority certificates."
-rm api/builder/cachain/*.cer || true
-rm api/server/cachain/*.cer || true
-rm chaincode/artifact-metadata/docker/cachain/*.cer || true
-rm hyperledger/admin-cli/cachain/*.cer || true
-rm test/cachain/*.cer || true
+$(rm api/builder/cachain/*.cer)
+$(rm api/server/cachain/*.cer)
+$(rm chaincode/artifact-metadata/docker/cachain/*.cer)
+$(rm hyperledger/admin-cli/cachain/*.cer)
+$(rm test/cachain/*.cer)
 
 syslog "Expanding archive of corporate Certificate Authority certificates."
 unzip -o cachain.zip
