@@ -13,8 +13,16 @@
       ansible.builtin.git:
         repo: 'https://github.com/lmco/ChaordicLedger.git'
         dest: ~/git/lmco/ChaordicLedger
-        version: main
+        version: iac_update
         force: yes
+
+    - name: Copy CA Certificates archive
+      ansible.builtin.copy:
+        src: ~/git/ChaordicLedger/cachain.zip
+        dest: ~/git/lmco/ChaordicLedger/cachain.zip
+        # owner: ec2-user
+        # group: ec2-user
+        mode: '0644'
 
     - name: Execute the setup.
       shell: |
