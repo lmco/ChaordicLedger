@@ -11,6 +11,8 @@ fi
 CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 
+KIND_IMAGE="kindest/node:v1.21.1"
+
 function cluster_init() {
   pull_docker_images
   cluster_create
@@ -24,7 +26,7 @@ function cluster_init() {
 function cluster_create() {
   syslog "Creating cluster \"${CLUSTER_NAME}\" with ${NGINX_HTTPS_PORT}"
   populateTemplate ../config/cluster-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_cluster_config.yaml
-  kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate}
+  kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate} --image $KIND_IMAGE
 }
 
 function apply_proxy_certs() {
@@ -88,7 +90,10 @@ function launch_docker_registry() {
 function pull_docker_images() {
   syslog "Pulling docker images for Fabric ${FABRIC_VERSION}"
 
-  docker pull ${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}kindest/base:v20210521-82de8f15 || true
+  kind_source_image="${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6"
+  docker pull $kind_source_image || true
+  docker tag $kind_source_image $KIND_IMAGE
+
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:$FABRIC_CA_VERSION || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-peer:$FABRIC_VERSION || true
