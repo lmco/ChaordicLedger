@@ -78,7 +78,6 @@ fi
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
-cd ~/git/ChaordicLedger/
 
 syslog "Initializing the system."
 ./network purge &&
