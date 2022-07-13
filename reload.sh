@@ -25,7 +25,7 @@ function removeCertsIfExist() {
   result=$(find $1 -type f -name \*.cer | wc -l)
   if [ $result -gt 0 ]
   then
-    rm $1/$2
+    rm $1/*.cer
   else
     echo "NOT removing certificate files from $1; no certificate files exist in that directory."
   fi
