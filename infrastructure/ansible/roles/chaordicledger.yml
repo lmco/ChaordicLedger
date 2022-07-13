@@ -1,6 +1,3 @@
-- import_playbook: prerequisites.yml
-- import_playbook: tools.yml
-
 - hosts: all
   become: no
   gather_facts: no

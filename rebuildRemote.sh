@@ -32,7 +32,11 @@ popd
 # sleep $waitTime
 
 export ANSIBLE_HOST_KEY_CHECKING=false
-ansible-playbook ansible/prerequisites.yml -i $TF_VAR_inventoryFile --key-file $CHAORDICLEDGER_TERRAFORM_KEYFILE
-ansible-playbook ansible/chaordicledger.yml -i $TF_VAR_inventoryFile --key-file $CHAORDICLEDGER_TERRAFORM_KEYFILE
+
+playbooks=("prerequisites" "tools" "chaordicledger")
+
+for playbook in ${playbooks[@]}; do
+  ansible-playbook ansible/roles/${playbook}.yml -i $TF_VAR_inventoryFile --key-file $CHAORDICLEDGER_TERRAFORM_KEYFILE
+done
 
 popd
