@@ -2,6 +2,12 @@
   become: yes
   gather_facts: no
   
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
   tasks:
     - name: uninstall certain python modules for docker
       pip:
@@ -93,13 +99,14 @@
 
     - name: Set docker daemon proxy config
       shell: |
-        echo "[Service]" > /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"HTTP_PROXY={{ lookup('env', 'http_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"http_proxy{{ lookup('env', 'http_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"HTTPS_PROXY={{ lookup('env', 'https_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"https_proxy={{ lookup('env', 'https_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"NO_PROXY={{ lookup('env', 'no_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
-        echo "Environment=\"no_proxy={{ lookup('env', 'no_proxy') }}\"" >> /etc/systemd/system/docker.service.d/proxy.conf
+        http_proxy_conf="/etc/systemd/system/docker.service.d/proxy.conf"
+        echo "[Service]" > $http_proxy_conf
+        echo "Environment=\"HTTP_PROXY={{ lookup('env', 'http_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"http_proxy{{ lookup('env', 'http_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"HTTPS_PROXY={{ lookup('env', 'https_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"https_proxy={{ lookup('env', 'https_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"NO_PROXY={{ lookup('env', 'no_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"no_proxy={{ lookup('env', 'no_proxy') }}\"" >> $http_proxy_conf
 
       register: result
       check_mode: false
