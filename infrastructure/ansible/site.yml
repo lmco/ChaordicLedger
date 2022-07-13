@@ -1,1 +1,1 @@
-- import_playbook: chaordicledger.yml
+- import_playbook: roles/chaordicledger.yml
