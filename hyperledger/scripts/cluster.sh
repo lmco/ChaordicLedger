@@ -44,7 +44,7 @@ function apply_nginx_ingress() {
   NGINX_FILE=$CLUSTER_TMP/nginx_deploy.yaml
 
   wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml -O $NGINX_FILE
-  sed -i "s|registry.k8s.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_K8S|g" $CERT_MANAGER_FILE
+  sed -i "s|registry.k8s.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_K8S|g" $NGINX_FILE
 
   kubectl apply -f $NGINX_FILE
 }
