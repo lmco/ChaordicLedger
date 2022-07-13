@@ -76,7 +76,7 @@ if [ -f nodejs-server.zip ]; then
   rm nodejs-server.zip
 fi
 
-export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
+export ADDITIONAL_CA_CERTS_LOCATION="${PWD}/test/cachain/"
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 
 syslog "Initializing the system."
