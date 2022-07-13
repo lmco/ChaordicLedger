@@ -21,12 +21,13 @@ function terminateProcess() {
   fi
 }
 
-function removeIfExists() {
-  if [[ -d $1 ]]
+function removeCertsIfExist() {
+  result=$(find $1 -type f -name \*.cer | wc -l)
+  if [ $result -gt 0 ]
   then
     rm $1/$2
   else
-    echo "NOT removing $2 files from $1; the directory does not exist."
+    echo "NOT removing certificate files from $1; no certificate files exist in that directory."
   fi
 }
 
@@ -37,11 +38,11 @@ ls -rotl
 syslog "Starting reload."
 
 syslog "Removing corporate Certificate Authority certificates."
-removeIfExists api/builder/cachain *.cer
-removeIfExists api/server/cachain *.cer
-removeIfExists chaincode/artifact-metadata/docker/cachain *.cer
-removeIfExists hyperledger/admin-cli/cachain *.cer
-removeIfExists test/cachain/cachain *.cer
+removeCertsIfExist api/builder/cachain
+removeCertsIfExist api/server/cachain
+removeCertsIfExist chaincode/artifact-metadata/docker/cachain
+removeCertsIfExist hyperledger/admin-cli/cachain
+removeCertsIfExist test/cachain/cachain
 
 syslog "Expanding archive of corporate Certificate Authority certificates."
 unzip -o cachain.zip
