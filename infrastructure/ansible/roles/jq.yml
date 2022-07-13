@@ -1,0 +1,18 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  tasks:
+    - name: Install jq
+      dnf:
+        name:
+          - jq
+        state: latest
+
+    - name: Check jq is accessible.
+      shell:
+        cmd: jq --version
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

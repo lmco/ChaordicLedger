@@ -21,6 +21,15 @@ function terminateProcess() {
   fi
 }
 
+function removeIfExists() {
+  if [[ -d $1 ]]
+  then
+    rm $1/$2
+  else
+    echo "NOT removing $2 files from $1; the directory does not exist."
+  fi
+}
+
 ls -rotl
 
 . ./env.sh
@@ -28,11 +37,11 @@ ls -rotl
 syslog "Starting reload."
 
 syslog "Removing corporate Certificate Authority certificates."
-$(rm api/builder/cachain/*.cer)
-$(rm api/server/cachain/*.cer)
-$(rm chaincode/artifact-metadata/docker/cachain/*.cer)
-$(rm hyperledger/admin-cli/cachain/*.cer)
-$(rm test/cachain/*.cer)
+removeIfExists api/builder/cachain *.cer
+removeIfExists api/server/cachain *.cer
+removeIfExists chaincode/artifact-metadata/docker/cachain *.cer
+removeIfExists hyperledger/admin-cli/cachain *.cer
+removeIfExists test/cachain/cachain *.cer
 
 syslog "Expanding archive of corporate Certificate Authority certificates."
 unzip -o cachain.zip

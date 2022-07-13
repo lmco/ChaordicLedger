@@ -10,6 +10,7 @@
 
   tasks:
     - name: Download kind
+      environment: "{{proxy_env}}"
       ansible.builtin.get_url:
         url: https://kind.sigs.k8s.io/dl/v0.11.1/kind-linux-amd64
         dest: /usr/bin/kind
