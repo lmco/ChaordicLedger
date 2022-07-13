@@ -1,5 +1,5 @@
-- import_playbook: roles/kind.yml
-- import_playbook: roles/kubectl.yml
+- import_playbook: kind.yml
+- import_playbook: kubectl.yml
 
 - hosts: all
   become: yes

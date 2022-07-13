@@ -41,14 +41,25 @@ function apply_proxy_certs() {
 function apply_nginx_ingress() {
   syslog "Launching NGINX ingress controller"
   
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+  NGINX_FILE=$CLUSTER_TMP/nginx_deploy.yaml
+
+  wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml -O $NGINX_FILE
+  sed -i "s|registry.k8s.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_K8S|g" $CERT_MANAGER_FILE
+
+  kubectl apply -f $NGINX_FILE
 }
 
 function install_cert_manager() {
   syslog "Installing cert-manager"
 
   # Install cert-manager to manage TLS certificates
-  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+
+  CERT_MANAGER_FILE=$CLUSTER_TMP/cert-manager.yaml
+
+  wget https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml -O $CERT_MANAGER_FILE
+  sed -i "s|quay.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_QUAY|g" $CERT_MANAGER_FILE
+
+  kubectl apply -f $CERT_MANAGER_FILE
 
   kubectl -n cert-manager rollout status deploy/cert-manager
   kubectl -n cert-manager rollout status deploy/cert-manager-cainjector
