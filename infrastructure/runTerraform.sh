@@ -20,7 +20,7 @@ terraform init -input=false
 terraform plan -out $TERRAFORM_PLAN_FILE -var="inventoryFile=$TF_VAR_inventoryFile" -input=false
 terraform apply -input=false $TERRAFORM_PLAN_FILE
 
-waitTime=1200
+waitTime=1800
 echo "Waiting $waitTime seconds for the first-boot autoconfig to finish."
 sleep $waitTime
 

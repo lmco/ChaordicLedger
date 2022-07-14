@@ -57,7 +57,7 @@ function install_cert_manager() {
   CERT_MANAGER_FILE=$CLUSTER_TMP/cert-manager.yaml
 
   wget https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml -O $CERT_MANAGER_FILE
-  sed -i "s|quay.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_QUAY|g" $CERT_MANAGER_FILE
+  #sed -i "s|quay.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_QUAY|g" $CERT_MANAGER_FILE
 
   kubectl apply -f $CERT_MANAGER_FILE
 
