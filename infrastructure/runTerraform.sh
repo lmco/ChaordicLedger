@@ -20,9 +20,11 @@ terraform init -input=false
 terraform plan -out $TERRAFORM_PLAN_FILE -var="inventoryFile=$TF_VAR_inventoryFile" -input=false
 terraform apply -input=false $TERRAFORM_PLAN_FILE
 
+date
 waitTime=1800
 echo "Waiting $waitTime seconds for the first-boot autoconfig to finish."
 sleep $waitTime
+date
 
 echo "Done waiting. Check each host with 'ssh -i $CHAORDICLEDGER_TERRAFORM_KEYFILE <USER>@<IPAddress>' to ensure the first-boot behavior is complete."
 echo "(e.g.: check the ~/initial-maintenance.log* file to see if the play recap indicates 0 failed items.)"
