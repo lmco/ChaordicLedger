@@ -16,4 +16,4 @@ echo $defaultFilePath
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"file\" : \"$defaultFileName\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"
+echo "{ \"operation\" : \"uploadArtifact\", \"file\" : \"$defaultFileName\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"

@@ -12,4 +12,4 @@ content=$(ipfs files read $path | base64 | tr -d "\n")
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 #echo "{ \"path\" : \"$path\", \"content\": \"$content\", \"durationInNanoseconds\": \"$duration\"}"
-echo "{ \"path\" : \"$path\", \"content\": \"$content\", \"durationInMicroseconds\": \"$duration\"}"
+echo "{ \"operation\" : \"getArtifactAtPath\", \"path\" : \"$path\", \"content\": \"$content\", \"durationInMicroseconds\": \"$duration\"}"

@@ -41,4 +41,4 @@ fi
 # end=${EPOCHREALTIME/./}
 # duration=$(( end - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"result\": $payload }"
+echo "{ \"operation\" : \"createArtifact\", \"file\" : \"$friendlyName\", \"result\": $payload }"
