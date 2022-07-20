@@ -9,7 +9,6 @@
     "parameters": [
       "body"
     ],
-    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   },
   "createRelationship": {
@@ -17,7 +16,6 @@
     "parameters": [
       "body"
     ],
-    "directResult": "true",
     "target": "deploy/org1-admin-cli"
   }
 }

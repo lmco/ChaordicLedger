@@ -19,4 +19,4 @@ duration=$(( end - start ))
 
 #echo "{ \"durationInNanoseconds\": \"$duration\", \"result\": $result }"
 #echo "{ \"artifactID\" : \"{{artifactID}}, \"durationInMicroseconds\": \"$duration\", \"result\": $result }"
-echo "{ \"artifactID\" : \"{{artifactID}}\", \"ipfsData\": $result }"
+echo "{ \"operation\" : \"getArtifactObject\", \"artifactID\" : \"{{artifactID}}\", \"ipfsData\": $result }"

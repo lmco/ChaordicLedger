@@ -10,4 +10,4 @@ result=$(ipfs files rm {{artifactPath}})
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"file\" : \"{{artifactPath}}\", \"durationInMicroseconds\": \"$duration\", \"result\": $result }"
+echo "{ \"operation\" : \"deleteArtifactAtPath\", \"file\" : \"{{artifactPath}}\", \"durationInMicroseconds\": \"$duration\", \"result\": $result }"

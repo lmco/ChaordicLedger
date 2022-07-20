@@ -23,4 +23,4 @@ end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
 #echo "{ \"file\" : \"$friendlyName\", \"durationInNanoseconds\": \"$duration\", \"result\": $result }"
-echo "{ \"file\" : \"$friendlyName\", \"durationInMicroseconds\": \"$duration\", \"result\": $result }"
+echo "{ \"operation\" : \"listArtifactsAtPath\", \"file\" : \"$friendlyName\", \"durationInMicroseconds\": \"$duration\", \"result\": $result }"

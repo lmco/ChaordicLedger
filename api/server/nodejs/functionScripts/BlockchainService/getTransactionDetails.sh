@@ -42,4 +42,4 @@ fi
 # end=${EPOCHREALTIME/./}
 # duration=$(( end - start ))
 
-echo "{ \"transaction\" : \"$friendlyName\", \"result\": \"$payload\" }"
+echo "{ \"operation\" : \"getTransactionDetails\", \"transaction\" : \"$friendlyName\", \"result\": \"$payload\" }"
