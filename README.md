@@ -20,7 +20,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
     1. All deployment-specific attributes shall be specifiable at deployment time (e.g. from a pipeline)
 1. Test automation shall be implemented early and where practical.
 1. Free and Open-Source technologies shall be leveraged.
-1. Behavior and results are measurable and repeatable.
+1. Behavior and results are measurable and equatable.
 
 ## Implementation Road Map
 |Item|Implementation Status|Documentation Status|Pipeline Execution|
