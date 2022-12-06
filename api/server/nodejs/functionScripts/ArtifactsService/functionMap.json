@@ -25,18 +25,18 @@
     "parameters": [
       "formData"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/org1-admin-cli",
+    "copyToTarget": {
+      "src": "formData",
+      "dst": "org1-admin-cli"
+    }
   },
   "createArtifactAsync": {
     "script": "createArtifactAsync.sh",
     "parameters": [
       "formData"
     ],
-    "target": "deploy/org1-admin-cli",
-    "copyToTarget": {
-      "src": "formData",
-      "dst": "org1-admin-cli"
-    }
+    "target": "deploy/org1-admin-cli"
   },
   "uploadArtifact": {
     "script": "uploadArtifact.sh",

@@ -148,27 +148,26 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                 f.write(f'fs.writeFileSync(tmpfilePath, data);{os.linesep}')
                 f.write(f"var tmpfileName=`formdata_${openbrace}now('nano'){closebrace}.json`{os.linesep}")
                 f.write(f'var tmpfilePath=`/tmp/${openbrace}tmpfileName{closebrace}`{os.linesep}')
-                f.write(f'var stringified=`${openbrace}JSON.stringify(formData){closebrace}`{os.linesep}')
 
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
 
             if "copyToTarget" in mapfile[key]:
-                f.write(f'    exec(`kubectl get pods -l=app={dst} -n chaordicledger | grep -v "NAME" | cut -d " " -f1`, (error, stdout, stderr) => {openbrace}{os.linesep}')
-                f.write(f'      if (error) {openbrace}{os.linesep}')
-                f.write(f"        var end = now('nano'){os.linesep}")
-                f.write('        resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                f.write(f'        exec(`kubectl get pods -l=app={dst} -n chaordicledger | grep -v "NAME" | cut -d " " -f1`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f.write(f'        if (error) {openbrace}{os.linesep}')
+                f.write(f"          var end = now('nano'){os.linesep}")
+                f.write('          resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
                 f.write(f'      {closebrace} else {openbrace}{os.linesep}')
                 f.write(
-                    '        var podname=stdout.trim()' + f'{os.linesep}')
-                f.write('    exec(`kubectl cp -n chaordicledger ${tmpfilePath} ${podname}:${tmpfileName}`, (error, stdout, stderr) => ' + f'{openbrace}{os.linesep}')
-                f.write(f'      if (error) {openbrace}{os.linesep}')
-                f.write(f"        var end = now('nano'){os.linesep}")
-                f.write('        resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
-                f.write(f'      {closebrace} else {openbrace}{os.linesep}')
+                         '        var podname=stdout.trim()' + f'{os.linesep}')
+                f.write( '        exec(`kubectl cp -n chaordicledger ${tmpfilePath} ${podname}:${tmpfileName}`, (error, stdout, stderr) => ' + f'{openbrace}{os.linesep}')
+                f.write(f'        if (error) {openbrace}{os.linesep}')
+                f.write(f"          var end = now('nano'){os.linesep}")
+                f.write('           resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                f.write(f'        {closebrace} else {openbrace}{os.linesep}')
 
             f.write(
-                f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                        f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f"      var end = now('nano'){os.linesep}")
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write(
@@ -183,11 +182,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                 f.write(
                     '        resolve({ "result": obj, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
             if "copyToTarget" in mapfile[key]:
-                f.write(f'      {closebrace}{os.linesep}')
-                f.write(f'    {closebrace});{os.linesep}')
-                f.write(f'      {closebrace}{os.linesep}')
-                f.write(f'    {closebrace});{os.linesep}')
-
+                f.write(f'              {closebrace}{os.linesep}')
+                f.write(f'          {closebrace});{os.linesep}')
+                f.write(f'        {closebrace}{os.linesep}')
+                f.write(f'      {closebrace});{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')
