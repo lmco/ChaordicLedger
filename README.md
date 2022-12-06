@@ -1,12 +1,21 @@
 [![CI](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml)
 
-# CharodicLedger
+# ChaordicLedger
 The ChaordicLedger is the implementation of a design for a combination of Distributed Ledger Technology (DLT) and a Distributed File System (DFS) to create a secure, enterprise-grade platform for storing interlinked project artifacts.
 
 The development of this platform is in pursuit of the author's PhD research objectives.
 
 # Goal
 The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.org/wiki/Technology_readiness_level) Proof of Concept (PoC) of integrating the distributed nature of the InterPlanetary File System (IPFS) with the permissioned, private nature of Hyperledger Fabric via industry-relevant smart contracts to achieve a macro-to-micro-scale view of large integrated systems in support of Systems Engineering, Configuration Management, Software Engineering, and Cost Account Management.
+
+## Getting Started
+1. Clone this repository
+1. Create a GitHub read token.
+1. Create a *"githubReadToken.sh"* script file in the repository's root directory with the following contents:
+    ```
+    export githubReadToken=ghp_YOUR_READ_TOKEN_HERE
+    ```
+1. Run the *reload.sh* script.
 
 ## Related Publications
 |Title|Forum|URL|

@@ -1,6 +1,6 @@
 #/bin/sh
 . ${ROOT_DIR}/scenarios/testenv.sh
-SCENARIO_NAME="Create Two Hundred Randomly-Related Artifacts of Varying Sizes"
+SCENARIO_NAME="Create Five Hundred Randomly-Related Artifacts of Varying Sizes"
 setTestOutdir
 
 FILE_COUNT_TO_GENERATE=500

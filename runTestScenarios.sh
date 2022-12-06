@@ -15,6 +15,7 @@ popd
 ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
+./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
 
 #./testCleanup.sh
 
