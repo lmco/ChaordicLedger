@@ -10,7 +10,7 @@ timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 friendlytimestamp=$(date -u +%Y%m%d%H%M%S)
 
-filename={{tmpfileName}}
+filename={{formData}}
 #echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 friendlyName=$(cat $filename | jq .originalname | tr -d '"')
@@ -42,9 +42,9 @@ fi
 # duration=$(( end - start ))
 
 # Remove source file
-rm $filename
+#rm $filename
 
 # Remove results file
-rm $resultfile
+#rm $resultfile
 
 echo "{ \"operation\" : \"createArtifact\", \"file\" : \"$friendlyName\", \"result\": $payload }"
