@@ -64,7 +64,7 @@ def getReplacementExpression(arg):
     retVal = "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
 
     if arg == "formData" or arg == "body":
-        retVal = "sed 's|{{" + arg + "}}|\"${JSON.stringify(" + arg + ")}\"|g'"
+        retVal = "sed 's|{{" + arg + "}}|\"${tmpfileName}\"|g'"
 
     return retVal
 
@@ -144,10 +144,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                 src=mapfile[key]["copyToTarget"]["src"]
                 dst=mapfile[key]["copyToTarget"]["dst"]
                 f.write(f"const fs = require('fs'){os.linesep}")
-                f.write(f'let data = JSON.stringify({src});{os.linesep}')
-                f.write(f'fs.writeFileSync(tmpfilePath, data);{os.linesep}')
                 f.write(f"var tmpfileName=`formdata_${openbrace}now('nano'){closebrace}.json`{os.linesep}")
                 f.write(f'var tmpfilePath=`/tmp/${openbrace}tmpfileName{closebrace}`{os.linesep}')
+                f.write(f'let data = JSON.stringify({src});{os.linesep}')
+                f.write(f'fs.writeFileSync(tmpfilePath, data);{os.linesep}')
 
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
