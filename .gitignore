@@ -24,3 +24,4 @@ terraform/env
 *tfstate*
 infrastructure/.lmcoenv
 .terraform*
+kube-state-metrics/

@@ -7,14 +7,14 @@ pushd scenarios
 
 ./generatedArtifacts/createOneArtifact.sh
 
-pushd industrial/gpsExample
- ./gpsExample.sh
-popd
+# pushd industrial/gpsExample
+#  ./gpsExample.sh
+# popd
 
-./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
-./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
-./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
-./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
+# ./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
+# ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
+# ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
+# ./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
 ./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
 
 #./testCleanup.sh
