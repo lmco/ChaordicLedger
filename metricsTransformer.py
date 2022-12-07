@@ -29,8 +29,6 @@ def convertInputToJSON(inputFile : str):
                 state = "Header"
             elif state == "Header":
                 headers = line.strip().split()
-                for item in headers:
-                    print(item)
                 state="Pods"
             elif state == "Pods":
                 if line == "---":
@@ -40,10 +38,9 @@ def convertInputToJSON(inputFile : str):
                     podCount+=1
                     elements = line.strip().split()
                     for i in range(0, len(elements)):
-                        print(f"{i} {len(headers)} {len(elements)}")
-                        sample[headers[i]]=elements[i]
+                        filteredHeader=headers[i].replace("(", "_").replace(")", "")
+                        sample[filteredHeader]=elements[i]
                     samples.append(sample)
-                    print(podCount)
                     # Hack for count ... need a delimiter between each sample.
                     if podCount >= 19:
                         state="Timestamp"
@@ -67,3 +64,4 @@ if __name__ == "__main__":
 
     result = convertInputToJSON(args.input)
     writeJSON(result, args.output)
+    print("Done")
