@@ -39,8 +39,8 @@ echo "[$now] Formatting gathered samples into a single datafile: ${datafile}"
 now=$(date -u '+%Y%m%dT%H%M%SZ')
 echo "[$now] Visualizing the formatted samples."
 
-python3 metricsVisualizer.py -i ${datafile} -c CPU_in_nanocores -o ${plotDir}
-python3 metricsVisualizer.py -i ${datafile} -c Memory_in_Kibibytes -o ${plotDir}
+python3 metricsVisualizer.py -i ${datafile} -c CPU_in_nanocores -p ${timestamp} -o ${plotDir}
+python3 metricsVisualizer.py -i ${datafile} -c Memory_in_Kibibytes -p ${timestamp} -o ${plotDir}
 
 now=$(date -u '+%Y%m%dT%H%M%SZ')
-echo "Done"
+echo "[$now] Done."

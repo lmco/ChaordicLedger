@@ -3,7 +3,7 @@ set -e
 
 function orchestratorLog() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  echo -e "[$now | Orchestrator | | INFO] $1"
+  echo -e "[$now | Orchestrator | INFO] $1"
 }
 
 orchestratorLog "Orchestrator Started"
@@ -28,6 +28,7 @@ popd
 ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
 ./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
+./generatedArtifacts/createOneThousandUnrelatedArtifactsOfFixedSize.sh
 ./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
 
 #./testCleanup.sh
@@ -36,7 +37,7 @@ popd
 
 orchestratorLog "Scenario execution complete."
 
-orchestratorLog "Retrieving all blocks from the blockchain."
-./getAllBlocks.sh
+#orchestratorLog "Retrieving all blocks from the blockchain."
+#./getAllBlocks.sh
 
 orchestratorLog "Done."
