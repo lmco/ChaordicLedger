@@ -2,8 +2,8 @@
 
 # Poll the metrics on an interval specified in seconds
 
-outdir=$1
-wait=$2
+export outdir=$1
+export wait=$2
 
 mkdir -p $outdir
 
@@ -16,6 +16,6 @@ do
     # The timestamp is used to keep the sample's filenames unique.
     kubectl get --raw /apis/metrics.k8s.io/v1beta1/pods -n chaordicledger | jq '. | del ( ."items"[] | select(.metadata.namespace != "chaordicledger"))' > ${outdir}/${timestamp}_sample.json
       
-    echo "Waiting ${wait} to gather next sample"
+    echo "[${timestamp}] Waiting ${wait} to gather next sample"
     sleep ${wait}
 done

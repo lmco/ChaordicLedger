@@ -140,14 +140,14 @@ sleep 10
 syslog "Deploying dashboard"
 kubectl apply -f dashboards/kubernetes/recommended.yaml
 kubectl apply -f metrics/components.yaml
-kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
+kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
 
 syslog "Creating service account for dashboard"
 kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
 
 # TODO: This may not be necessary.
-syslog "Creating access token for service account"
-kubectl -n kubernetes-dashboard create token admin-user
+#syslog "Creating access token for service account"
+#kubectl -n kubernetes-dashboard create token admin-user
 
 kubectl create serviceaccount dashboard-admin-sa
 kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
@@ -159,6 +159,7 @@ kubectl create token dashboard-admin-sa
 syslog "Starting kubectl proxy."
 nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
+rm -rf kube-state-metrics
 git clone https://github.com/kubernetes/kube-state-metrics.git
 cd kube-state-metrics
 kubectl apply -f examples/standard

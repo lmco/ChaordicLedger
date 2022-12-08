@@ -38,3 +38,5 @@ orchestratorLog "Scenario execution complete."
 
 orchestratorLog "Retrieving all blocks from the blockchain."
 ./getAllBlocks.sh
+
+orchestratorLog "Done."
