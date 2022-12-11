@@ -1,0 +1,3 @@
+From 2.1.5
+
+User profile information must include geographic region.
