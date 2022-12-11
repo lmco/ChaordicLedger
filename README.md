@@ -53,6 +53,8 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Add API method to retrieve a subset of the relationship graph with a specific depth or distance of relationships.
 1. Add API method for drill-down requests.
 1. Add served rendering of relationship graphs. Possible starting point [https://github.com/wangkuiyi/graphviz-server](https://github.com/wangkuiyi/graphviz-server)
+1.	Increase the TRL by executing the platform on edge-style hardware devices by way of third-party users.
+1.	Refactor the codebase to use another form of scripted setup orchestration, such as docker-compose.
 
 ## References
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)
