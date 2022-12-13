@@ -14,7 +14,7 @@ function waitForSeconds() {
 
 orchestratorLog "Orchestrator Started"
 
-#waitForSeconds 30
+waitForSeconds 60
 
 orchestratorLog "Commencing tests"
 
@@ -23,35 +23,35 @@ export ROOT_DIR=$(pwd)
 pushd scenarios
 
 ./generatedArtifacts/createOneArtifact.sh
-waitForSeconds 30
+waitForSeconds 60
 
 pushd industrial/gpsExample
  ./gpsExample.sh
 popd
-waitForSeconds 30
+waitForSeconds 60
 
 pushd industrial/salesSystem
  ./salesSystem.sh
 popd
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createOneThousandUnrelatedArtifactsOfFixedSize.sh
-waitForSeconds 30
+waitForSeconds 60
 
 ./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
-waitForSeconds 30
+waitForSeconds 60
 
 #./testCleanup.sh
 
