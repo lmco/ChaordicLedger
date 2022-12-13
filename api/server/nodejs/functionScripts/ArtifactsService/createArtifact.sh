@@ -10,8 +10,8 @@ timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 
 friendlytimestamp=$(date -u +%Y%m%d%H%M%S)
 
-filename=${friendlytimestamp}_artifact.json
-echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
+filename={{formData}}
+#echo '{{formData}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 friendlyName=$(cat $filename | jq .originalname | tr -d '"')
 
@@ -40,5 +40,11 @@ fi
 #end=$(date +%s%N)
 # end=${EPOCHREALTIME/./}
 # duration=$(( end - start ))
+
+# Remove source file
+#rm $filename
+
+# Remove results file
+#rm $resultfile
 
 echo "{ \"operation\" : \"createArtifact\", \"file\" : \"$friendlyName\", \"result\": $payload }"

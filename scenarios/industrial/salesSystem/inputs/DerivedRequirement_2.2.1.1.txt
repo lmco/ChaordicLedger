@@ -1,0 +1,3 @@
+From 2.2.1
+
+Product catalog information must be searchable.

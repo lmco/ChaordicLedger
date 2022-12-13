@@ -1,0 +1,3 @@
+From 2.1.4
+
+Product information shall access relevant and recent stored owner data.

@@ -1,0 +1,3 @@
+From 2.2.2
+
+Applicable whitepapers must be accessible from product details.

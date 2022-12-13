@@ -64,7 +64,7 @@ def getReplacementExpression(arg):
     retVal = "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
 
     if arg == "formData" or arg == "body":
-        retVal = "sed 's|{{" + arg + "}}|\"${JSON.stringify(" + arg + ")}\"|g'"
+        retVal = "sed 's|{{" + arg + "}}|\"${tmpfileName}\"|g'"
 
     return retVal
 
@@ -139,10 +139,35 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             f.write(f"  var start = now('nano')" + f'{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
+
+            if "copyToTarget" in mapfile[key]:
+                src=mapfile[key]["copyToTarget"]["src"]
+                dst=mapfile[key]["copyToTarget"]["dst"]
+                f.write(f"const fs = require('fs'){os.linesep}")
+                f.write(f"var tmpfileName=`formdata_${openbrace}now('nano'){closebrace}.json`{os.linesep}")
+                f.write(f'var tmpfilePath=`/tmp/${openbrace}tmpfileName{closebrace}`{os.linesep}')
+                f.write(f'let data = JSON.stringify({src});{os.linesep}')
+                f.write(f'fs.writeFileSync(tmpfilePath, data);{os.linesep}')
+
             f.write(
                 f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
+
+            if "copyToTarget" in mapfile[key]:
+                f.write(f'        exec(`kubectl get pods -l=app={dst} -n chaordicledger | grep -v "NAME" | cut -d " " -f1`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f.write(f'        if (error) {openbrace}{os.linesep}')
+                f.write(f"          var end = now('nano'){os.linesep}")
+                f.write('          resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                f.write(f'      {closebrace} else {openbrace}{os.linesep}')
+                f.write(
+                         '        var podname=stdout.trim()' + f'{os.linesep}')
+                f.write( '        exec(`kubectl cp -n chaordicledger ${tmpfilePath} ${podname}:${tmpfileName}`, (error, stdout, stderr) => ' + f'{openbrace}{os.linesep}')
+                f.write(f'        if (error) {openbrace}{os.linesep}')
+                f.write(f"          var end = now('nano'){os.linesep}")
+                f.write('           resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                f.write(f'        {closebrace} else {openbrace}{os.linesep}')
+
             f.write(
-                f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                        f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
             f.write(f"      var end = now('nano'){os.linesep}")
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write(
@@ -156,6 +181,11 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                     '        const obj = JSON.parse(stdout)' + f'{os.linesep}')
                 f.write(
                     '        resolve({ "result": obj, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+            if "copyToTarget" in mapfile[key]:
+                f.write(f'              {closebrace}{os.linesep}')
+                f.write(f'          {closebrace});{os.linesep}')
+                f.write(f'        {closebrace}{os.linesep}')
+                f.write(f'      {closebrace});{os.linesep}')
             f.write(f'      {closebrace}{os.linesep}')
             f.write(f'    {closebrace});{os.linesep}')
             f.write(f'  {closebrace});{os.linesep}')

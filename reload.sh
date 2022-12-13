@@ -2,6 +2,8 @@
 set -e
 start=$SECONDS
 
+BASEDIR=$(dirname "$0")
+
 function log() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
   echo "[$now] $1"
@@ -78,12 +80,13 @@ fi
 
 export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
-cd ~/git/ChaordicLedger/
+cd $BASEDIR
 
 syslog "Initializing the system."
+pwd
+ls -l
 ./network purge &&
 ./network init &&
-./network monitor &&
 ./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
 ./network channel 2 &&
 ./network peer &&
@@ -125,22 +128,42 @@ unzip nodejs-server.zip -d apiServer
 
 pushd apiServer
 syslog "Starting API server."
+npm install connect
 nohup npm start > apiserver.log 2>&1  &
 popd
 
 syslog "Waiting for the API server to start."
 sleep 10
 
+./network monitor
+
+syslog "Deploying dashboard"
+kubectl apply -f dashboards/kubernetes/recommended.yaml
+kubectl apply -f metrics/components.yaml
+kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
+
 syslog "Creating service account for dashboard"
-kubectl create serviceaccount dashboard-admin-sa &&
-kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa &&
-kubectl apply -f metrics/components.yaml &&
-kubectl rollout status deployment metrics-server -n kube-system --timeout=120s &&
-kubectl apply -f dashboards/kubernetes/recommended.yaml &&
-kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
+kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
+
+# TODO: This may not be necessary.
+#syslog "Creating access token for service account"
+#kubectl -n kubernetes-dashboard create token admin-user
+
+kubectl create serviceaccount dashboard-admin-sa
+kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+kubectl create token dashboard-admin-sa
+
+# kubectl apply -f dashboards/kubernetes/recommended.yaml --enable-skip-login &&
+# kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
 
 syslog "Starting kubectl proxy."
 nohup kubectl proxy > kubectl_proxy.log 2>&1 &
+
+rm -rf kube-state-metrics
+git clone https://github.com/kubernetes/kube-state-metrics.git
+cd kube-state-metrics
+kubectl apply -f examples/standard
+#Or?: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 
 syslog "Getting the current graph state."
 currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraph')
