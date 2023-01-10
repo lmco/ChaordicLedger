@@ -1,0 +1,291 @@
+from flask import Flask, request, Response
+import json
+import re
+
+app = Flask(__name__)
+
+# These global variable represent what would be stateful data in a production deployment.
+globalConfiguration={}
+globalUserProfiles={}
+globalOrderHistory={}
+globalOrderDetailsHistory={}
+
+@app.route('/')
+def index():
+  return 'Storefront is ready!'
+
+@app.route('/reset')
+def reset():
+  global globalConfiguration
+  globalConfiguration.clear()
+
+  global globalUserProfiles
+  globalUserProfiles.clear()
+
+  global globalOrderHistory
+  globalOrderHistory.clear()
+
+  global globalOrderDetailsHistory
+  globalOrderDetailsHistory.clear()
+
+  return 'Reset complete!'
+
+@app.route('/catalog')
+def catalog():
+  configurable = request.args.get('configurable')
+
+  retval = None
+  with open("products.json", "r") as f:
+    retval = json.load(f)
+
+  if configurable == "true" or configurable == "false":
+    subset = {}
+
+    for key in retval.keys():
+      if retval[key]["configurable"] == configurable:
+        subset[key] = retval[key]
+    
+    retval = subset
+
+  return retval
+
+@app.route('/details')
+def details():
+  productName = request.args.get('productName')
+
+  retval = {}
+  with open("details.json", "r") as f:
+    details = json.load(f)
+
+  for key in details.keys():
+    if key == productName:
+      retval = details[key]
+    
+  return retval
+
+@app.route('/configElements')
+def configElements():
+  productName = request.args.get('productName')
+
+  retval = {}
+  with open("configurableElements.json", "r") as f:
+    configurableElements = json.load(f)
+
+  for key in configurableElements.keys():
+    if key == productName:
+      retval = configurableElements[key]
+    
+  return retval
+
+@app.route('/addConfiguration')
+def addConfiguration():
+  productName = request.args.get('productName')
+
+  catalog = {}
+  with open("products.json", "r") as f:
+    catalog = json.load(f)
+
+  if productName in catalog.keys() and catalog[productName]["configurable"] == "true":
+    configElement = request.args.get('configElement')
+
+    if productName not in globalConfiguration:
+      globalConfiguration[productName] = []
+
+    globalConfiguration[productName].append(configElement)
+    return globalConfiguration
+  
+  return Response("{}", 400, mimetype='application/json')  
+
+@app.route('/removeConfiguration')
+def removeConfiguration():
+  productName = request.args.get('productName')
+
+  catalog = {}
+  with open("products.json", "r") as f:
+    catalog = json.load(f)
+
+  if productName in catalog.keys() and catalog[productName]["configurable"] == "true":
+    configElement = request.args.get('configElement')
+
+    if productName not in globalConfiguration:
+      globalConfiguration[productName] = []
+      
+    globalConfiguration[productName].remove(configElement)
+    return globalConfiguration
+  
+  return Response("{}", 400, mimetype='application/json')  
+
+@app.route('/categories')
+def categories():
+  retval = {}
+  with open("categories.json", "r") as f:
+    retval = json.load(f)
+
+  return retval
+
+@app.route('/search')
+def search():
+  pattern = request.args.get('productNameExpression')
+
+  products = None
+  with open("products.json", "r") as f:
+    products = json.load(f)
+
+  limit = 10
+  retval = []
+  for item in products.keys():
+    match = re.match(pattern, item)
+    if match is not None:
+      retval.append(item)
+      if len(retval) == limit:
+        break
+
+  return retval
+
+@app.route('/createUser')
+def createUser():
+  username = request.args.get('username')
+  password = request.args.get('password')
+  email = request.args.get('email')
+
+  userProfile={
+    "username" : {
+      "value": username,
+      "sensitive" : False,
+    },
+    "password" : {
+      "value": password,
+      "sensitive" : True,
+    },
+    "email" : {
+      "value": email,
+      "sensitive" : False,
+    },
+    "subscribeForNewsletters" : {
+      "value": False,
+      "sensitive" : False,
+    },
+    "subscribeForSurveys" : {
+      "value": False,
+      "sensitive" : False,
+    },
+  }
+
+  retval = {}
+
+  for key in userProfile.keys():
+    item = userProfile[key]
+    if item["sensitive"] == False:
+      retval[key] = item["value"]
+
+  globalUserProfiles[username] = userProfile
+
+  return retval
+
+@app.route('/updateUser')
+def updateUser():
+  username = request.args.get('username')
+  expression = request.args.get('set')
+
+  if username in globalUserProfiles:
+    userProfile = globalUserProfiles[username]
+
+    parts = expression.split("=")
+
+    value = parts[1]
+
+    if value == "True":
+      value = True
+    elif value == "False":
+      value = False
+
+    if parts[0] in userProfile:
+      userProfile[parts[0]] = { 
+        "value": value,
+        "sensitive": False
+      }
+  
+  retval = {}
+  for key in userProfile.keys():
+    item = userProfile[key]
+    if item["sensitive"] == False:
+      retval[key] = item["value"]
+
+  return retval
+
+@app.route('/orderHistory')
+def orderHistory():
+  username = request.args.get('username')
+  status = request.args.get('status')
+
+  retval = []
+
+  if username in globalOrderHistory:
+    allOrders = globalOrderHistory[username]
+
+    if status == "Active" or status == "Completed":
+      for i in range(0, len(allOrders)):
+        if allOrders[i]["status"] == status:
+          retval.append(allOrders[i])
+    else:
+      retval = allOrders
+
+  return retval
+
+@app.route('/createOrder')
+def createOrder():
+  username = request.args.get('username')
+  status = request.args.get('status')
+  productName = request.args.get('productName')
+  timestamp = request.args.get('timestamp')
+
+  if username not in globalOrderHistory:
+    globalOrderHistory[username] = []
+
+  order = {
+    "username": username,
+    "status" : status,
+    "productName" : productName,
+    "timestamp" : timestamp
+  }
+
+  globalOrderHistory[username].append(order)
+  
+  if username not in globalOrderDetailsHistory:
+    globalOrderDetailsHistory[username] = {}
+  
+  globalOrderDetailsHistory[username][f"{username}_{productName}_{timestamp}"] = {
+    "key": f"{username}_{productName}_{timestamp}",
+    "orderDetails": "Some more information about the order."
+  }
+
+  return order
+
+@app.route('/orderDetails')
+def orderDetails():
+  username = request.args.get('username')
+  productName = request.args.get('productName')
+  timestamp = request.args.get('timestamp')
+
+  key = f"{username}_{productName}_{timestamp}"
+  if username in globalOrderDetailsHistory and key in globalOrderDetailsHistory[username]:
+    return globalOrderDetailsHistory[username][key]
+  
+  return Response("{}", 400, mimetype='application/json')  
+  #return globalOrderDetailsHistory
+
+@app.route('/help')
+def help():
+  return "Here's some useful info!"
+
+@app.route('/support')
+def support():
+  username = request.args.get('username')
+  productName = request.args.get('productName')
+  return {
+    "username" : username,
+    "productName" : productName
+  }
+
+if __name__ == '__main__':
+	app.run(host='0.0.0.0', port=50000)

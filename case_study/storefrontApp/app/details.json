@@ -1,0 +1,59 @@
+{
+    "CoffeeMug": {
+        "productName" : "CoffeeMug",
+        "configurable": "true",
+        "weight" : {
+            "amount": "0.25",
+            "unit": "kilogram"
+        },
+        "length" : {
+            "amount": "0.1",
+            "unit": "meters"
+        },
+        "materials" : [
+            "Ceramic"
+        ]
+    },
+    "DeskPhone": {
+        "productName" : "DeskPhone",
+        "configurable": "false",
+        "weight" : {
+            "amount": "0.75",
+            "unit": "kilogram"
+        },
+        "length" : {
+            "amount": "0.5",
+            "unit": "meters"
+        },
+        "materials" : [
+            "Plastic"
+        ]
+    },
+    "FishingRod": {
+        "productName" : "FishingRod",
+        "configurable": "true",
+        "weight" : {
+            "amount": "1",
+            "unit": "kilogram"
+        },
+        "length" : {
+            "amount": "2",
+            "unit": "meters"
+        },
+        "materials" : [
+            "Carbon fiber"
+        ]
+    },
+    "Speakers": {
+        "productName" : "Speakers",
+        "configurable": "false",
+        "weight" : {
+            "amount": "0.1",
+            "unit": "kilogram"
+        },
+        "materials" : [
+            "Plastic",
+            "Aluminum"
+        ]
+    }
+}

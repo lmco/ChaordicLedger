@@ -1,0 +1,9 @@
+# Reference: https://github.com/docker/awesome-compose/blob/master/flask/compose.yaml
+services:
+  web: 
+    image: storefront:0.0.1
+    # flask requires SIGINT to stop gracefully
+    # (default stop signal from Compose is SIGTERM)
+    stop_signal: SIGINT
+    ports:
+      - '50000:50000'

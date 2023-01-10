@@ -1,0 +1,20 @@
+{
+    "CoffeeMug": {
+        "productName" : "CoffeeMug",
+        "configurableElements" :
+        [
+            "capacity"
+        ]
+    },
+    "FishingRod": {
+        "productName" : "FishingRod",
+        "configurableElements" :
+        [
+            "weight",
+            "length",
+            "material",
+            "strength",
+            "flex"
+        ]
+    }
+}

@@ -1,0 +1,35 @@
+{
+    "CoffeeMug": {
+        "configurable": "true"
+    },
+    "DeskPhone": {
+        "configurable": "false"
+    },
+    "FishingRod": {
+        "configurable": "true"
+    },
+    "Speakers": {
+        "configurable": "false"
+    },
+    "BowlingBall": {
+        "configurable": "false"
+    },
+    "Keyboard": {
+        "configurable": "false"
+    },
+    "Tent": {
+        "configurable": "false"
+    },
+    "Stove": {
+        "configurable": "false"
+    },
+    "Canteen": {
+        "configurable": "false"
+    },
+    "Flashlight": {
+        "configurable": "false"
+    },
+    "Thermostat": {
+        "configurable": "false"
+    }
+}

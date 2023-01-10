@@ -25,3 +25,4 @@ terraform/env
 infrastructure/.lmcoenv
 .terraform*
 kube-state-metrics/
+__pycache__

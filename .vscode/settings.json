@@ -10,6 +10,7 @@
         "Hyperledger",
         "IPFS",
         "permissioned",
-        "SYSCON"
+        "SYSCON",
+        "httpx"
     ]
 }
