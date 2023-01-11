@@ -8,6 +8,11 @@ LABEL org.opencontainers.image.title="Storefront for fictitious e-commerce site.
 LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
+ARG HTTP_PROXY=
+ARG HTTPS_PROXY=
+ARG http_proxy=
+ARG https_proxy=
+
 RUN python3 -m pip --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org install flask
 
 WORKDIR /app
