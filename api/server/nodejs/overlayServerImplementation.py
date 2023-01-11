@@ -65,6 +65,8 @@ def getReplacementExpression(arg):
 
     if arg == "formData" or arg == "body":
         retVal = "sed 's|{{" + arg + "}}|\"${tmpfileName}\"|g'"
+    elif arg == "relationshipBody" or arg == "nodeBody":
+        retVal = "sed 's|{{" + arg + "}}|\"${JSON.stringify(arg)}\"|g'"
 
     return retVal
 

@@ -446,7 +446,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "body",
+            "name": "relationshipBody",
             "description": "Relationship to be established",
             "required": true,
             "schema": {
@@ -478,7 +478,7 @@
         "parameters": [
           {
             "in": "body",
-            "name": "body",
+            "name": "nodeBody",
             "description": "Node to be created",
             "required": true,
             "schema": {
