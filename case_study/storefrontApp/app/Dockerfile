@@ -1,9 +1,12 @@
 FROM python:3.11.0b3-slim-bullseye AS builder
 
-ARG HTTP_PROXY=http://proxy-zsgov.external.lmco.com:80
-ARG HTTPS_PROXY=http://proxy-zsgov.external.lmco.com:80
-ARG http_proxy=http://proxy-zsgov.external.lmco.com:80
-ARG https_proxy=http://proxy-zsgov.external.lmco.com:80
+LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
+LABEL org.opencontainers.image.description="Microservice for a case study of using ChaordicLedger during development."
+LABEL org.opencontainers.image.revision="0.0.1"
+LABEL org.opencontainers.image.source="https://github.com/lmco/ChaordicLedger"
+LABEL org.opencontainers.image.title="Storefront for ficticious e-commerce site."
+LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
+LABEL org.opencontainers.image.version="0.0.1"
 
 RUN python3 -m pip --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org install flask
 
