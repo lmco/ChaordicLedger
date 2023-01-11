@@ -225,7 +225,7 @@ jobs:
     env:
       IMAGE_NAME: storefront
       IMAGE_VERSION: 0.0.1
-      BUILD_DIR: case_study/storefront/app
+      BUILD_DIR: case_study/storefrontApp/app
     permissions:
       packages: write
       contents: read
