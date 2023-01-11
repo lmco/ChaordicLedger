@@ -4,7 +4,7 @@ LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
 LABEL org.opencontainers.image.description="Microservice for a case study of using ChaordicLedger during development."
 LABEL org.opencontainers.image.revision="0.0.1"
 LABEL org.opencontainers.image.source="https://github.com/lmco/ChaordicLedger"
-LABEL org.opencontainers.image.title="Storefront for ficticious e-commerce site."
+LABEL org.opencontainers.image.title="Storefront for fictitious e-commerce site."
 LABEL org.opencontainers.image.vendor="Lockheed Martin Corporation"
 LABEL org.opencontainers.image.version="0.0.1"
 
