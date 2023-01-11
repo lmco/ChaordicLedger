@@ -220,6 +220,31 @@ jobs:
         run: |
           docker push ${{ env.imageTag }}
 
+  docker-casestudy-storefront:
+    runs-on: ubuntu-latest
+    env:
+      IMAGE_NAME: storefront
+      IMAGE_VERSION: 0.0.1
+      BUILD_DIR: case_study/storefrontApp/app
+    permissions:
+      packages: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build image
+        run: |
+          imageTag=${{ env.DOCKER_REGISTRY }}/${{ env.IMAGE_NAME }}:${{ env.IMAGE_VERSION }}
+          docker build --tag $imageTag ${{ env.BUILD_DIR }}
+          echo "imageTag=${imageTag}" >> $GITHUB_ENV
+
+      - name: Log in to registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+
+      - name: Push image
+        run: |
+          docker push ${{ env.imageTag }}
+
   docker-graphjob:
     runs-on: ubuntu-latest
     env:
