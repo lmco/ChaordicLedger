@@ -44,47 +44,54 @@ def executeTest(testName: str, requestPath: str, expectedStatusCode: int, expect
         global count
         count += 1
 
-    global ledgerURL, tempdir
     if ledgerURL is not None:
-        print(f"Reporting results to ledger at {ledgerURL}.")
-        
-        allArtifactsEndpoint=f'{ledgerURL}/artifacts/listAllArtifacts'
-        r = httpx.get(allArtifactsEndpoint)
-        allArtifacts = json.loads(r.text)
-        # Find the matching requirement.
-        requirementID=testName.split("_")[0]
-        print(f'Locating requirement {requirementID}')
-        requirementIPFSName=None
-        for artifact in allArtifacts["result"]:
-            if artifact["ID"] == f'{requirementID}.requirement':
-                requirementIPFSName = artifact["IPFSName"]
-                print(f'IPFS for requirement {requirementID} is {requirementIPFSName}')
-                break
-        
-        filename=os.path.join(tempdir, f'{testName}.result')
-        with open(filename, 'w') as f:
-            f.writelines([testName, os.linesep, datetime.now(timezone.utc).isoformat(), os.linesep, "PASS!"])
-        
-        createArtifactEndpoint=f'{ledgerURL}/artifacts/createArtifact'
-
-        # Upload the result artifact.
-        resultIPFSName = None
-        with open(filename, 'rb') as f:
-            files = {'upfile': (filename, f, 'multipart/form-data')}
-            r = httpx.post(createArtifactEndpoint, files=files)
-            print(r.status_code)
-            print(r.text)
-            resultIPFSName = json.loads(r.text)["result"]["result"]["IPFSName"]
-        
-        # Relate the artifact to its parent requirement artifact.
-        createRelationshipEndpoint=f'{ledgerURL}/relationships/createRelationship'
-        print(f'Relating requirement {requirementIPFSName} to result {resultIPFSName}')
-        data = { "nodeida": f"{requirementIPFSName}", "nodeidb" : f"{resultIPFSName}"}
-        r = httpx.post(createRelationshipEndpoint, json=data)
-        print(r.status_code)
-        print(r.text)
+        uploadTestResultToLedger(testName)
 
     return r
+
+
+def uploadTestResultToLedger(testName: str):
+    global ledgerURL, tempdir
+    print(f"Reporting results to ledger at {ledgerURL}.")
+
+    allArtifactsEndpoint = f'{ledgerURL}/artifacts/listAllArtifacts'
+    r = httpx.get(allArtifactsEndpoint)
+    allArtifacts = json.loads(r.text)
+    # Find the matching requirement.
+    requirementID = testName.split("_")[0]
+    print(f'Locating requirement {requirementID}')
+    requirementIPFSName = None
+    for artifact in allArtifacts["result"]:
+        if artifact["ID"] == f'{requirementID}.requirement':
+            requirementIPFSName = artifact["IPFSName"]
+            print(
+                f'IPFS for requirement {requirementID} is {requirementIPFSName}')
+            break
+
+    filename = os.path.join(tempdir, f'{testName}.result')
+    with open(filename, 'w') as f:
+        f.writelines([testName, os.linesep, datetime.now(
+            timezone.utc).isoformat(), os.linesep, "PASS!"])
+
+    createArtifactEndpoint = f'{ledgerURL}/artifacts/createArtifact'
+
+    # Upload the result artifact.
+    resultIPFSName = None
+    with open(filename, 'rb') as f:
+        files = {'upfile': (filename, f, 'multipart/form-data')}
+        r = httpx.post(createArtifactEndpoint, files=files)
+        print(r.status_code)
+        print(r.text)
+        resultIPFSName = json.loads(r.text)["result"]["result"]["IPFSName"]
+
+    # Relate the artifact to its parent requirement artifact.
+    createRelationshipEndpoint = f'{ledgerURL}/relationships/createRelationship'
+    print(
+        f'Relating requirement {requirementIPFSName} to result {resultIPFSName}')
+    data = {"nodeida": requirementIPFSName, "nodeidb": resultIPFSName}
+    r = httpx.post(createRelationshipEndpoint, json=data)
+    print(r.status_code)
+    print(r.text)
 
 
 def doAssert(description: str, expectedValue: str, actualValue: str):
