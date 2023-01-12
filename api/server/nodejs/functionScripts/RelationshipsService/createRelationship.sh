@@ -8,7 +8,8 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 
 friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 
-filename=${friendlyName}_relationship.json
+filename={{body}}
+#filename=${friendlyName}_relationship.json
 echo '{{body}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 content=$(cat $filename | sed 's|"|\\"|g')

@@ -9,13 +9,21 @@
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/org1-admin-cli",
+    "copyToTarget": {
+      "src": "body",
+      "dst": "org1-admin-cli"
+    }
   },
   "createRelationship": {
     "script": "createRelationship.sh",
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/org1-admin-cli",
+    "copyToTarget": {
+      "src": "body",
+      "dst": "org1-admin-cli"
+    }
   }
 }
