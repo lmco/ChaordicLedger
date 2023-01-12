@@ -16,11 +16,9 @@ globalCart = []
 def index():
   return 'Storefront is ready!'
 
-
 @app.route('/health')
 def health():
   return 'Storefront is healthy!'
-
 
 @app.route('/reset')
 def reset():
