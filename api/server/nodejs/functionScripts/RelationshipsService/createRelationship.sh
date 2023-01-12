@@ -27,4 +27,6 @@ result=$(peer chaincode \
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
+rm $filename
+
 echo "{ \"operation\" : \"createRelationship\", \"file\" : \"$filename\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"

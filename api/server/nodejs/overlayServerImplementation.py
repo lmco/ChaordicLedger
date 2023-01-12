@@ -60,11 +60,14 @@ def validateArgs():
     return (args.inputdir, config, args.outputdir, args.outputfile, namespace)
 
 
-def getReplacementExpression(arg):
+def getReplacementExpression(arg, stringify):
     retVal = "sed 's|{{" + arg + "}}|${" + arg + "}|g'"
 
     if arg == "formData" or arg == "body":
-        retVal = "sed 's|{{" + arg + "}}|\"${tmpfileName}\"|g'"
+        if stringify:
+            retVal = "sed 's|{{" + arg + "}}|\"${JSON.stringify(" + arg + ")}\"|g'"
+        else:
+            retVal = "sed 's|{{" + arg + "}}|\"${tmpfileName}\"|g'"
 
     return retVal
 
@@ -108,12 +111,16 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             functionParams = []
             functionExpressions = []
             divider = ""
+            stringify=False
+            if "stringifyParameters" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":
+                stringify = True
+
             if "parameters" in mapfile[key]:
                 functionParams = mapfile[key]["parameters"]
                 log.info('Parameters for operation "%s" are "%s"',
                          key, functionParams)
                 for param in functionParams:
-                    functionExpressions.append(getReplacementExpression(param))
+                    functionExpressions.append(getReplacementExpression(param, stringify))
                     divider = " | "
 
             directResult = False

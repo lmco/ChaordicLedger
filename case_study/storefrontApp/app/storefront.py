@@ -488,21 +488,24 @@ def productReviews():
       ]
   }
 
+
 @app.route('/financingOptions')
 def financingOptions():
   return [
-        "A credit union",
-        "A bank",
-        "A loan shark",
-        "Predatory loans"
-    ]
+      "A credit union",
+      "A bank",
+      "A loan shark",
+      "Predatory loans"
+  ]
+
 
 @app.route('/promotions')
 def promotions():
   return [
-        "Buy one fishing rod, get one half off!",
-        "Buy two coffee mugs, get the third for half off!"
-    ]
+      "Buy one fishing rod, get one half off!",
+      "Buy two coffee mugs, get the third for half off!"
+  ]
+
 
 if __name__ == '__main__':
 	app.run(host='0.0.0.0', port=50000)

@@ -9,13 +9,15 @@
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/org1-admin-cli",
+    "stringifyParameters": "true"
   },
   "createRelationship": {
     "script": "createRelationship.sh",
     "parameters": [
       "body"
     ],
-    "target": "deploy/org1-admin-cli"
+    "target": "deploy/org1-admin-cli",
+    "stringifyParameters": "true"
   }
 }
