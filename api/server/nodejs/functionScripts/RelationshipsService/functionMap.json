@@ -10,10 +10,7 @@
       "body"
     ],
     "target": "deploy/org1-admin-cli",
-    "copyToTarget": {
-      "src": "body",
-      "dst": "org1-admin-cli"
-    }
+    "stringifyParameters": "true"
   },
   "createRelationship": {
     "script": "createRelationship.sh",
@@ -21,9 +18,6 @@
       "body"
     ],
     "target": "deploy/org1-admin-cli",
-    "copyToTarget": {
-      "src": "body",
-      "dst": "org1-admin-cli"
-    }
+    "stringifyParameters": "true"
   }
 }

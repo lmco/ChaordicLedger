@@ -42,7 +42,7 @@ fi
 # duration=$(( end - start ))
 
 # Remove source file
-#rm $filename
+rm $filename
 
 # Remove results file
 #rm $resultfile

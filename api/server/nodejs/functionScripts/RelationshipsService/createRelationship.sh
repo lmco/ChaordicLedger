@@ -8,8 +8,7 @@ export CORE_PEER_ADDRESS=org1-peer1:7051
 
 friendlyName=$(date -u +%Y%m%dT%H%M%SZ)
 
-filename={{body}}
-#filename=${friendlyName}_relationship.json
+filename=${friendlyName}_relationship.json
 echo '{{body}}' | sed 's:^.\(.*\).$:\1:' > $filename
 
 content=$(cat $filename | sed 's|"|\\"|g')
@@ -27,5 +26,7 @@ result=$(peer chaincode \
 #end=$(date +%s%N)
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
+
+rm $filename
 
 echo "{ \"operation\" : \"createRelationship\", \"file\" : \"$filename\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"
