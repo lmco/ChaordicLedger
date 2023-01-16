@@ -87,13 +87,13 @@ pwd
 ls -l
 ./network purge &&
 ./network init &&
-./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
-./network channel 2 &&
-./network peer &&
+./network msp 2 1 1 && # msp OrgCount OrdererCount PeerCount
+./network channel 2 && # channel OrgCount
+./network peer 1 1 &&  # peer OrdererCount PeerCount
 ./network ipfs &&
 ./network graphinit &&
 ./network graphprocessor &&
-./network chaincode
+./network chaincode 1 1 # chaincode OrgCount PeerCount
 
 syslog "Invoking metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'

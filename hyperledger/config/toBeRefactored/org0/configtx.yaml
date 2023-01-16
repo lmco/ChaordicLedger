@@ -37,8 +37,8 @@ Organizations:
 
     OrdererEndpoints:
       - org0-orderer1:6050
-      - org0-orderer2:6050
-      - org0-orderer3:6050
+      # - org0-orderer2:6050
+      # - org0-orderer3:6050
 
   - &Org1
     # DefaultOrg defines the organization which is used in the sampleconfig
@@ -75,39 +75,39 @@ Organizations:
       - Host: org1-peer1
         Port: 7051
 
-  - &Org2
-    # DefaultOrg defines the organization which is used in the sampleconfig
-    # of the fabric.git development environment
-    Name: Org2MSP
+  # - &Org2
+  #   # DefaultOrg defines the organization which is used in the sampleconfig
+  #   # of the fabric.git development environment
+  #   Name: Org2MSP
 
-    # ID to load the MSP definition as
-    ID: Org2MSP
+  #   # ID to load the MSP definition as
+  #   ID: Org2MSP
 
-    MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp
+  #   MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp
 
-    # Policies defines the set of policies at this level of the config tree
-    # For organization policies, their canonical path is usually
-    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
-    Policies:
-      Readers:
-        Type: Signature
-        Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
-      Writers:
-        Type: Signature
-        Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
-      Admins:
-        Type: Signature
-        Rule: "OR('Org2MSP.admin')"
-      Endorsement:
-        Type: Signature
-        Rule: "OR('Org2MSP.peer')"
+  #   # Policies defines the set of policies at this level of the config tree
+  #   # For organization policies, their canonical path is usually
+  #   #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+  #   Policies:
+  #     Readers:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+  #     Writers:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+  #     Admins:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin')"
+  #     Endorsement:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.peer')"
 
-    AnchorPeers:
-      # AnchorPeers defines the location of peers which can be used
-      # for cross org gossip communication.  Note, this value is only
-      # encoded in the genesis block in the Application section context
-      - Host: org2-peer1
-        Port: 7051
+  #   AnchorPeers:
+  #     # AnchorPeers defines the location of peers which can be used
+  #     # for cross org gossip communication.  Note, this value is only
+  #     # encoded in the genesis block in the Application section context
+  #     - Host: org2-peer1
+  #       Port: 7051
 
 ################################################################################
 #
@@ -194,10 +194,12 @@ Application: &ApplicationDefaults
       Rule: "MAJORITY Admins"
     LifecycleEndorsement:
       Type: Signature
-      Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
+      Rule: "OR('Org1MSP.peer')"
+      #Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
     Endorsement:
       Type: Signature
-      Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
+      Rule: "OR('Org1MSP.peer')"
+      #Rule: "OR('Org1MSP.peer','Org2MSP.peer')"
 
   Capabilities:
     <<: *ApplicationCapabilities
@@ -220,14 +222,14 @@ Orderer: &OrdererDefaults
         Port: 6050
         ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
         ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
-      - Host: org0-orderer2
-        Port: 6050
-        ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
-        ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
-      - Host: org0-orderer3
-        Port: 6050
-        ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
-        ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+      # - Host: org0-orderer2
+      #   Port: 6050
+      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+      # - Host: org0-orderer3
+      #   Port: 6050
+      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
 
 
     # Options to be specified for all the etcd/raft nodes. The values here
@@ -353,7 +355,7 @@ Profiles:
       <<: *ApplicationDefaults
       Organizations:
         - *Org1
-        - *Org2
+        #- *Org2
       Capabilities: *ApplicationCapabilities
 
 
@@ -378,7 +380,7 @@ Profiles:
       SampleConsortium:
         Organizations:
           - *Org1
-          - *Org2
+          #- *Org2
   TwoOrgsChannel:
     Consortium: SampleConsortium
     <<: *ChannelDefaults
@@ -386,7 +388,7 @@ Profiles:
       <<: *ApplicationDefaults
       Organizations:
         - *Org1
-        - *Org2
+        #- *Org2
       Capabilities:
         <<: *ApplicationCapabilities
   Org1Channel:
@@ -398,12 +400,12 @@ Profiles:
         - *Org1
       Capabilities:
         <<: *ApplicationCapabilities
-  Org2Channel:
-    Consortium: SampleConsortium
-    <<: *ChannelDefaults
-    Application:
-      <<: *ApplicationDefaults
-      Organizations:
-        - *Org2
-      Capabilities:
-        <<: *ApplicationCapabilities
+  # Org2Channel:
+  #   Consortium: SampleConsortium
+  #   <<: *ChannelDefaults
+  #   Application:
+  #     <<: *ApplicationDefaults
+  #     Organizations:
+  #       - *Org2
+  #     Capabilities:
+  #       <<: *ApplicationCapabilities
