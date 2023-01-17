@@ -1,0 +1,97 @@
+################################################################################
+#
+#   SECTION: Orderer
+#
+#   - This section defines the values to encode into a config transaction or
+#   genesis block for orderer related parameters
+#
+################################################################################
+Orderer: &OrdererDefaults
+
+  # Orderer Type: The orderer implementation to start
+  OrdererType: etcdraft
+
+  EtcdRaft:
+    Consenters:
+      - Host: org0-orderer1
+        Port: 6050
+        ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
+        ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer1.org0.example.com/tls/signcerts/cert.pem
+      # - Host: org0-orderer2
+      #   Port: 6050
+      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer2.org0.example.com/tls/signcerts/cert.pem
+      # - Host: org0-orderer3
+      #   Port: 6050
+      #   ClientTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+      #   ServerTLSCert: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/orderers/org0-orderer3.org0.example.com/tls/signcerts/cert.pem
+
+
+    # Options to be specified for all the etcd/raft nodes. The values here
+    # are the defaults for all new channels and can be modified on a
+    # per-channel basis via configuration updates.
+    Options:
+      # TickInterval is the time interval between two Node.Tick invocations.
+      #TickInterval: 500ms default
+      TickInterval: 2500ms
+
+      # ElectionTick is the number of Node.Tick invocations that must pass
+      # between elections. That is, if a follower does not receive any
+      # message from the leader of current term before ElectionTick has
+      # elapsed, it will become candidate and start an election.
+      # ElectionTick must be greater than HeartbeatTick.
+      # ElectionTick: 10 default
+      ElectionTick: 5
+
+      # HeartbeatTick is the number of Node.Tick invocations that must
+      # pass between heartbeats. That is, a leader sends heartbeat
+      # messages to maintain its leadership every HeartbeatTick ticks.
+      HeartbeatTick: 1
+
+      # MaxInflightBlocks limits the max number of in-flight append messages
+      # during optimistic replication phase.
+      MaxInflightBlocks: 5
+
+      # SnapshotIntervalSize defines number of bytes per which a snapshot is taken
+      SnapshotIntervalSize: 16 MB
+
+  # Batch Timeout: The amount of time to wait before creating a batch
+  BatchTimeout: 2s
+
+  # Batch Size: Controls the number of messages batched into a block
+  BatchSize:
+
+    # Max Message Count: The maximum number of messages to permit in a batch
+    MaxMessageCount: 10
+
+    # Absolute Max Bytes: The absolute maximum number of bytes allowed for
+    # the serialized messages in a batch.
+    AbsoluteMaxBytes: 99 MB
+
+    # Preferred Max Bytes: The preferred maximum number of bytes allowed for
+    # the serialized messages in a batch. A message larger than the preferred
+    # max bytes will result in a batch larger than preferred max bytes.
+    PreferredMaxBytes: 512 KB
+
+  # Organizations is the list of orgs which are defined as participants on
+  # the orderer side of the network
+  Organizations:
+
+  # Policies defines the set of policies at this level of the config tree
+  # For Orderer policies, their canonical path is
+  #   /Channel/Orderer/<PolicyName>
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    # BlockValidation specifies what signatures must be included in the block
+    # from the orderer for the peer to validate it.
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"

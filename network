@@ -76,7 +76,7 @@ elif [ "${MODE}" == "monitor" ]; then
   sourceProxyDetails
   syslog "Enabling monitoring"
   pushd monitoring/scripts
-  #enable_monitoring
+  enable_monitoring
   popd
   syslog "🏁 - Monitoring is ready."
 elif [ "${MODE}" == "ipfs" ]; then
