@@ -1,0 +1,8 @@
+[
+    "organizations.yaml",
+    "capabilities.yaml",
+    "application.yaml",
+    "orderer.yaml",
+    "channel.yaml",
+    "profiles.yaml"
+]

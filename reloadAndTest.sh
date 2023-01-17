@@ -2,6 +2,8 @@
 timestamp=$(date -u '+%Y%m%dT%H%M%SZ')
 outdirRoot=/tmp/cleval_${timestamp}
 
+export CL_MONITOR="true"
+
 echo "[${timestamp}] Output dir is ${outdirRoot}"
 
 logdir=${outdirRoot}/logs

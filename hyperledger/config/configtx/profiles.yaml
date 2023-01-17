@@ -1,0 +1,76 @@
+################################################################################
+#
+#   Profile
+#
+#   - Different configuration profiles may be encoded here to be specified
+#   as parameters to the configtxgen tool
+#
+################################################################################
+Profiles:
+
+  # test network profile with application (not system) channel.
+  TwoOrgsApplicationGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities: *OrdererCapabilities
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        #- *Org2
+      Capabilities: *ApplicationCapabilities
+
+
+  #
+  # Unclear lineage for these profiles:  nano-fab?
+  #
+  # TwoOrgsOrdererGenesis will construct a system channel as it has a Consortiums stanza, which is not
+  # compatible with osnadmin.
+  #
+  # @enyeart - which profile should be used for the kube test network?
+  #
+  TwoOrgsOrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      OrdererType: etcdraft
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      SampleConsortium:
+        Organizations:
+          - *Org1
+          #- *Org2
+  TwoOrgsChannel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+        #- *Org2
+      Capabilities:
+        <<: *ApplicationCapabilities
+  Org1Channel:
+    Consortium: SampleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Org1
+      Capabilities:
+        <<: *ApplicationCapabilities
+  # Org2Channel:
+  #   Consortium: SampleConsortium
+  #   <<: *ChannelDefaults
+  #   Application:
+  #     <<: *ApplicationDefaults
+  #     Organizations:
+  #       - *Org2
+  #     Capabilities:
+  #       <<: *ApplicationCapabilities

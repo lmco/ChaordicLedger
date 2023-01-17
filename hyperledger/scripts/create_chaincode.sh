@@ -56,45 +56,26 @@ function transfer_chaincode_archive_for() {
   tar cf - ${cc_archive} | kubectl -n $NS exec -i deploy/${org}-admin-cli -c main -- tar xvf -
 }
 
-function install_chaincode_for() {
-  local org=$1
-  local peer=$2
-  local ccname=$3
-  syslog "Installing chaincode ${ccname} for ${org} ${peer}"
-
-  # Install the chaincode
-  echo 'set -x
-  export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
-  peer lifecycle chaincode install build/chaincode/'${ccname}'.tgz
-  ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
-
-  # local org=$1
-  # local peer=$2
-  # echo "Installing chaincode for org ${org} peer ${peer}"
-
-  # # Install the chaincode
-  # echo 'set -x
-  # export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
-  # peer lifecycle chaincode install '${CHAINCODE_NAME}'.tgz
-  # ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
-
-  # # # Install the chaincode
-  # # echo 'set -x
-  # # export CORE_PEER_ADDRESS='${org}'-'${peer}':7051
-  # # peer lifecycle chaincode install '${CHAINCODE_TMP_DIR}'/build/'${CHAINCODE_NAME}'.tgz
-  # # ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
-}
-
-
 # Package and install the chaincode, but do not activate.
 function install_chaincode() {
-  local org=org1
-  local ccname=$1
+  local org=org$1
+  local peercount=$2
+  local ccname=$3
+
+  syslog "install_chaincode ${org} ${peercount} ${ccname}"
 
   package_chaincode_for ${org} ${ccname}
   transfer_chaincode_archive_for ${org} ${ccname}
-  install_chaincode_for ${org} peer1 ${ccname}
-  install_chaincode_for ${org} peer2 ${ccname}
+
+  local i=1
+  for (( ; i<=${peercount}; i++))
+  do
+    # Install the chaincode
+    echo 'set -x
+    export CORE_PEER_ADDRESS='${org}'-peer'${i}':7051
+    peer lifecycle chaincode install build/chaincode/'${ccname}'.tgz
+    ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -c main -i -- /bin/bash
+  done
 
   set_chaincode_id ${ccname}
 }
@@ -116,7 +97,7 @@ function launch_chaincode_service() {
   export PEER_NAME=$2
   local ccimage=$3
   local ccname=$4
-  syslog "Launching chaincode container \"${ccimage}\""
+  syslog "Launching chaincode container \"${ccimage}\" for ${org} ${PEER_NAME} ${ccname}"
 
   # The chaincode endpoint needs to have the generated chaincode ID available in the environment.
   # This could be from a config map, a secret, or by directly editing the deployment spec.  Here we'll keep
@@ -132,17 +113,18 @@ function launch_chaincode_service() {
 # Activate the installed chaincode but do not package/install a new archive.
 function activate_chaincode() {
   set -x
-  local ccname=$1
+  local orgname=$1
+  local ccname=$2
 
   set_chaincode_id ${ccname}
-  activate_chaincode_for org1 $CHAINCODE_ID $ccname
+  activate_chaincode_for ${orgname} $CHAINCODE_ID $ccname
 }
 
 function activate_chaincode_for() {
   local org=$1
   local cc_id=$2
   local ccname=$3
-  syslog "Activating chaincode ${cc_id}"
+  syslog "Activating chaincode ${cc_id} for ${org}"
 
   echo 'set -x 
   export CORE_PEER_ADDRESS='${org}'-peer1:7051
@@ -171,15 +153,29 @@ function activate_chaincode_for() {
 # Install, launch, and activate the chaincode
 function deploy_chaincode() {
   set -x
+  local orgcount=$1
+  local peercount=$2
+  local ccimage=$3
+  local ccname=$4
 
-  local ccimage=$1
-  local ccname=$2
+  syslog "Deploying chaincode ${orgcount} ${peercount} ${ccimage} ${ccname}"
 
-  install_chaincode ${ccname}
-  
-  launch_chaincode_service org1 peer1 ${ccimage} ${ccname}
-  #launch_chaincode_service org1 peer2 ${ccimage} ${ccname}
-  activate_chaincode ${ccname}
+  local i=1
+  local j=1
+
+  for (( ; i<=${orgcount}; i++))
+  do
+    for (( ; j<=${peercount}; j++))
+    do
+      syslog "find1: install_chaincode $i $j ${ccname}"
+      install_chaincode $i $j ${ccname} 
+      syslog "find2: launch_chaincode_service org${i} peer${j} ${ccimage} ${ccname}"
+      launch_chaincode_service org${i} peer${j} ${ccimage} ${ccname}
+    done
+
+    syslog "find3: activate_chaincode org${i} ${ccname}"
+    activate_chaincode org${i} ${ccname}
+  done
 }
 
 function invoke_chaincode() {

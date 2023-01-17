@@ -10,6 +10,7 @@ CHANNEL_TMP_DIR=${TEMP_DIR}/channel
 mkdir -p ${CHANNEL_TMP_DIR}
 
 function launch_admin_clis() {
+  local orgcount=$1
   syslog "Launching admin CLIs"
 
   local i="0"
@@ -32,7 +33,7 @@ function launch_admin_clis() {
 
   kubectl -n $NS rollout status deploy/org${i}-admin-cli
 
-  for ((i=1; i<=${orgcount}; i++))
+  for ((i=1; i<${orgcount}; i++))
   do
     local admin_cli_config=$CHANNEL_TMP_DIR/org${i}-admin-cli.template.yaml
 
@@ -59,7 +60,7 @@ function aggregate() {
 
   kubectl -n $NS exec deploy/org0-ca -- tar zcvf - -C /var/hyperledger/fabric organizations/ordererOrganizations/org0.example.com/msp > $CHANNEL_TMP_DIR/build/msp/msp-org0.example.com.tgz
 
-  for ((i=1; i<=${orgcount}; i++))
+  for ((i=1; i<${orgcount}; i++))
   do
     kubectl -n $NS exec deploy/org${i}-ca -- tar zcvf - -C /var/hyperledger/fabric organizations/peerOrganizations/org${i}.example.com/msp > $CHANNEL_TMP_DIR/build/msp/msp-org${i}.example.com.tgz
   done
@@ -104,16 +105,18 @@ function create_channel_for_org() {
 
 # TODO: Needs to be genericized
 function create_genesis_block() {
+  local orgcount=$1
+
   syslog "Creating channel \"${CHANNEL_NAME}\""
 
   echo 'set -x
   configtxgen -profile TwoOrgsApplicationGenesis -channelID '${CHANNEL_NAME}' -outputBlock genesis_block.pb
   # configtxgen -inspectBlock genesis_block.pb
   
-  osnadmin channel join --orderer-address org0-orderer1:9443 --channelID '${CHANNEL_NAME}' --config-block genesis_block.pb
-  osnadmin channel join --orderer-address org0-orderer2:9443 --channelID '${CHANNEL_NAME}' --config-block genesis_block.pb
-  osnadmin channel join --orderer-address org0-orderer3:9443 --channelID '${CHANNEL_NAME}' --config-block genesis_block.pb
-  
+  for ((i=1; i<'${orgcount}'; i++))
+  do
+    osnadmin channel join --orderer-address org0-orderer${i}:9443 --channelID '${CHANNEL_NAME}' --config-block genesis_block.pb
+  done
   ' | exec kubectl -n $NS exec deploy/org0-admin-cli -i -- /bin/bash
   
   sleep 10
@@ -133,26 +136,30 @@ function join_org_peers()
   # TODO: Refactor to not assume two peers per org
   syslog "Joining peers in ${org} to channel \"${CHANNEL_NAME}\""
   echo 'set -x
-  # Join peer2 to the channel.
-  echo "Joining '${org}' peer 2 to channel '${CHANNEL_NAME}'"
-  export CORE_PEER_ADDRESS='${org}'-peer2:7051
-  peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
 
-  # Join peer1 to the channel.
-  echo "Joining '${org}' peer 1 to channel '${CHANNEL_NAME}'"
-  export CORE_PEER_ADDRESS='${org}'-peer1:7051
-  peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+  for ((i=1; i<='${peer}'; i++))
+  do
+    # Join peer to the channel.
+    echo "Joining '${org}' peer ${i} to channel '${CHANNEL_NAME}'"
+    export CORE_PEER_ADDRESS="'${org}'-peer${i}:7051"
+    peer channel join -b genesis_block.pb -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem
+  done
 
   ' | exec kubectl -n $NS exec deploy/${org}-admin-cli -i -- /bin/bash
 }
 
 function channel_init()
 {
-  orgcount=$1
+  local orgcount=$1
 
   create_channel_for_org org0 orderer
-  create_channel_for_org org1 peer
-  create_channel_for_org org2 peer
+
+  local i=1
+  for (( ; i<${orgcount}; i++))
+  do
+    create_channel_for_org "org${i}" peer
+  done
+
   aggregate $orgcount
   launch_admin_clis $orgcount
   create_genesis_block $orgcount
@@ -160,7 +167,19 @@ function channel_init()
 
 function channel_join()
 {
-  join_org_peers org1
+  local orgcount=$1
+  local peercount=$2
+
+  local i=1
+  local j=1
+
+  for (( ; i<=${orgcount}; i++))
+  do
+    for (( ; j<=${peercount}; j++))
+    do
+      join_org_peers "org${i}" ${j}
+    done
+  done
 
   # TODO: Currently org1-peer1 and org1-peer2 connect and get the genesis block, but org2-peer* fail because org2-admin-cli cannot get the genesis block.
   #   peer channel fetch oldest genesis_block.pb -c cl -o org0-orderer1:6050 --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem

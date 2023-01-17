@@ -124,20 +124,13 @@ elif [ "${MODE}" == "chaincode" ]; then
   sourceProxyDetails
   pushd hyperledger/scripts
   # This images are already in the kind cluster's registry, just need to reference them.
-  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
-  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}
-  deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/relationship-chaincode:v0.0.0" ${ARTIFACT_RELATIONSHIP_CCNAME}
-  #deploy_chaincode "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
+  deploy_chaincode $@ "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/metadata-chaincode:v0.0.0" ${ARTIFACT_METADATA_CCNAME}
+  deploy_chaincode $@ "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/content-chaincode:v0.0.0" ${ARTIFACT_CONTENT_CCNAME}
+  deploy_chaincode $@ "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/relationship-chaincode:v0.0.0" ${ARTIFACT_RELATIONSHIP_CCNAME}
+  #deploy_chaincode $@ "${DOCKER_REGISTRY_PROXY}${GHCR_IO}lmco/chaordicledger/obsidian-lightswitch:v0.0.0" ${LIGHTSWITCH_CCNAME}
   popd
 
   syslog "🏁 - Chaincode deployed."
-elif [ "${MODE}" == "redeploy" ]; then
-  syslog "Redeploying chaincode $@"
-  pushd hyperledger/scripts
-  export CHAINCODE_ID=basic_1.0:0262396ccaffaa2174bc09f750f742319c4f14d60b16334d2c8921b6842c090c
-  launch_chaincode_service $@
-  popd
-  syslog "🏁 - Chaincode redeployed."
 elif [ "${MODE}" == "invoke" ]; then
   syslog "Invoking chaincode \"$1\""
   pushd hyperledger/scripts

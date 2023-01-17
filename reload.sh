@@ -87,13 +87,13 @@ pwd
 ls -l
 ./network purge &&
 ./network init &&
-./network msp 3 3 2 && # msp OrgCount OrdererCount PeerCount
-./network channel 2 &&
-./network peer &&
+./network msp 2 1 1 && # msp OrgCount OrdererCount PeerCount
+./network channel 2 && # channel OrgCount
+./network peer 1 1 &&  # peer OrdererCount PeerCount
 ./network ipfs &&
 ./network graphinit &&
 ./network graphprocessor &&
-./network chaincode
+./network chaincode 1 1 # chaincode OrgCount PeerCount
 
 syslog "Invoking metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
@@ -135,35 +135,38 @@ popd
 syslog "Waiting for the API server to start."
 sleep 10
 
-./network monitor
+if [ "$CL_MONITOR" == "true" ];
+then
+  ./network monitor
 
-syslog "Deploying dashboard"
-kubectl apply -f dashboards/kubernetes/recommended.yaml
-kubectl apply -f metrics/components.yaml
-kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
+  syslog "Deploying dashboard"
+  kubectl apply -f dashboards/kubernetes/recommended.yaml
+  kubectl apply -f metrics/components.yaml
+  kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
 
-syslog "Creating service account for dashboard"
-kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
+  syslog "Creating service account for dashboard"
+  kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
 
-# TODO: This may not be necessary.
-#syslog "Creating access token for service account"
-#kubectl -n kubernetes-dashboard create token admin-user
+  # TODO: This may not be necessary.
+  #syslog "Creating access token for service account"
+  #kubectl -n kubernetes-dashboard create token admin-user
 
-kubectl create serviceaccount dashboard-admin-sa
-kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
-kubectl create token dashboard-admin-sa
+  kubectl create serviceaccount dashboard-admin-sa
+  kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+  kubectl create token dashboard-admin-sa
 
-# kubectl apply -f dashboards/kubernetes/recommended.yaml --enable-skip-login &&
-# kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
+  # kubectl apply -f dashboards/kubernetes/recommended.yaml --enable-skip-login &&
+  # kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
 
-syslog "Starting kubectl proxy."
-nohup kubectl proxy > kubectl_proxy.log 2>&1 &
+  syslog "Starting kubectl proxy."
+  nohup kubectl proxy > kubectl_proxy.log 2>&1 &
 
-rm -rf kube-state-metrics
-git clone https://github.com/kubernetes/kube-state-metrics.git
-cd kube-state-metrics
-kubectl apply -f examples/standard
-#Or?: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+  rm -rf kube-state-metrics
+  git clone https://github.com/kubernetes/kube-state-metrics.git
+  cd kube-state-metrics
+  kubectl apply -f examples/standard
+  #Or?: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+fi
 
 syslog "Getting the current graph state."
 currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraph')
@@ -201,5 +204,4 @@ syslog "View the Elastic dashboard at http://localhost:5601/"
 syslog "View the Elastic Metrics Inventory at http://localhost:5601/app/metrics/inventory and select the metricbeat item"
 syslog "View the Elastic Metrics Explorer at http://localhost:5601/app/metrics/explorer?metricsExplorer"
 syslog "View the ChaordicLedger metrics at http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/#/pod?namespace=chaordicledger"
-syslog "Note: Reveal the Kubernetes Dashboard login token with ./revealLoginToken.sh"
 syslog "Done initializing the system in $duration seconds."
