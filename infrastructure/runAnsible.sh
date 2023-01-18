@@ -2,9 +2,11 @@
 
 set -e
 
-export ANSIBLE_HOST_KEY_CHECKING=false
+. .ansibleEnvfile
 
-playbooks=("prerequisites" "tools" "chaordicledger")
+export repo_dir="$( cd -- "$( dirname -- "${BASH_SOURCE[0]:-$0}"; )/.." &> /dev/null && pwd 2> /dev/null; )";
+#playbooks=("prerequisites" "tools" "chaordicledger")
+playbooks=("chaordicledger")
 
 for playbook in ${playbooks[@]}; do
   ansible-playbook ansible/roles/${playbook}.yml \

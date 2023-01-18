@@ -90,10 +90,7 @@ fi
 
 export ADDITIONAL_CA_CERTS_LOCATION="${PWD}/test/cachain/"
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
-<<<<<<< HEAD
-=======
 cd $BASEDIR
->>>>>>> origin/main
 
 syslog "Initializing the system."
 pwd
