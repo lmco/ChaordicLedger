@@ -53,6 +53,12 @@ mkdir -p hyperledger/admin-cli/cachain/
 mkdir -p test/cachain/
 
 syslog "Loading corporate Certificate Authority certificates where necessary."
+pushd LMChain
+for file in *.cer; do 
+    mv -- "$file" "${file%.cer}.crt"
+done
+popd
+
 cp LMChain/* api/builder/cachain/
 cp LMChain/* api/server/cachain/
 cp LMChain/* chaincode/artifact-metadata/docker/cachain/
