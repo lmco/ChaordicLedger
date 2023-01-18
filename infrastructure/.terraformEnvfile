@@ -8,8 +8,6 @@ then
     echo "Sourcing Terraform Infrastructure as Code (IaC) environment file."
 fi
 
-if [ -z ${OS_PASSWORD_INPUT+x} ]; then echo "OS_PASSWORD_INPUT is unset! Set the value with 'read -s OS_PASSWORD_INPUT' and source this file again. Exiting."; return 1; fi
-
 #!/usr/bin/env bash
 # To use an OpenStack cloud you need to authenticate against the Identity
 # service named keystone, which returns a **Token** and **Service Catalog**.
@@ -51,8 +49,6 @@ export OS_IDENTITY_API_VERSION=3
 #get infrastructure folder path
 export TF_VAR_ROOT_FOLDER="$(cd "$(dirname "${BASH_SOURCE[0]}")" > /dev/null && pwd)"
 
-export TERRAFORM_TMP_PATH="/tmp/chaordicledger/terraform"
-export TF_VAR_inventoryFile="$TERRAFORM_TMP_PATH/chaordicledgerhosts_inventory.yml"
 export TERRAFORM_PLAN_FILE="$TERRAFORM_TMP_PATH/tf.plan"
 
 # Packer variables
