@@ -8,7 +8,7 @@ function syslog() {
 pushd infrastructure
 
 syslog "Establishing resources via Terraform"
-#./runTerraform.sh
+./runTerraform.sh
 
 syslog "Establishing platform via Ansible"
 ./runAnsible.sh
