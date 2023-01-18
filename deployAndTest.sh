@@ -1,4 +1,4 @@
-#/bin/sh
+#/bin/bash
 
 function syslog() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
@@ -8,7 +8,7 @@ function syslog() {
 pushd infrastructure
 
 syslog "Establishing resources via Terraform"
-./runTerraform.sh
+#./runTerraform.sh
 
 syslog "Establishing platform via Ansible"
 ./runAnsible.sh

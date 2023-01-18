@@ -43,6 +43,15 @@
         dest: '{{ remote_repo_dir }}/githubReadToken.sh'
         mode: '0555'
 
+    - name: List directory
+      args:
+        chdir: '{{ remote_repo_dir }}'
+      command: ls -rotl
+      register: results
+
+    - debug:
+        var: results.stdout_lines
+
     - name: Execute the reload script.
       args:
         chdir: '{{ remote_repo_dir }}'

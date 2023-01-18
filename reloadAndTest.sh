@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/bash
 timestamp=$(date -u '+%Y%m%dT%H%M%SZ')
 outdirRoot=/tmp/cleval_${timestamp}
 
