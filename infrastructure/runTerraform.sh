@@ -3,7 +3,9 @@
 set -e
 
 . .lmcoenv
-. .envfile
+. .terraformEnvfile
+
+if [ -z ${OS_PASSWORD_INPUT+x} ]; then echo "OS_PASSWORD_INPUT is unset! Set the value with 'read -s pw;exportOS_PASSWORD_INPUT=\$pw' and source this file again. Exiting."; return 1; fi
 
 pushd terraform
 

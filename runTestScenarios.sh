@@ -25,33 +25,33 @@ pushd scenarios
 ./generatedArtifacts/createOneArtifact.sh
 waitForSeconds 60
 
-pushd industrial/gpsExample
- ./gpsExample.sh
-popd
-waitForSeconds 60
+# pushd industrial/gpsExample
+#  ./gpsExample.sh
+# popd
+# waitForSeconds 60
 
-pushd industrial/salesSystem
- ./salesSystem.sh
-popd
-waitForSeconds 60
+# pushd industrial/salesSystem
+#  ./salesSystem.sh
+# popd
+# waitForSeconds 60
 
-./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
-waitForSeconds 60
+# ./generatedArtifacts/createTenRandomlyRelatedArtifacts.sh
+# waitForSeconds 60
 
-./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
-waitForSeconds 60
+# ./generatedArtifacts/createTwentyRandomlyRelatedArtifacts.sh
+# waitForSeconds 60
 
-./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
-waitForSeconds 60
+# ./generatedArtifacts/createOneHundredRandomlyRelatedArtifacts.sh
+# waitForSeconds 60
 
-./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
-waitForSeconds 60
+# ./generatedArtifacts/createTwoHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
+# waitForSeconds 60
 
-./generatedArtifacts/createOneThousandUnrelatedArtifactsOfFixedSize.sh
-waitForSeconds 60
+# ./generatedArtifacts/createOneThousandUnrelatedArtifactsOfFixedSize.sh
+# waitForSeconds 60
 
-./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
-waitForSeconds 60
+# ./generatedArtifacts/createFiveHundredRandomlyRelatedArtifactsOfVaryingSizes.sh
+# waitForSeconds 60
 
 #./testCleanup.sh
 
