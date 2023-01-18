@@ -85,6 +85,12 @@ function load_org_config() {
     # TODO: Perform this refactoring after this is confirmed working.
     cp ../config/toBeRefactored/org${i}/*.yaml ${dir}
 
+    if [ "$i" -eq "0" ]
+    then
+      # Only need this for Org0
+      python3 ./concatenator.py -i ../config/configtx -o ${dir}/configtx.yaml
+    fi
+
     kubectl -n $NS create configmap org${i}-config --from-file=${dir} -o yaml --dry-run=client | kubectl apply -f -
   done
 }

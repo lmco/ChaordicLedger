@@ -47,8 +47,8 @@ if __name__ == "__main__":
         session.close()
 
         for relation in inputMap[file]:
-            sourceName = responseMap[file]["IPFSName"]
-            targetName = responseMap[relation]["IPFSName"]
+            sourceName = responseMap[file]["result"]["IPFSName"]
+            targetName = responseMap[relation]["result"]["IPFSName"]
             print(
                 f"Submitting relationship between \"{file}\" (\"{sourceName}\") and \"{relation}\" (\"{targetName}\") to {relationshipUrl}.")
 

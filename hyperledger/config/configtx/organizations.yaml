@@ -1,0 +1,110 @@
+################################################################################
+#
+#   Section: Organizations
+#
+#   - This section defines the different organizational identities which will
+#   be referenced later in the configuration.
+#
+################################################################################
+Organizations:
+
+  # SampleOrg defines an MSP using the sampleconfig.  It should never be used
+  # in production but may be used as a template for other definitions
+  - &OrdererOrg
+    # DefaultOrg defines the organization which is used in the sampleconfig
+    # of the fabric.git development environment
+    Name: OrdererOrg
+
+    # ID to load the MSP definition as
+    ID: OrdererMSP
+
+    # MSPDir is the filesystem path which contains the MSP configuration
+    MSPDir: /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp
+
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+
+    OrdererEndpoints:
+      - org0-orderer1:6050
+      # - org0-orderer2:6050
+      # - org0-orderer3:6050
+
+  - &Org1
+    # DefaultOrg defines the organization which is used in the sampleconfig
+    # of the fabric.git development environment
+    Name: Org1MSP
+
+    # ID to load the MSP definition as
+    ID: Org1MSP
+
+    MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org1.example.com/msp
+
+    # Policies defines the set of policies at this level of the config tree
+    # For organization policies, their canonical path is usually
+    #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.peer', 'Org1MSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin', 'Org1MSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('Org1MSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('Org1MSP.peer')"
+
+    # leave this flag set to true.
+    AnchorPeers:
+      # AnchorPeers defines the location of peers which can be used
+      # for cross org gossip communication.  Note, this value is only
+      # encoded in the genesis block in the Application section context
+      - Host: org1-peer1
+        Port: 7051
+
+  # - &Org2
+  #   # DefaultOrg defines the organization which is used in the sampleconfig
+  #   # of the fabric.git development environment
+  #   Name: Org2MSP
+
+  #   # ID to load the MSP definition as
+  #   ID: Org2MSP
+
+  #   MSPDir: /var/hyperledger/fabric/organizations/peerOrganizations/org2.example.com/msp
+
+  #   # Policies defines the set of policies at this level of the config tree
+  #   # For organization policies, their canonical path is usually
+  #   #   /Channel/<Application|Orderer>/<OrgName>/<PolicyName>
+  #   Policies:
+  #     Readers:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.peer', 'Org2MSP.client')"
+  #     Writers:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin', 'Org2MSP.client')"
+  #     Admins:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.admin')"
+  #     Endorsement:
+  #       Type: Signature
+  #       Rule: "OR('Org2MSP.peer')"
+
+  #   AnchorPeers:
+  #     # AnchorPeers defines the location of peers which can be used
+  #     # for cross org gossip communication.  Note, this value is only
+  #     # encoded in the genesis block in the Application section context
+  #     - Host: org2-peer1
+  #       Port: 7051

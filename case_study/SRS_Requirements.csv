@@ -1,0 +1,224 @@
+﻿isHeading,Artifact Type,module,parentBinding,Name,Primary Text,Description,Within Scope?,Justification
+TRUE,Header,System,,3,Specific Requirements,Specific Requirements,TRUE,Header
+TRUE,Header,System,3,3.1,Functionality,Functionality,TRUE,Header
+TRUE,Header,Sales,3.1,3.1.1,Sell Configured to Ordered Products,Sell Configured to Ordered Products,TRUE,Header
+FALSE,Requirement,Sales,3.1.1,3.1.1.1,The system shall display all the products that can be configured.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.1,GetAllProducts,Displays a non-zero length list if at least one product exists.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Test,Sales,3.1.1.1,GetAllConfigurableProducts,Displays a non-zero length list if at least one configurable product exists.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Test,Sales,3.1.1.1,GetAllNonConfigurableProducts,Displays a non-zero length list if at least one non-configurable product exists.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Requirement,Sales,3.1.1,3.1.1.2,The system shall allow user to select the product to configure.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.2,UserSelectsValidProduct,Indicates a valid product was selected.,Sell Configured to Ordered Products,FALSE,GUI
+FALSE,Test,Sales,3.1.1.2,UserSelectsInvalidProduct,Indicates an invalid product was selected.,Sell Configured to Ordered Products,FALSE,GUI
+FALSE,Requirement,Sales,3.1.1,3.1.1.3,The system shall display all the available components of the product to configure.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.3,ReturnOneConfigurableElement,Indicates a single configurable element of the product with one configurable element.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Test,Sales,3.1.1.3,ReturnMultipleConfigurableElements,Indicates 5 configurable elements of the product with 5 configurable elements.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Requirement,Sales,3.1.1,3.1.1.4,The system shall enable user to add one or more component to the configuration.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.4,UserCanConfigure,Returns the configuration specified by the user for a product.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Requirement,Sales,3.1.1,3.1.1.5,The system shall notify the user about any conflict in the current configuration.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.5,ErrorIfNonConfigurable,Returns an error if the user attempts to configure a non-configurable product.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Requirement,Sales,3.1.1,3.1.1.6,The system shall allow user to update the configuration to resolve conflict in the current configuration.,Sell Configured to Ordered Products,TRUE,Web API
+FALSE,Test,Sales,3.1.1.6,RetryImmediatelyAfterError,The user may configure a valid product after attempting to configure an invalid product.,Sell Configured to Ordered Products,TRUE,Test case
+FALSE,Requirement,Sales,3.1.1,3.1.1.7,The system shall allow user to confirm the completion of current configuration.,Sell Configured to Ordered Products,TRUE,Web API
+TRUE,Header,Products,3.1,3.1.2,Provide comprehensive product details.,Provide comprehensive product details.,TRUE,Header
+FALSE,Requirement,Products,3.1.2,3.1.2.1,The system shall display detailed information of the selected products.,Provide comprehensive product details.,TRUE,Web API
+FALSE,Test,Products,3.1.2.1,DisplayDetailsForValidProduct,Returns the details of a valid product.,Provide comprehensive product details.,TRUE,Test case
+FALSE,Test,Products,3.1.2.1,ReturnErrorForInvalidProduct,Returns an error for an invalid product.,Provide comprehensive product details.,TRUE,Test case
+FALSE,Requirement,Products,3.1.2,3.1.2.2,The system shall provide browsing options to see product details.,Provide comprehensive product details.,TRUE,Web API
+FALSE,Test,Products,3.1.2.2,CatalogSelectionToDetails,"The user may retrieve the catalog, select a product, and get its details.",Provide comprehensive product details.,TRUE,Test case
+TRUE,Header,Products,3.1,3.1.3,Detailed product Categorizations,Detailed product Categorizations,TRUE,Header
+FALSE,Requirement,Products,3.1.3,3.1.3.1,The system shall display detailed product categorization to the user.,Detailed product Categorizations,TRUE,Web API
+FALSE,Test,Products,3.1.3.1,DisplayProductCategories,The user may retrieve product categories.,Detailed product Categorizations,TRUE,Test case
+TRUE,Header,Search,3.1,3.1.4,Provide Search facility.,Provide Search facility.,TRUE,Header
+FALSE,Requirement,Search,3.1.4,3.1.4.1,The system shall enable user to enter the search text on the screen.,Provide Search facility.,TRUE,Web API
+FALSE,Test,Products,3.1.4.1,SearchAPIExists,Confirms the search API exists.,Provide Search facility.,TRUE,Test case
+FALSE,Requirement,Search,3.1.4,3.1.4.2,The system shall enable user to select multiple options on the screen to search.,Provide Search facility.,FALSE,Requires GUI.
+FALSE,Requirement,Search,3.1.4,3.1.4.3,The system shall display all the matching products based on the search.,Provide Search facility.,TRUE,Web API
+FALSE,Test,Products,3.1.4.3,ResultsFound,Indicates results for existing products.,Provide Search facility.,TRUE,Test case
+FALSE,Requirement,Search,3.1.4,3.1.4.4,The system shall display only 10 matching result on the current screen.,Provide Search facility.,TRUE,Web API
+FALSE,Test,Products,3.1.4.4,PaginationLimit,Response is limited to 10 returned items.,Provide Search facility.,TRUE,Test case
+FALSE,Requirement,Search,3.1.4,3.1.4.5,The system shall enable user to navigate between the search results.,Provide Search facility.,FALSE,Requires GUI.
+FALSE,Requirement,Search,3.1.4,3.1.4.6,The system shall notify the user when no matching product is found on the search.,Provide Search facility.,TRUE,Web API
+FALSE,Test,Products,3.1.4.6,NoResultsFound,Indicates no results are found if a product doesn't exist.,Provide Search facility.,TRUE,Test case
+TRUE,Header,Customer,3.1,3.1.5,Maintain customer profile.,Maintain customer profile.,TRUE,Header
+FALSE,Requirement,Customer,3.1.5,3.1.5.1,The system shall allow user to create profile and set his credential.,Maintain customer profile.,TRUE,Web API
+FALSE,Test,Customer,3.1.5.1,CreateUserProfile,"Allows the caller to create a user profile, including a password.",Maintain customer profile.,TRUE,Test case
+FALSE,Requirement,Customer,3.1.5,3.1.5.2,The system shall authenticate user credentials to view the profile.,Maintain customer profile.,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Customer,3.1.5,3.1.5.3,The system shall allow user to update the profile information.,Maintain customer profile.,TRUE,Web API
+FALSE,Test,Customer,3.1.5.3,UpdateUserProfile,Allows the caller to update a user profile,Maintain customer profile.,TRUE,Test case
+TRUE,Header,Customer,3.1,3.1.6,Provide personalized profile,Provide personalized profile,TRUE,Header
+FALSE,Requirement,Customer,3.1.6,3.1.6.1,The system shall display both the active and completed order history in the customer profile.,Provide personalized profile,TRUE,Web API
+FALSE,Test,Customer,3.1.6.1,DisplayEmptyOrderHistory,Return an empty order history if user has no active or completed orders.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.1,CreateActiveOrder,Create an active order.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.1,CreateCompletedOrder,Create a completed order.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.1,DisplayPopulatedOrderHistoryAll,Return a complete order history if user has active and completed orders.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.1,DisplayPopulatedOrderHistoryActive,Return a complete order history if user has active orders.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.1,DisplayPopulatedOrderHistoryCompleted,Return a complete order history if user has completed orders.,Provide personalized profile,TRUE,Test case
+FALSE,Requirement,Customer,3.1.6,3.1.6.2,The system shall allow user to select the order from the order history.,Provide personalized profile,FALSE,GUI
+FALSE,Requirement,Customer,3.1.6,3.1.6.3,The system shall display the detailed information about the selected order.,Provide personalized profile,TRUE,Web API
+FALSE,Test,Customer,3.1.6.3,DisplayOrderDetailsForValidOrder,Returns the full order details,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.3,DisplayErrorForInvalidOrder,Indicates an error if the order doesn't exist.,Provide personalized profile,TRUE,Test case
+FALSE,Requirement,Customer,3.1.6,3.1.6.4,The system shall display the most frequently searched items by the user in the profile.,Provide personalized profile,FALSE,"dynamic, stateful"
+FALSE,Requirement,Customer,3.1.6,3.1.6.5,The system shall allow user to register for newsletters and surveys in the profile.,Provide personalized profile,TRUE,Web API
+FALSE,Test,Customer,3.1.6.5,RegisterForNewsletters,User may update profile to register for the newsletters.,Provide personalized profile,TRUE,Test case
+FALSE,Test,Customer,3.1.6.5,RegisterForSurveys,User may update profile to register for the surveys.,Provide personalized profile,TRUE,Test case
+TRUE,Header,Support,3.1,3.1.7,Provide Customer Support,Provide Customer Support,TRUE,Header
+FALSE,Requirement,Support,3.1.7,3.1.7.1,"The system shall provide online help, FAQ’s customer support, and sitemap options for customer support.",Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.1,GeneralHelpRequested,Displays help information.,Provide Customer Support,TRUE,Test case
+FALSE,Requirement,Support,3.1.7,3.1.7.2,The system shall allow user to select the support type he wants.,Provide Customer Support,FALSE,GUI
+FALSE,Requirement,Support,3.1.7,3.1.7.3,The system shall allow user to enter the customer and product information for the support.,Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.3,SupportAPI,Customer can invoke the stubbed Support API with customer and product information.,Provide Customer Support,TRUE,Test case
+FALSE,Requirement,Support,3.1.7,3.1.7.4,The system shall display the customer support contact numbers on the screen.,Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.4,GetCustomerSupportNumbers,Customer can invoke the stubbed Support API with customer and product information.,Provide Customer Support,TRUE,Test case
+FALSE,Requirement,Support,3.1.7,3.1.7.5,The system shall allow user to enter the contact number for support personnel to call.,Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.5,CallbackNumberInProfile,The user may include a callback number in the profile.,Provide Customer Support,TRUE,Test case
+FALSE,Requirement,Support,3.1.7,3.1.7.6,The system shall display the online help upon request.,Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.6,DetailedHelpRequested,Displays help information.,Provide Customer Support,TRUE,Test case
+FALSE,Requirement,Support,3.1.7,3.1.7.7,The system shall display the FAQ’s upon request.,Provide Customer Support,TRUE,Web API
+FALSE,Test,Support,3.1.7.7,FAQRequested,Displays the FAQ.,Provide Customer Support,TRUE,Test case
+TRUE,Header,Customer,3.1,3.1.8,Email confirmation,Email confirmation,TRUE,Header
+FALSE,Requirement,Customer,3.1.8,3.1.8.1,The system shall maintain customer email information as a required part of customer profile.,Email confirmation,TRUE,Web API
+FALSE,Test,Customer,3.1.8.1,UserEmailInProfile,User profile includes an email address,Email confirmation,TRUE,Test case
+FALSE,Test,Customer,3.1.8.1,UserDoesNotExist,Error if user does not exist,Email confirmation,TRUE,Test case
+FALSE,Requirement,Customer,3.1.8,3.1.8.2,The system shall send an order confirmation to the user through email.,Email confirmation,FALSE,ordering will be stubbed.
+TRUE,Header,Sales,3.1,3.1.9,Detailed invoice for customer,Detailed invoice for customer,TRUE,Header
+FALSE,Requirement,Sales,3.1.9,3.1.9.1,The system shall display detailed invoice for current order once it is confirmed.,Detailed invoice for customer,FALSE,ordering will be stubbed.
+FALSE,Requirement,Sales,3.1.9,3.1.9.2,The system shall optionally allow user to print the invoice.,Detailed invoice for customer,FALSE,Requires formatting to PDF
+TRUE,Header,Sales,3.1,3.1.10,Provide shopping cart facility.,Provide shopping cart facility.,TRUE,Header
+FALSE,Requirement,Sales,3.1.10,3.1.10.1,The system shall provide shopping cart during online purchase.,Provide shopping cart facility.,TRUE,Web API
+FALSE,Test,Sales,3.1.10.1,DisplayEmptyCart,System displays an empty cart if it is empty.,Provide shopping cart facility.,TRUE,Test case
+FALSE,Test,Sales,3.1.10.1,DisplayPopulatedCart,System displays a populated cart if it is populated.,Provide shopping cart facility.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.10,3.1.10.2,The system shall allow user to add/remove products in the shopping cart.,Provide shopping cart facility.,TRUE,Web API
+FALSE,Test,Sales,3.1.10.2,AddItemsToCart,User may add items to cart,Provide shopping cart facility.,TRUE,Test case
+FALSE,Test,Sales,3.1.10.2,RemoveItemsFromCart,User may remove items from a populated cart.,Provide shopping cart facility.,TRUE,Test case
+FALSE,Test,Sales,3.1.10.2,ErrorOnRemoveItemsFromEmpty,User receives an error for attempting to remove an item from an empty cart.,Provide shopping cart facility.,TRUE,Test case
+FALSE,Test,Sales,3.1.10.2,ErrorOnRemoveInvalidItem,User receives an error for attempting to remove an invalid item.,Provide shopping cart facility.,TRUE,Test case
+FALSE,Test,Sales,3.1.10.2,ErrorOnRemoveNonExistentItem,User receives an error for attempting to remove a valid item that's not in the cart.,Provide shopping cart facility.,TRUE,Test case
+TRUE,Header,Fulfillment,3.1,3.1.11,Provide multiple shipping methods.,Provide multiple shipping methods.,TRUE,Header
+FALSE,Requirement,Fulfillment,3.1.11,3.1.11.1,The system shall display different shipping options provided by shipping department.,Provide multiple shipping methods.,TRUE,Web API
+FALSE,Test,Fulfillment,3.1.11.1,GetShippingOptions,User receives a list of shipping options.,Provide multiple shipping methods.,TRUE,Test case
+FALSE,Requirement,Fulfillment,3.1.11,3.1.11.2,The system shall enable user to select the shipping method during payment process.,Provide multiple shipping methods.,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Fulfillment,3.1.11,3.1.11.3,The system shall display the shipping charges.,Provide multiple shipping methods.,TRUE,Web API
+FALSE,Test,Fulfillment,3.1.11.3,GetShippingCharges,User receives a list of shipping charges.,Provide multiple shipping methods.,TRUE,Test case
+FALSE,Requirement,Fulfillment,3.1.11,3.1.11.4,The system shall display tentative duration for shipping.,Provide multiple shipping methods.,TRUE,Web API
+FALSE,Test,Fulfillment,3.1.11.4,GetShippingDuration,User receives a list of shipping durations.,Provide multiple shipping methods.,TRUE,Test case
+TRUE,Header,Fulfillment,3.1,3.1.12,Online tracking of shipments,Online tracking of shipments,TRUE,Header
+FALSE,Requirement,Fulfillment,3.1.12,3.1.12.1,The system shall allow user to enter the order information for tracking.,Online tracking of shipments,TRUE,Web API
+FALSE,Test,Fulfillment,3.1.12.1,GetInfoForValidOrder,User receives information on a valid order.,Online tracking of shipments,FALSE,Duplicate of 3.1.6.1
+FALSE,Test,Fulfillment,3.1.12.1,ErrorOnInvalidOrder,User receives an error when requesting info on an invalid order.,Online tracking of shipments,FALSE,Duplicate of 3.1.6.3
+FALSE,Requirement,Fulfillment,3.1.12,3.1.12.2,The system shall display the current tracking information about the order.,Online tracking of shipments,TRUE,Web API
+FALSE,Test,Fulfillment,3.1.12.2,GetTrackingInfoForValidOrder,User receives tracking information on a valid order.,Online tracking of shipments,FALSE,Duplicate of 3.1.6.3
+FALSE,Test,Fulfillment,3.1.12.2,ErrorOnTrackingInvalidOrder,User receives an error when requesting tracking info on an invalid order.,Online tracking of shipments,FALSE,Duplicate of 3.1.6.3
+TRUE,Header,Sales,3.1,3.1.13,Provide online Tax Calculations,Provide online Tax Calculations,TRUE,Header
+FALSE,Requirement,Sales,3.1.13,3.1.13.1,The system shall calculate tax for the order.,Provide online Tax Calculations,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Sales,3.1.13,3.1.13.2,The system shall display tax information for the order.,Provide online Tax Calculations,TRUE,Web API
+FALSE,Test,Sales,3.1.13.2,GetTaxInfoOnValidOrder,User receives tax info on the order.,Provide online Tax Calculations,FALSE,Duplicate of 3.1.6.3
+FALSE,Test,Sales,3.1.13.2,ErrorOnTaxInfoForInvalidOrder,User receives an error if an invalid order is provided.,Provide online Tax Calculations,FALSE,Duplicate of 3.1.6.3
+TRUE,Header,Sales,3.1,3.1.14,Allow multiple payment methods.,Allow multiple payment methods.,TRUE,Header
+FALSE,Requirement,Sales,3.1.14,3.1.14.1,The system shall display available payment methods for payment.,Allow multiple payment methods.,TRUE,Web API
+FALSE,Test,Sales,3.1.14.1,GetPaymentMethods,User receives a list of available payment methods.,Allow multiple payment methods.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.14,3.1.14.2,The system shall allow user to select the payment method for order.,Allow multiple payment methods.,FALSE,GUI
+TRUE,Header,Sales,3.1,3.1.15,Allow online change or cancellation of order.,Allow online change or cancellation of order.,TRUE,Header
+FALSE,Requirement,Sales,3.1.15,3.1.15.1,The system shall display the orders that are eligible to change.,Allow online change or cancellation of order.,TRUE,Web API
+FALSE,Test,Sales,3.1.15.1,GetMutableOrders,User receives a list of orders that can be changed.,Allow online change or cancellation of order.,FALSE,Duplicate of 3.1.6.1
+FALSE,Requirement,Sales,3.1.15,3.1.15.2,The system shall allow user to select the order to be changed.,Allow online change or cancellation of order.,FALSE,GUI
+FALSE,Requirement,Sales,3.1.15,3.1.15.3,The system shall allow user to cancel the order,Allow online change or cancellation of order.,TRUE,Web API
+FALSE,Test,Sales,3.1.15.3,CancelActiveOrder,User received indication that order has been cancelled.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Test,Sales,3.1.15.3,CancelCancelledOrder,User received indication that order is already cancelled.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.15,3.1.15.4,"The system shall allow user to change shipping, payment method.",Allow online change or cancellation of order.,TRUE,Web API
+FALSE,Test,Sales,3.1.15.4,ModifyOrderShipping,User may modify an order's shipping method.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Test,Sales,3.1.15.4,ModifyOrderPaymentMethod,User may modify an order's payment method.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.15,3.1.15.5,The system shall notify the user about any changes made to the order.,Allow online change or cancellation of order.,FALSE,Not a full implementation for production use.
+TRUE,Header,Sales,3.1,3.1.16,Allow Online Product reviews and ratings,Allow Online Product reviews and ratings,TRUE,Header
+FALSE,Requirement,Sales,3.1.16,3.1.16.1,"The system shall display the reviews and ratings of each product, when it is selected.",Allow Online Product reviews and ratings,TRUE,Web API
+FALSE,Test,Sales,3.1.16.1,GetProductReviews,User receives a list of reviews for the specified product.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.16,3.1.16.2,The system shall enable the user to enter their reviews and ratings.,Allow Online Product reviews and ratings,FALSE,Not a full implementation for production use.
+TRUE,Header,Sales,3.1,3.1.17,Offer financing options.,Offer financing options.,TRUE,Header
+FALSE,Requirement,Sales,3.1.17,3.1.17.1,The system shall display all the available financing options.,Offer financing options.,TRUE,Web API
+FALSE,Test,Sales,3.1.17.1,GetFinancingOptions,User receives a list of financing options.,Allow online change or cancellation of order.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.17,3.1.17.2,The system shall allow user to select the financing option.,Offer financing options.,FALSE,GUI
+FALSE,Requirement,Sales,3.1.17,3.1.17.3,The system shall notify the user about the financing request.,Offer financing options.,FALSE,Not a full implementation for production use.
+TRUE,Header,Products,3.1,3.1.18,Provide detailed sitemap.,Provide detailed sitemap.,TRUE,Header
+FALSE,Requirement,Products,3.1.18,3.1.18.1,The system shall allow user to view detailed sitemap.,Provide detailed sitemap.,FALSE,GUI
+TRUE,Header,Sales,3.1,3.1.19,Offer online promotions and rewards.,Offer online promotions and rewards.,TRUE,Header
+FALSE,Requirement,Sales,3.1.19,3.1.19.1,The system shall display all the available promotions to the user.,Offer online promotions and rewards.,TRUE,Web API
+FALSE,Test,Sales,3.1.19.1,GetAvailablePromotions,User receives a list of available promotions.,Offer online promotions and rewards.,TRUE,Test case
+FALSE,Requirement,Sales,3.1.19,3.1.19.2,The system shall allow user to select available promotion.,Offer online promotions and rewards.,FALSE,GUI
+TRUE,Header,Sales,3.1,3.1.20,Online Purchase of products.,Online Purchase of products.,TRUE,Header
+FALSE,Requirement,Sales,3.1.20,3.1.20.1,The system shall allow user to confirm the purchase.,Online Purchase of products.,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Sales,3.1.20,3.1.20.2,The system shall enable user to enter the payment information.,Online Purchase of products.,FALSE,Not a full implementation for production use.
+TRUE,Header,System,3,3.2,Usability,Usability,TRUE,Header
+TRUE,Header,Graphical User Interface,3.2,3.2.1,Usability: Graphical User Interface,Usability: Graphical User Interface,TRUE,Header
+FALSE,Requirement,Graphical User Interface,3.2.1,3.2.1.1,The system shall provide a uniform look and feel between all the web pages.,Usability: Graphical User Interface,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.2.1,3.2.1.2,The system shall provide a digital image for each product in the product catalog.,Usability: Graphical User Interface,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.2.1,3.2.1.3,The system shall provide use of icons and toolbars.,Usability: Graphical User Interface,FALSE,GUI
+TRUE,Header,Graphical User Interface,3.2,3.2.2,Usability: Accessibility,Usability: Accessibility,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.2.2,3.2.2.1,The system shall provide handicap access.,Usability: Accessibility,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.2.2,3.2.2.2,The system shall provide multi language support.,Usability: Accessibility,FALSE,GUI
+TRUE,Header,System,3,3.3,Reliability & Availability,Reliability & Availability,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3.3,3.3.1,Reliability & Availability: Back-end Internal Computers,Reliability & Availability: Back-end Internal Computers,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.3.1,3.3.1.1,The system shall provide storage of all databases on redundant computers with automatic switchover.,Reliability & Availability: Back-end Internal Computers,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.3.1,3.3.1.2,The system shall provide for replication of databases to off-site storage locations.,Reliability & Availability: Back-end Internal Computers,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.3.1,3.3.1.3,The system shall provide RAID V Disk Stripping on all database storage disks.,Reliability & Availability: Back-end Internal Computers,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3.3,3.3.2,Internet Service Provider,Internet Service Provider,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.3.2,3.3.2.1,The system shall provide a contractual agreement with an internet service provider for T3 access with 99.9999% availability.,Internet Service Provider,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.3.2,3.3.2.2,The system shall provide a contractual agreement with an internet service provider who can provide 99.999% availability through their network facilities onto the internet.,Internet Service Provider,FALSE,Not a full implementation for production use.
+TRUE,Header,System,3,3.4,Performance,Performance,TRUE,Header
+FALSE,Requirement,Infrastructure,3.4,3.4.1,The product shall be based on web and has to be run from a web server.,Performance,TRUE,Web API
+FALSE,Test,Infrastructure,3.4.1,PerformHealthCheck,Endpoint responds to a simple HTTP request.,Performance,TRUE,Test case
+FALSE,Requirement,Infrastructure,3.4,3.4.2,The product shall take initial load time depending on internet connection strength which also depends on the media from which the product is run.,Performance,TRUE,Web API
+FALSE,Test,Infrastructure,3.4.2,PerformReadinessCheck,Endpoint is ready within 5 seconds.,Performance,TRUE,Test case
+FALSE,Requirement,Infrastructure,3.4,3.4.3,The performance shall depend upon hardware components of the client/customer. ,Performance,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3,3.5,Security,Security,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3.5,3.5.1,Data Transfer,Data Transfer,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.1,3.5.1.1,The system shall use secure sockets in all transactions that include any confidential customer information.,Security: Data Transfer,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.1,3.5.1.2,The system shall automatically log out all customers after a period of inactivity.,Security: Data Transfer,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.1,3.5.1.3,The system shall confirm all transactions with the customer’s web browser.,Security: Data Transfer,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.1,3.5.1.4,The system shall not leave any cookies on the customer’s computer containing the user’s password.,Security: Data Transfer,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.1,3.5.1.5,The system shall not leave any cookies on the customer’s computer containing any of the user’s confidential information.,Security: Data Transfer,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3.5,3.5.2,Data Storage,Data Storage,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.2,3.5.2.1,The customer’s web browser shall never display a customer’s password.  It shall always be echoed with special characters representing typed characters.,Security: Data Storage,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.2,3.5.2.2,The customer’s web browser shall never display a customer’s credit card number after retrieving from the database.  It shall always be shown with just the last 4 digits of the credit card number.,Security: Data Storage,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.2,3.5.2.3,The system’s back-end servers shall never display a customer’s password.  The customer’s password may be reset but never shown.,Security: Data Storage,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.2,3.5.2.4,The system’s back-end servers shall only be accessible to authenticated administrators.,Security: Data Storage,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Infrastructure,3.5.2,3.5.2.5,The system’s back-end databases shall be encrypted.,Security: Data Storage,FALSE,Not a full implementation for production use.
+TRUE,Header,Infrastructure,3,3.6,Supportability,Supportability,TRUE,Header
+TRUE,Header,Infrastructure,3.6,3.6.1,Configuration Management Tool,Configuration Management Tool,TRUE,Header
+FALSE,Requirement,Infrastructure,3.6,3.6.1.1,The source code developed for this system shall be maintained in configuration management tool.,Supportability: Configuration Management Tool,FALSE,Not a web API requirement.
+TRUE,Header,System,3,3.7,Design Constraints,Design Constraints,TRUE,Header
+TRUE,Header,System,3.7,3.7.1,Standard Development Tools,Standard Development Tools,TRUE,Header
+FALSE,Requirement,Graphical User Interface,3.7.1,3.7.1.2,The system shall be built using a standard web page development tool that conforms to either IBM’s CUA standards or Microsoft’s GUI standards.,Design Constraints: Standard Development Tools,FALSE,GUI
+TRUE,Header,Graphical User Interface,3.7,3.7.2,Web Based Products,Web Based Products,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.7.2,3.7.2.1,There are no memory requirements.,Design Constraints: Web Based Products,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.7.2,3.7.2.2,The computers must be equipped with web browsers such as Internet explorer.,Design Constraints: Web Based Products,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.7.2,3.7.2.3,The product must be stored in such a way that allows the client easy access to it.,Design Constraints: Web Based Products,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.7.2,3.7.2.4,Response time for loading the product should take no longer than five minutes.,Design Constraints: Web Based Products,FALSE,GUI
+FALSE,Requirement,Graphical User Interface,3.7.2,3.7.2.5,A general knowledge of basic computer skills is required to use the product.,Design Constraints: Web Based Products,FALSE,GUI
+TRUE,Header,System,3,3.8,On-line User Documentation and Help System Requirements,On-line User Documentation and Help System Requirements,TRUE,Header
+FALSE,Requirement,Web Interface,3.8,3.8.1,"As the product is E-store, On-line help system becomes a critical component of the system which shall provide",On-line User Documentation and Help System Requirements,FALSE,Duplicate of 3.1.7.1
+FALSE,Requirement,Web Interface,3.8,3.8.2,It shall provide specific guidelines to a user for using the E-Store system and within the system.,On-line User Documentation and Help System Requirements,FALSE,Duplicate of 3.1.7.1
+FALSE,Requirement,Graphical User Interface,3.8,3.8.3,"To implement online user help, link and search fields shall be provided.",On-line User Documentation and Help System Requirements,FALSE,GUI
+TRUE,Header,System,3,3.10,Interfaces,Interfaces,TRUE,Header
+TRUE,Header,Graphical User Interface,3.10,3.10.1,User Interfaces,User Interfaces,TRUE,Header
+FALSE,Requirement,Web Interface,3.10.1,3.10.1.1,"The user interface for the software shall be compatible to any browser such as Internet Explorer, Mozilla or Netscape Navigator by which user can access to the system.",Interfaces - User Interfaces,TRUE,Web API
+FALSE,Test,Web Interface,3.10.1.1,UseBroswerToUseAPI,Use a modern browser to execute an API method.,Interfaces - User Interfaces,TRUE,Manual test case
+FALSE,Requirement,Graphical User Interface,3.10.1,3.10.1.2,"The user interface shall be implemented using any tool or software package like Java Applet, MS Front Page, EJB etc.",Interfaces - User Interfaces,FALSE,GUI
+TRUE,Header,System,3.10,3.10.2,Hardware Interfaces,Hardware Interfaces,TRUE,Header
+FALSE,Requirement,Web Interface,3.10.2,3.10.2.1,"Since the application must run over the internet, all the hardware shall require to connect internet will be hardware interface for the system. As for e.g. Modem, WAN – LAN, Ethernet Cross-Cable.",Interfaces - Hardware Interfaces,TRUE,Web API
+FALSE,Test,Web Interface,3.10.2.1,DeployToCluster,Run the microservice via a container daemon.,Interfaces - Hardware Interfaces,FALSE,Prerequisite to test cases.
+TRUE,Header,System,3.10,3.10.3,Software Interfaces,Software Interfaces,TRUE,Header
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.1,The e-store system shall communicate with the Configurator to identify all the available components to configure the product.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.2,"The e-store shall communicate with the content manager to get the product specifications, offerings and promotions.",Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.3,"The e-store system shall communicate with bill-pay system to identify available payment methods , validate the payments and process payment.",Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.4,The e-store system shall communicate to credit management system for handling financing options.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.5,The e-store system shall communicate with CRM system to provide support.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.6,The e-store system shall communicate with Sales system for order management.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.7,The e-store system shall communicate with shipping system for tracking orders and updating of shipping methods.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.8,The e-store system shall communicate with external Tax system to calculate tax.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.9,The e-store system shall communicate with export regulation system to validate export regulations.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+FALSE,Requirement,Web Interface,3.10.3,3.10.3.10,The system shall be VeriSign-like software which shall allow the users to complete secured transaction. This usually shall be the third party software system which is widely used for internet transaction.,Interfaces - Software Interfaces,FALSE,Not a full implementation for production use.
+TRUE,Header,System,3.10,3.10.4,Communications Interfaces,Communications Interfaces,TRUE,Header
+FALSE,Requirement,Web Interface,3.10.4,3.10.4.1,The e-store system shall use the HTTP protocol for communication over the internet and for the intranet communication will be through TCP/IP protocol suite.,Interfaces - Communications Interfaces,TRUE,Web API
+FALSE,Requirement,Web Interface,3.10.4,3.10.4.2,The Port number used will be 80.,Interfaces - Communications Interfaces,TRUE,Web API
+FALSE,Requirement,Web Interface,3.10.4,3.10.4.3,There shall be logical address of the system in IPv4 format.,Interfaces - Communications Interfaces,TRUE,Web API
+TRUE,Header,System,3,3.12,"Legal, Copyright, and Other Notices","Legal, Copyright, and Other Notices",TRUE,Header
+FALSE,Requirement,Web Interface,3.12,3.12.1,"E-store should display the disclaimers, copyright, word mark, trademark and product warranties of the Marvel electronics and home entertainment.","Legal, Copyright, and Other Notices",TRUE,Web API

@@ -1,6 +1,6 @@
 [![CI](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml/badge.svg)](https://github.com/lmco/ChaordicLedger/actions/workflows/ci.yml)
 
-# CharodicLedger
+# ChaordicLedger
 The ChaordicLedger is the implementation of a design for a combination of Distributed Ledger Technology (DLT) and a Distributed File System (DFS) to create a secure, enterprise-grade platform for storing interlinked project artifacts.
 
 The development of this platform is in pursuit of the author's PhD research objectives.
@@ -8,19 +8,41 @@ The development of this platform is in pursuit of the author's PhD research obje
 # Goal
 The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.org/wiki/Technology_readiness_level) Proof of Concept (PoC) of integrating the distributed nature of the InterPlanetary File System (IPFS) with the permissioned, private nature of Hyperledger Fabric via industry-relevant smart contracts to achieve a macro-to-micro-scale view of large integrated systems in support of Systems Engineering, Configuration Management, Software Engineering, and Cost Account Management.
 
+## Getting Started
+1. Clone this repository
+1. Create a GitHub read token.
+1. Create a *"githubReadToken.sh"* script file in the repository's root directory with the following contents:
+    ```
+    export githubReadToken=ghp_YOUR_READ_TOKEN_HERE
+    ```
+1. Run the *reload.sh* script.
+
 ## Related Publications
 |Title|Forum|URL|
 |---|---|---|
 |***ChaordicLedger: Digital Transformation and Business Intelligence via Data Provenance and Ubiquity***|[Institute of Electrical and Electronics Engineers Systems Conference (IEEE SYSCON) 2022](https://2022.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9773812](https://ieeexplore.ieee.org/document/9773812)|
 |***Distributed Ledgers in Developing Large-Scale Integrated Systems***|[Institute of Electrical and Electronics Engineers Systems Conference (IEEE SYSCON) 2021](https://2021.ieeesyscon.org)|[https://ieeexplore.ieee.org/document/9447136](https://ieeexplore.ieee.org/document/9447136)|
-* All indexed publications by author: [https://orcid.org/0000-0001-5594-9756](https://orcid.org/0000-0001-5594-9756)
+* All indexed publications by author: 
+<a
+id="cy-effective-orcid-url"
+class="underline"
+    href="https://orcid.org/0000-0001-5594-9756"
+    target="orcid.widget"
+    rel="me noopener noreferrer"
+    style="vertical-align: top">
+    <img
+    src="https://orcid.org/sites/default/files/images/orcid_16x16.png"
+    style="width: 1em; margin-inline-start: 0.5em"
+    alt="ORCID iD icon"/>
+    https://orcid.org/0000-0001-5594-9756
+</a>
 
 ## Design Objectives
 1. The platform shall be portable.
     1. All deployment-specific attributes shall be specifiable at deployment time (e.g. from a pipeline)
 1. Test automation shall be implemented early and where practical.
 1. Free and Open-Source technologies shall be leveraged.
-1. Behavior and results are measurable and repeatable.
+1. Behavior and results are measurable and equatable.
 
 ## Implementation Road Map
 |Item|Implementation Status|Documentation Status|Pipeline Execution|
@@ -34,10 +56,8 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 |Defining and Executing Simulations|✔️|✔️|➖|
 |Gathering Key Performance Indicators (KPIs)|✔️|✔️|➖|
 
-## Near-Term Items
-1. Add Infrastructure as Code (IaC) configuration.
-
 ## Future Development Goals
+1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.
 1. Enable role-based authorization.
@@ -46,6 +66,8 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Add API method to retrieve a subset of the relationship graph with a specific depth or distance of relationships.
 1. Add API method for drill-down requests.
 1. Add served rendering of relationship graphs. Possible starting point [https://github.com/wangkuiyi/graphviz-server](https://github.com/wangkuiyi/graphviz-server)
+1.	Increase the TRL by executing the platform on edge-style hardware devices by way of third-party users.
+1.	Refactor the codebase to use another form of scripted setup orchestration, such as docker-compose.
 
 ## References
 * Hyperledger Fabric Cheat Sheet: [https://softwaremill.com/hyperledger-fabric-cheat-sheet/](https://softwaremill.com/hyperledger-fabric-cheat-sheet/)

@@ -40,4 +40,6 @@ fi
 # end=${EPOCHREALTIME/./}
 # duration=$(( end - start ))
 
-echo "{ \"file\" : \"$friendlyName\", \"result\": $payload }"
+rm $filename
+
+echo "{ \"operation\" : \"createArtifactAsync\", \"file\" : \"$friendlyName\", \"result\": $payload }"

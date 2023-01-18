@@ -26,4 +26,6 @@ result=$(peer chaincode \
 end=${EPOCHREALTIME/./}
 duration=$(( end - start ))
 
-echo "{ \"file\" : \"$filename\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"
+rm $filename
+
+echo "{ \"operation\" : \"createNode\", \"file\" : \"$filename\", \"durationInMicroseconds\": \"$duration\", \"result\": \"$result\" }"

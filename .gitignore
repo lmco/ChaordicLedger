@@ -24,3 +24,5 @@ terraform/env
 *tfstate*
 infrastructure/.lmcoenv
 .terraform*
+kube-state-metrics/
+__pycache__

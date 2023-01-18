@@ -19,29 +19,41 @@ function enable_monitoring() {
   helm repo add --force-update elastic https://helm.elastic.co
   helm repo update
   
+  # TODO: Use helm values override in command instead of overwriting the file's contents.
+
   # Download helm chart, replace image prefix with proxy variables, install.
   # This allows the use of proxies without affecting the image name and tag.
-  helm pull elastic/elasticsearch --untar --untardir $MONITORING_TMP
-  sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/elasticsearch/values.yaml
-  helm install elasticsearch $MONITORING_TMP/elasticsearch -n dapr-monitoring --set replicas=1
-  #helm install elasticsearch elastic/elasticsearch -n dapr-monitoring --set replicas=1
-
-  syslog "Waiting for elasticsearch start-up..."
+  # helm pull elastic/elasticsearch --untar --untardir $MONITORING_TMP
+  # sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/elasticsearch/values.yaml
+  # helm install elasticsearch $MONITORING_TMP/elasticsearch -n dapr-monitoring --set replicas=1
+  
+  #syslog "elasticsearch DISABLED!"
+  helm install elasticsearch elastic/elasticsearch --version 7.17.3 -n dapr-monitoring --set replicas=1
+  
+  #syslog "Waiting for elasticsearch start-up..."
   # One replica, so only wait for index 0
   kubectl wait --namespace=dapr-monitoring --for=condition=ready pod --timeout=3600s -l statefulset.kubernetes.io/pod-name=elasticsearch-master-0
 
-  helm pull elastic/kibana --untar --untardir $MONITORING_TMP
-  sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/kibana/values.yaml
-  helm install kibana $MONITORING_TMP/kibana -n dapr-monitoring
+  #helm pull elastic/kibana --untar --untardir $MONITORING_TMP
+  # Received "expected HTTP 206 from byte range request" when pulling from corporate proxy registry; pulling direct from elastic.
+  #sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/kibana/values.yaml
+  #helm install kibana $MONITORING_TMP/kibana -n dapr-monitoring
   #helm install kibana elastic/kibana -n dapr-monitoring
 
-  syslog "Waiting for kibana start-up..."
+  # FIX: Kibana refuses to start... need to investigate this manually.
+  helm install kibana elastic/kibana --version 7.17.3 -n dapr-monitoring
+
+  #syslog "kibana DISABLED!"
+  #syslog "Waiting for kibana start-up..."
   kubectl wait --for=condition=Ready pods -l=app=kibana -n dapr-monitoring --timeout=3600s
 
   # Load metricbeat via helm chart.
-  helm pull elastic/metricbeat --untar --untardir $MONITORING_TMP
-  sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/metricbeat/values.yaml
-  helm install metricbeat $MONITORING_TMP/metricbeat -n dapr-monitoring --wait
+  #syslog "metricbeat DISABLED!"
+  syslog "Waiting for metricbeat start-up..."
+  #helm pull elastic/metricbeat --untar --untardir $MONITORING_TMP
+  #sed -i "s|docker.elastic.co/|$DOCKER_REGISTRY_PROXY$REGISTRY_ELASTIC_DOCKER|g" $MONITORING_TMP/metricbeat/values.yaml
+  #helm install metricbeat $MONITORING_TMP/metricbeat --version 7.17.3 -n dapr-monitoring --wait
+  helm install metricbeat elastic/metricbeat --version 7.17.3 -n dapr-monitoring --wait
 
   # Note: filebeat appears to hit a memory limit; disabling for now as it's not really necessary.
   # Load filebeat via helm chart.

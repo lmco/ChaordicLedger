@@ -1,0 +1,3 @@
+From 2.1.6
+
+Transaction data must be accessible via a protected API.

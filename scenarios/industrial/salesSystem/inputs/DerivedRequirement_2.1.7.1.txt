@@ -1,0 +1,3 @@
+From 2.1.7
+
+Order destination data must be accessible via a protected API.
