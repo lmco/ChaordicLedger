@@ -1,0 +1,24 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Install perl-Digest-SHA for shasum utility
+      dnf:
+        name:
+          - perl-Digest-SHA
+        state: latest
+
+    - name: Check shasum is accessible.
+      shell:
+        cmd: shasum -v
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

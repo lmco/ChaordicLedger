@@ -18,9 +18,13 @@ function check_return_code() {
   fi
 }
 
+check_return_code "curl" "--version"
 check_return_code "docker" "version"
 check_return_code "kind" "version"
 check_return_code "jq" "--version"
+check_return_code "shasum" "-v"
+check_return_code "npm" "-v"
+check_return_code "helm" "version"
 
 # Note: Using the version option with kubectl will cause a non-zero return code 
 # if the client and the server have drifted too far in version.

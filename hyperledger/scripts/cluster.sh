@@ -11,20 +11,22 @@ fi
 CLUSTER_TMP=${TEMP_DIR}/cluster
 mkdir -p $CLUSTER_TMP
 
+KIND_IMAGE="kindest/node:v1.21.1"
+
 function cluster_init() {
+  pull_docker_images
   cluster_create
   apply_proxy_certs
   apply_nginx_ingress
   install_cert_manager
   launch_docker_registry
-  pull_docker_images
   load_docker_images
 }
 
 function cluster_create() {
   syslog "Creating cluster \"${CLUSTER_NAME}\" with ${NGINX_HTTPS_PORT}"
   populateTemplate ../config/cluster-template.yaml ${CLUSTER_TMP}/${CLUSTER_NAME}_cluster_config.yaml
-  kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate}
+  kind create cluster --name $CLUSTER_NAME --config=${populatedTemplate} --image $KIND_IMAGE
 }
 
 function apply_proxy_certs() {
@@ -39,14 +41,25 @@ function apply_proxy_certs() {
 function apply_nginx_ingress() {
   syslog "Launching NGINX ingress controller"
   
-  kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml
+  NGINX_FILE=$CLUSTER_TMP/nginx_deploy.yaml
+
+  wget https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/kind/deploy.yaml -O $NGINX_FILE
+  sed -i "s|registry.k8s.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_K8S|g" $NGINX_FILE
+
+  kubectl apply -f $NGINX_FILE
 }
 
 function install_cert_manager() {
   syslog "Installing cert-manager"
 
   # Install cert-manager to manage TLS certificates
-  kubectl apply -f https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml
+
+  CERT_MANAGER_FILE=$CLUSTER_TMP/cert-manager.yaml
+
+  wget https://github.com/jetstack/cert-manager/releases/download/v1.6.1/cert-manager.yaml -O $CERT_MANAGER_FILE
+  #sed -i "s|quay.io/|$DOCKER_REGISTRY_PROXY$REGISTRY_QUAY|g" $CERT_MANAGER_FILE
+
+  kubectl apply -f $CERT_MANAGER_FILE
 
   kubectl -n cert-manager rollout status deploy/cert-manager
   kubectl -n cert-manager rollout status deploy/cert-manager-cainjector
@@ -87,6 +100,10 @@ function launch_docker_registry() {
 
 function pull_docker_images() {
   syslog "Pulling docker images for Fabric ${FABRIC_VERSION}"
+
+  kind_source_image="${DOCKER_REGISTRY_PROXY}${REGISTRY_DOCKER_IO}kindest/node:v1.21.1@sha256:69860bda5563ac81e3c0057d654b5253219618a22ec3a346306239bba8cfa1a6"
+  docker pull $kind_source_image || true
+  docker tag $kind_source_image $KIND_IMAGE
 
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-ca:$FABRIC_CA_VERSION || true
   docker pull ${FABRIC_CONTAINER_REGISTRY}/fabric-orderer:$FABRIC_VERSION || true

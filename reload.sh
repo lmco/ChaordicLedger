@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/bash
 set -e
 start=$SECONDS
 
@@ -21,18 +21,28 @@ function terminateProcess() {
   fi
 }
 
+function removeCertsIfExist() {
+  result=$(find $1 -type f -name \*.cer | wc -l)
+  if [ $result -gt 0 ]
+  then
+    rm $1/*.cer
+  else
+    echo "NOT removing certificate files from $1; no certificate files exist in that directory."
+  fi
+}
+
 ls -rotl
 
-. env.sh
+. ./env.sh
 
 syslog "Starting reload."
 
 syslog "Removing corporate Certificate Authority certificates."
-rm api/builder/cachain/*.cer
-rm api/server/cachain/*.cer
-rm chaincode/artifact-metadata/docker/cachain/*.cer
-rm hyperledger/admin-cli/cachain/*.cer
-rm test/cachain/*.cer
+removeCertsIfExist api/builder/cachain
+removeCertsIfExist api/server/cachain
+removeCertsIfExist chaincode/artifact-metadata/docker/cachain
+removeCertsIfExist hyperledger/admin-cli/cachain
+removeCertsIfExist test/cachain/cachain
 
 syslog "Expanding archive of corporate Certificate Authority certificates."
 unzip -o cachain.zip
@@ -43,6 +53,12 @@ mkdir -p hyperledger/admin-cli/cachain/
 mkdir -p test/cachain/
 
 syslog "Loading corporate Certificate Authority certificates where necessary."
+pushd LMChain
+for file in *.cer; do 
+    mv -- "$file" "${file%.cer}.crt"
+done
+popd
+
 cp LMChain/* api/builder/cachain/
 cp LMChain/* api/server/cachain/
 cp LMChain/* chaincode/artifact-metadata/docker/cachain/
@@ -78,7 +94,7 @@ if [ -f nodejs-server.zip ]; then
   rm nodejs-server.zip
 fi
 
-export ADDITIONAL_CA_CERTS_LOCATION=/home/cloud-user/cachain/
+export ADDITIONAL_CA_CERTS_LOCATION="${PWD}/test/cachain/"
 export TEST_NETWORK_ADDITIONAL_CA_TRUST=${ADDITIONAL_CA_CERTS_LOCATION}
 cd $BASEDIR
 

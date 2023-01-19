@@ -16,7 +16,7 @@ function sourceProxyDetails() {
   proxy_details_source_file=docker_registry_proxy_details.sh
   if [[ -f "$proxy_details_source_file" ]]; then
     syslog "Sourcing proxy details from $proxy_details_source_file"
-    . $proxy_details_source_file
+    . ./$proxy_details_source_file
 
     if [[ "$REGISTRY_LOGIN_REQUIRED" == "true" ]]; then
       syslog "Logging in to $DOCKER_REGISTRY_PROXY"

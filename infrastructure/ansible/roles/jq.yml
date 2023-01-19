@@ -1,5 +1,5 @@
 - hosts: all
-  become: no
+  become: yes
   gather_facts: no
   
   vars:
@@ -9,16 +9,15 @@
       no_proxy: '{{ lookup("env", "no_proxy") }}'
 
   tasks:
-    - name: Check out ChaordicLedger Git repository
-      ansible.builtin.git:
-        repo: 'https://github.com/lmco/ChaordicLedger.git'
-        dest: ~/git/lmco/ChaordicLedger
-        version: main
+    - name: Install jq
+      dnf:
+        name:
+          - jq
+        state: latest
 
-    - name: Execute the setup.
-      shell: |
-        pushd ~/git/lmco/ChaordicLedger
-        ./reload.sh
+    - name: Check jq is accessible.
+      shell:
+        cmd: jq --version
       register: result
       check_mode: false
       changed_when: false

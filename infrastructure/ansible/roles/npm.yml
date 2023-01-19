@@ -1,0 +1,24 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Install npm
+      dnf:
+        name:
+          - npm
+        state: latest
+
+    - name: Check npm is accessible.
+      shell:
+        cmd: npm -v
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

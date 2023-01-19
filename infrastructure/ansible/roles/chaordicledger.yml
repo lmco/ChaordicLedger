@@ -1,0 +1,62 @@
+- hosts: all
+  become: no
+  gather_facts: no
+  
+  vars:
+    repo_dir: '{{ lookup("env", "repo_dir") }}'
+    active_local_git_branch: '{{ lookup("env", "active_local_git_branch") }}'
+    remote_repo_dir: ~/git/lmco/ChaordicLedger
+    ca_chain_archive: '{{ lookup("env", "CA_CHAIN_ARCHIVE") }}'
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Check out ChaordicLedger Git repository
+      ansible.builtin.git:
+        repo: 'https://github.com/lmco/ChaordicLedger.git'
+        dest: '{{ remote_repo_dir }}'
+        version: '{{ active_local_git_branch }}'
+        force: yes
+
+    - name: Check for local CA Certificates Archive
+      local_action: stat path={{ ca_chain_archive }}
+      register: ca_certs_archive
+
+    - name: Copy CA Certificates archive
+      ansible.builtin.copy:
+        src: '{{ ca_chain_archive }}'
+        dest: '{{ remote_repo_dir }}/cachain.zip'
+        mode: '0644'
+      when: ca_certs_archive.stat.exists
+
+    - name: Copy registry proxy details
+      ansible.builtin.copy:
+        src: '{{ repo_dir }}/docker_registry_proxy_details.sh'
+        dest: '{{ remote_repo_dir }}/docker_registry_proxy_details.sh'
+        mode: '0555'
+
+    - name: Copy GitHub Read Token details
+      ansible.builtin.copy:
+        src: '{{ repo_dir }}/githubReadToken.sh'
+        dest: '{{ remote_repo_dir }}/githubReadToken.sh'
+        mode: '0555'
+
+    - name: List directory
+      args:
+        chdir: '{{ remote_repo_dir }}'
+      command: ls -rotl
+      register: results
+
+    - debug:
+        var: results.stdout_lines
+
+    - name: Execute the reload script.
+      args:
+        chdir: '{{ remote_repo_dir }}'
+      command: ./reloadAndTest.sh
+      register: results
+
+    - debug:
+        var: results.stdout_lines

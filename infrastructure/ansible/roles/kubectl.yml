@@ -1,0 +1,40 @@
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Download kubectl
+      ansible.builtin.get_url:
+        url: https://dl.k8s.io/release/v1.25.3/bin/linux/amd64/kubectl
+        dest: /usr/bin/kubectl
+        mode: '0555'
+
+    - name: Download kubectl hash
+      ansible.builtin.get_url:
+        url: https://dl.k8s.io/release/v1.25.3/bin/linux/amd64/kubectl.sha256
+        dest: /usr/bin/kubectl.sha256
+        mode: '0555'
+
+    - name: Check executable against hash.
+      shell: |
+        pushd /usr/bin
+        echo "$(<kubectl.sha256)  kubectl" | sha256sum --check
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Check kubectl accessibility
+      shell: |
+        echo $PATH
+        kubectl version --client
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

@@ -85,17 +85,33 @@
         gpgcheck: true
         gpgkey: "https://download.docker.com/linux/{{ mydistribution }}/gpg"
 
-    - name: Install jq
-      dnf:
-        name:
-          - jq
-        state: latest
-
     - name: Install docker
       dnf:
         name:
           - docker-ce
         state: latest
+
+    - name: Create docker service config directory
+      ansible.builtin.file:
+        path: /etc/systemd/system/docker.service.d
+        mode: '0644'
+        state: directory
+
+    - name: Set docker daemon proxy config
+      shell: |
+        http_proxy_conf="/etc/systemd/system/docker.service.d/proxy.conf"
+        echo "[Service]" > $http_proxy_conf
+        echo "Environment=\"HTTP_PROXY={{ lookup('env', 'http_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"http_proxy{{ lookup('env', 'http_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"HTTPS_PROXY={{ lookup('env', 'https_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"https_proxy={{ lookup('env', 'https_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"NO_PROXY={{ lookup('env', 'no_proxy') }}\"" >> $http_proxy_conf
+        echo "Environment=\"no_proxy={{ lookup('env', 'no_proxy') }}\"" >> $http_proxy_conf
+
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
 
     - name: Start docker service
       service:
@@ -108,18 +124,3 @@
         name: cloud-user
         groups: docker
         append: yes
-
-    - name: Install curl and wget
-      dnf:
-        name:
-          - curl
-          - wget
-        state: latest
-
-    - name: Check jq is accessible.
-      shell:
-        cmd: jq --version
-      register: result
-      check_mode: false
-      changed_when: false
-      failed_when: result.rc != 0

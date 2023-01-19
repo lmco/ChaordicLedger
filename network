@@ -188,7 +188,11 @@ elif [ "${MODE}" == "term" ]; then
 elif [ "${MODE}" == "purge" ]; then
   if [ -d "$TEMP_DIR" ] && [ "/tmp" != "$TEMP_DIR" ] && [ "/" != "$TEMP_DIR" ]; then
     syslog "Purging contents of $TEMP_DIR to get a clean set of results."
-    rm -rf $TEMP_DIR/*
+
+    for tmpdir in $(find $TEMP_DIR -d -mindepth 1 -maxdepth 1)
+    do
+      rm -rf $tmpdir
+    done
   else
     syslog "NOT purging contents of $TEMP_DIR"
   fi

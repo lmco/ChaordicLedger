@@ -1,0 +1,34 @@
+- hosts: all
+  become: no
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Download k9s install script
+      shell: |
+        curl -sS https://webinstall.dev/k9s > /tmp/k9s.sh
+        chmod +x /tmp/k9s.sh
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    # Using a shell download since the built-in get_url and uri modules don't seem to retrieve
+    # the actual file content from https://webinstall.dev/k9s or from GitHub
+    # - name: Download k9s install script
+    #   ansible.builtin.get_url:
+    #     url: https://raw.githubusercontent.com/webinstall/webi-installers/main/k9s/install.sh
+    #     dest: /tmp/k9s.sh
+    #     mode: '0755'
+
+    - name: Install k9s
+      shell: /tmp/k9s.sh
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

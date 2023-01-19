@@ -1,0 +1,15 @@
+#!/bin/bash
+
+$(return >/dev/null 2>&1)
+if [ "$?" -eq "0" ]
+then
+    echo "Sourcing general Infrastructure as Code (IaC) environment file."
+fi
+
+# The terraform inventory file is produced by Terraform and used by Ansible.
+export TERRAFORM_TMP_PATH="/tmp/chaordicledger/terraform"
+export TF_VAR_inventoryFile="$TERRAFORM_TMP_PATH/chaordicledgerhosts_inventory.yml"
+
+export CHAORDICLEDGER_TERRAFORM_KEYFILE="~/.ssh/ChaordicLedgerTerraform.pem"
+
+export CA_CHAIN_ARCHIVE=/tmp/cachain.zip

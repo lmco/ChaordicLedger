@@ -1,0 +1,33 @@
+- import_playbook: curl.yml
+
+- hosts: all
+  become: yes
+  gather_facts: no
+  
+  vars:
+    proxy_env:
+      http_proxy: '{{ lookup("env", "http_proxy") }}'
+      https_proxy: '{{ lookup("env", "https_proxy") }}'
+      no_proxy: '{{ lookup("env", "no_proxy") }}'
+
+  tasks:
+    - name: Install helm.
+      shell:
+        cmd: |
+          curl -fsSL https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz -o helm.tar.gz
+          tar -zxvf helm.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
+
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Check helm is accessible.
+      shell:
+        cmd: helm version
+      register: result
+      become: no
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0

@@ -11,6 +11,7 @@ nodejs-server.zip
 apiServer*
 archive
 *.rpm
+.corporateEnvfile
 *.tar.gz
 githubReadToken.sh
 nohup.out
@@ -22,7 +23,8 @@ randomArtifact*
 **/outdir
 terraform/env
 *tfstate*
-infrastructure/.lmcoenv
-.terraform*
+infrastructure/.corporateEnvfile
+.terraform.*
+.terraform/
 kube-state-metrics/
 __pycache__
