@@ -1,6 +1,8 @@
 #/bin/sh
 set -e
 
+signalfile=$1
+
 function orchestratorLog() {
   now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
   echo -e "[$now | Orchestrator | INFO] $1"
@@ -61,5 +63,13 @@ orchestratorLog "Scenario execution complete."
 
 #orchestratorLog "Retrieving all blocks from the blockchain."
 #./getAllBlocks.sh
+
+if [ -z ${signalfile+x} ];
+then
+  orchestratorLog "No signal file defined."
+else
+  orchestratorLog "Touching signal file ${signalfile}"
+  touch ${signalfile}
+fi
 
 orchestratorLog "Done."
