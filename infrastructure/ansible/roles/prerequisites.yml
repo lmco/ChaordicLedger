@@ -5,3 +5,4 @@
 - import_playbook: docker.yml
 - import_playbook: shasum.yml
 - import_playbook: npm.yml
+- import_playbook: helm.yml
