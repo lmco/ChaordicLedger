@@ -21,7 +21,23 @@
 
     - name: Install graphviz module.
       shell:
-        cmd: pip3 graphviz requests
+        cmd: pip3 install graphviz
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Install matplotlib module.
+      shell:
+        cmd: pip3 install matplotlib
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Install pandas module.
+      shell:
+        cmd: pip3 install pandas
       register: result
       check_mode: false
       changed_when: false
