@@ -57,7 +57,6 @@ class="underline"
 |Gathering Key Performance Indicators (KPIs)|✔️|✔️|➖|
 
 ## Future Development Goals
-1. Add Infrastructure as Code (IaC) configuration.
 1. Diagnose/correct Java-based chaincode connectivity issues (may be due to proxy on corporate network or TLS configuration).
 1. Enable communication of multiple nodes across disparate networks.
 1. Enable role-based authorization.
