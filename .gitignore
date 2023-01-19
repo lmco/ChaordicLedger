@@ -23,7 +23,7 @@ randomArtifact*
 **/outdir
 terraform/env
 *tfstate*
-infrastructure/.lmcoenv
+infrastructure/.corporateEnvfile
 .terraform.*
 .terraform/
 kube-state-metrics/

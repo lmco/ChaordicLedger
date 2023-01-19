@@ -1,3 +1,5 @@
+- import_playbook: curl.yml
+
 - hosts: all
   become: yes
   gather_facts: no
@@ -9,11 +11,29 @@
       no_proxy: '{{ lookup("env", "no_proxy") }}'
 
   tasks:
-    - name: Install helm
-      dnf:
-        name:
-          - helm
-        state: latest
+    - name: Download helm retrieval script.
+      shell:
+        cmd: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Set script as executable.
+      shell:
+        cmd: chmod 700 get_helm.sh
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Execute helm retrieval.
+      shell:
+        cmd: ./get_helm.sh
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
 
     - name: Check helm is accessible.
       shell:
