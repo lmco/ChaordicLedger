@@ -3,3 +3,5 @@
 - import_playbook: curl.yml
 - import_playbook: jq.yml
 - import_playbook: docker.yml
+- import_playbook: shasum.yml
+- import_playbook: npm.yml
