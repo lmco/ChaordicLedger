@@ -4,6 +4,7 @@
 
 export outdir=$1
 export wait=$2
+export signalfile=$3
 
 mkdir -p $outdir
 
@@ -18,4 +19,9 @@ do
       
     echo "[${timestamp}] Waiting ${wait} to gather next sample"
     sleep ${wait}
+
+    if [[ -f "$signalfile" ]]; then
+        echo "Signal file $signalfile exists; stopping monitor"
+        break
+    fi
 done
