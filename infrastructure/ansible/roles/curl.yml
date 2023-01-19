@@ -9,9 +9,8 @@
       no_proxy: '{{ lookup("env", "no_proxy") }}'
 
   tasks:
-    - name: Install curl and wget
+    - name: Install curl
       dnf:
         name:
           - curl
-          - wget
         state: latest

@@ -11,13 +11,13 @@
   tasks:
     - name: Download kubectl
       ansible.builtin.get_url:
-        url: https://dl.k8s.io/release/v1.23.3/bin/linux/amd64/kubectl
+        url: https://dl.k8s.io/release/v1.25.3/bin/linux/amd64/kubectl
         dest: /usr/bin/kubectl
         mode: '0555'
 
     - name: Download kubectl hash
       ansible.builtin.get_url:
-        url: https://dl.k8s.io/release/v1.23.3/bin/linux/amd64/kubectl.sha256
+        url: https://dl.k8s.io/release/v1.25.3/bin/linux/amd64/kubectl.sha256
         dest: /usr/bin/kubectl.sha256
         mode: '0555'
 

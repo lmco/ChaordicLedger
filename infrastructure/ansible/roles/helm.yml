@@ -11,25 +11,13 @@
       no_proxy: '{{ lookup("env", "no_proxy") }}'
 
   tasks:
-    - name: Download helm retrieval script.
+    - name: Install helm.
       shell:
-        cmd: curl -fsSL -o get_helm.sh https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3
-      register: result
-      check_mode: false
-      changed_when: false
-      failed_when: result.rc != 0
+        cmd: |
+          curl -fsSL https://get.helm.sh/helm-v3.11.0-linux-amd64.tar.gz -o helm.tar.gz
+          tar -zxvf helm.tar.gz
+          mv linux-amd64/helm /usr/local/bin/helm
 
-    - name: Set script as executable.
-      shell:
-        cmd: chmod 700 get_helm.sh
-      register: result
-      check_mode: false
-      changed_when: false
-      failed_when: result.rc != 0
-
-    - name: Execute helm retrieval.
-      shell:
-        cmd: ./get_helm.sh
       register: result
       check_mode: false
       changed_when: false
@@ -39,6 +27,7 @@
       shell:
         cmd: helm version
       register: result
+      become: no
       check_mode: false
       changed_when: false
       failed_when: result.rc != 0

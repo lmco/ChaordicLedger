@@ -1,8 +1,10 @@
 - import_playbook: kind.yml
 - import_playbook: kubectl.yml
 - import_playbook: curl.yml
+- import_playbook: wget.yml
+- import_playbook: helm.yml
 - import_playbook: jq.yml
 - import_playbook: docker.yml
 - import_playbook: shasum.yml
 - import_playbook: npm.yml
-- import_playbook: helm.yml
+- import_playbook: pythonmodules.yml
