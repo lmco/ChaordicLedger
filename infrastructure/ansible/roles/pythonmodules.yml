@@ -1,3 +1,5 @@
+- import_playbook: curl.yml
+
 - hosts: all
   become: yes
   gather_facts: no
@@ -9,15 +11,17 @@
       no_proxy: '{{ lookup("env", "no_proxy") }}'
 
   tasks:
-    - name: Install npm
-      dnf:
-        name:
-          - npm
-        state: latest
-
-    - name: Check npm is accessible.
+    - name: Install requests module.
       shell:
-        cmd: npm -v
+        cmd: pip3 install requests
+      register: result
+      check_mode: false
+      changed_when: false
+      failed_when: result.rc != 0
+
+    - name: Install graphviz module.
+      shell:
+        cmd: pip3 graphviz requests
       register: result
       check_mode: false
       changed_when: false
