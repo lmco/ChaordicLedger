@@ -124,3 +124,7 @@
         name: cloud-user
         groups: docker
         append: yes
+
+    - name: Reboot the machine
+      ansible.builtin.reboot:
+        reboot_timeout: 300
