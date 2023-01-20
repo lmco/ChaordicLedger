@@ -12,7 +12,7 @@ The goal of this codebase is to establish a [TRL Level 4](https://en.wikipedia.o
 1. Clone this repository
 1. Create a GitHub read token.
 1. Create a *"githubReadToken.sh"* script file in the repository's root directory with the following contents:
-    ```
+    ```sh
     export githubReadToken=ghp_YOUR_READ_TOKEN_HERE
     ```
 1. Run the *reload.sh* script.
