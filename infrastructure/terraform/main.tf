@@ -23,7 +23,7 @@ resource "openstack_compute_instance_v2" "chaordicledgerhost" {
   name            = "${local.hostname}${count.index + 1}"
   image_name      = "iniStar RHEL 8.6 LTS"
   image_id        = "a1db6c30-e97c-4c8d-b9d2-348224f7c99a"
-  flavor_name     = "m4.xlarge"
+  flavor_name     = "m1.large"
   key_pair        = "ChaordicLedgerTerraform"
   security_groups = [ "default" ]
 
