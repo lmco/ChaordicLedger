@@ -5,7 +5,7 @@
     "directResult": "true"
   },
   "getRelationshipGraphFile": {
-    "passthrough": "true"
+    "source": "getRelationshipGraphFile.js"
   },
   "createNode": {
     "script": "createNode.sh",
