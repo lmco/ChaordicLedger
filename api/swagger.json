@@ -429,6 +429,24 @@
         }
       }
     },
+    "/relationships/getRelationshipGraphFile": {
+      "get": {
+        "summary": "Gets the file describing the relationships between artifacts.",
+        "description": "Gets the file describing the relationships between artifacts.",
+        "operationId": "getRelationshipGraphFile",
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
     "/relationships/createRelationship": {
       "post": {
         "summary": "Creates a new relationship between nodes.",
