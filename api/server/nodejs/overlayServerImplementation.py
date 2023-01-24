@@ -114,7 +114,7 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             stringify=False
 
             if "source" in mapfile[key]:
-                with open(mapfile[key]["source"], 'r') as source:
+                with open(os.path.join(inputdir, mapfile[key]["source"]), 'r') as source:
                     line = source.readline()
                     while line:
                         f.writelines(line)
