@@ -116,6 +116,11 @@ jobs:
           SystemTestServiceFunctionMapFile="$SystemTestServiceInputDir/functionMap.json"
           python ./api/server/nodejs/overlayServerImplementation.py -i $SystemTestServiceInputDir -m $SystemTestServiceFunctionMapFile -o ${{ env.OUT_NODEJS }}/service -f SystemTestService.js
 
+      - name: Add API processing extension methods
+        run: |
+          cat ./api/server/nodejs/writerFunctions.js >> ${{ env.OUT_NODEJS }}/utils/writer.js
+          cat ./api/server/nodejs/customRelationshipControllerFunctions.js >> ${{ env.OUT_NODEJS }}/controllers/Relationships.js          
+
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code

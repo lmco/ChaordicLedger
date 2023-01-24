@@ -4,6 +4,9 @@
     "target": "deploy/chaordicledger-ipfs",
     "directResult": "true"
   },
+  "getRelationshipGraphFile": {
+    "passthrough": "true"
+  },
   "createNode": {
     "script": "createNode.sh",
     "parameters": [

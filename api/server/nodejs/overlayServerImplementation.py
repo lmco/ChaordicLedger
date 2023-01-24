@@ -112,6 +112,10 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             functionExpressions = []
             divider = ""
             stringify=False
+
+            if "passthrough" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":
+                continue
+
             if "stringifyParameters" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":
                 stringify = True
 
