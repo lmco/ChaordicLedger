@@ -52,7 +52,7 @@ func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterfac
 	fmt.Println()
 
 	ipfsName := ""
-	sh = shell.NewShell("ipfs-ui:5001")
+	sh = shell.NewShell("ipfs-rpc-api:5001")
 	for i := 0; i < 1; i++ {
 		resp, err := makeObject(formJson)
 		if err != nil {
