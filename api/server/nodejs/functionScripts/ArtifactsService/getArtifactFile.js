@@ -22,11 +22,16 @@ exports.getArtifactFile = function (artifactID) {
 
         w.on('finish', () => {
           console.log("Finished retrieving artifact!")
-          resolve(result.join(''))
+          var jsonObj = JSON.parse(result.join(''));
+          var originalName=jsonObj["originalname"]
+          console.log('Returning artifact ' + artifactID + ' (original name: ' + originalName + ').')
+          var buf = Buffer.from(jsonObj["buffer"]["data"], "hex")
+          resolve([200, buf, originalName, buf.length])
         })
         w.on('error', (src) => {
           console.log(src)
-          reject(src)
+          var buf = Buffer.from("error")
+          reject([400, buf, "error", buf.length])
         })
 
         myStream.pipe(w)
