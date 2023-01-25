@@ -33,6 +33,6 @@ function init_graph_job()
 #   kubectl delete -f $graphJobConfig -n ${NETWORK_NAME} || true
 #   kubectl delete secret graphjob-args -n ${NETWORK_NAME} || true
   
-#   kubectl create secret generic graphjob-args --from-literal=arg1="" --from-literal=arg2="" --from-literal=arg3="/dns/ipfs-ui/tcp/5001/http" --from-literal=arg4="write" --from-literal=arg5='{"nodeid":"A","fileid":"something"}' --from-literal=arg6="{}" -n ${NETWORK_NAME}
+#   kubectl create secret generic graphjob-args --from-literal=arg1="" --from-literal=arg2="" --from-literal=arg3="/dns/ipfs-rpc-api/tcp/5001/http" --from-literal=arg4="write" --from-literal=arg5='{"nodeid":"A","fileid":"something"}' --from-literal=arg6="{}" -n ${NETWORK_NAME}
 #   kubectl create -f $graphJobConfig -n ${NETWORK_NAME}
 # }

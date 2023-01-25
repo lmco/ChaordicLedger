@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+
 	//"github.com/stretchr/testify/assert"
 	"io"
 	"io/ioutil"
@@ -12,6 +13,7 @@ import (
 	"net/http"
 	"os"
 	"strings"
+
 	//"testing"
 	"time"
 
@@ -89,7 +91,7 @@ func TestUploadFolderRaw() {
 		"/dir/file": "@/my/path/dir/file",
 	})
 
-	resp, err := http.Post("http://ipfs-ui:5001/api/v0/add?pin=true&recursive=true&wrap-with-directory=true", ct, r)
+	resp, err := http.Post("http://ipfs-rpc-api:5001/api/v0/add?pin=true&recursive=true&wrap-with-directory=true", ct, r)
 
 	respAsBytes, err := ioutil.ReadAll(resp.Body)
 	fmt.Println("response: ", string(respAsBytes))
@@ -283,7 +285,7 @@ func (s *SmartContract) CreateContent(ctx contractapi.TransactionContextInterfac
 	fmt.Println()
 
 	ipfsName := ""
-	sh = shell.NewShell("ipfs-ui:5001")
+	sh = shell.NewShell("ipfs-rpc-api:5001")
 	for i := 0; i < 1; i++ {
 		resp, err := makeObject(formJson)
 		if err != nil {

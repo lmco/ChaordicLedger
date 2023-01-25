@@ -51,7 +51,7 @@ def validateMode(mode):
 def validateArgs():
     parser = argparse.ArgumentParser()
     parser.add_argument("-i", "--ipfsapiserver", action="store",
-                        help="The address of the IPFS API (e.g. /dns/localhost/tcp/5001/http)", required=False, default="/dns/ipfs-ui/tcp/5001/http")
+                        help="The address of the IPFS API (e.g. /dns/localhost/tcp/5001/http)", required=False, default="/dns/ipfs-rpc-api/tcp/5001/http")
     # parser.add_argument("-g", "--graphfile", action="store",
     #                     help="The name of the file representing the graph", required=True, default="graph.json")
     parser.add_argument("-m", "--mode", action="store",
