@@ -119,7 +119,7 @@ jobs:
       - name: Add API processing extension methods
         run: |
           cat ./api/server/nodejs/writerFunctions.js >> ${{ env.OUT_NODEJS }}/utils/writer.js
-          cat ./api/server/nodejs/customRelationshipControllerFunctions.js >> ${{ env.OUT_NODEJS }}/controllers/Relationships.js          
+          #cat ./api/server/nodejs/customRelationshipControllerFunctions.js >> ${{ env.OUT_NODEJS }}/controllers/Relationships.js
 
       # - name: Generate NPM package details
       #   run: |

@@ -119,6 +119,9 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
                     while line:
                         f.writelines(line)
                         line=source.readline()
+                    
+                    f.writelines(os.linesep)
+                    f.writelines(os.linesep)
                 continue
 
             if "stringifyParameters" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":

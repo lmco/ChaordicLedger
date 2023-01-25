@@ -181,6 +181,36 @@
         }
       }
     },
+    "/artifacts/getArtifactFile": {
+      "get": {
+        "summary": "Gets an existing artifact.",
+        "description": "Gets an existing artifact.",
+        "operationId": "getArtifactFile",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "artifactID",
+            "in": "query",
+            "description": "ID of artifact to get",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact not found"
+          }
+        }
+      }
+    },
     "/artifacts/getArtifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",

@@ -1,14 +1,13 @@
-exports.getRelationshipGraphFile = function () {
+exports.getArtifactFile = function (artifactID) {
   const fs = require('fs')
   const stream = require('stream')
 
   const exec = require("child_process").exec;
 
-  const srcFileName = "/graph.json"
-  const outFileName = "/tmp/chaordicLedgerRelationshipGraph.json"
+  const outFileName = '/tmp/' + artifactID
 
   return new Promise((resolve, reject) => {
-    exec(`touch ${outFileName} && export ipfsPodName=$(kubectl -n chaordicledger get pods | grep "ipfs-" | awk '{print $1;}') && export ipfsPodIp=$(kubectl -n chaordicledger get pod $ipfsPodName -o json | jq -r '.status.podIP') && export no_proxy=$ipfsPodIp && curl -X POST http://$ipfsPodIp:5001/api/v0/files/read?arg=${srcFileName} -o ${outFileName}`, (error, stdout, stderr) => {
+    exec(`touch ${outFileName} && export ipfsPodName=$(kubectl -n chaordicledger get pods | grep "ipfs-" | awk '{print $1;}') && export ipfsPodIp=$(kubectl -n chaordicledger get pod $ipfsPodName -o json | jq -r '.status.podIP') && export no_proxy=$ipfsPodIp && curl -X POST http://$ipfsPodIp:5001/api/v0/files/cat?arg=${artifactID} -o ${outFileName}`, (error, stdout, stderr) => {
       if (error) {
         reject({ "result": null, "error": stderr, "durationInNanoseconds": end - start })
       } else {
