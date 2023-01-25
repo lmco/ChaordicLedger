@@ -190,7 +190,7 @@
           "Artifacts"
         ],
         "produces": [
-          "application/json"
+          "application/octet-stream"
         ],
         "parameters": [
           {
