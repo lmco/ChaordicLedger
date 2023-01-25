@@ -1,15 +1,26 @@
-exports.getRelationshipGraph = function () {
-    var start = now('nano')
+exports.getRelationshipGraphFile = function() {
+    const fs = require('fs')
+    const stream = require('stream')
+
     const exec = require("child_process").exec;
-    return new Promise(function (resolve, reject) {
-      exec(`cat ./service/getRelationshipGraph.sh | exec kubectl -n chaordicledger exec deploy/chaordicledger-ipfs -i -- /bin/sh`, (error, stdout, stderr) => {
-        var end = now('nano')
+    exec(`curl http://localhost/rpc/api/v0/files/read?arg=/graph.json -o /tmp/graph.json`, (error, stdout, stderr) => {
         if (error) {
           resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })
         } else {
-          resolve(stdout)
+            const mystream = fs.createReadStream("/tmp/graph.json");
+
+            const result = []
+            const w = new stream.Writable({
+                write(chunk, encoding, callback) {
+                result.push(chunk)
+                callback()
+                }
+            })
+            mystream.pipe(w)
+            return new Promise((resolve, reject) => {
+                w.on('finish', resolve)
+                w.on('error', reject)
+            }).then(() => result.join(''))
         }
-      });
     });
   }
-  

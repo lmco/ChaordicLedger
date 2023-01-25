@@ -67,7 +67,7 @@ spec:
 kind: Service
 apiVersion: v1
 metadata:
-  name: ipfs-ui
+  name: ipfs-rpc-api
 spec:
   selector:
     app: ipfs-app

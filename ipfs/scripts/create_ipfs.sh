@@ -31,6 +31,11 @@ function create_storage_type() {
   kubectl -n $NS apply -f ${ipfs_config} || true
 }
 
+function create_ingress() {
+  ipfs_config=../config/ipfs_ingress.yaml
+  kubectl -n $NS apply -f ${ipfs_config} || true
+}
+
 function create_sample_file() {
   syslog "Creating sample file"
   result=$(cat create_default_files.sh | exec kubectl -n $NS exec deploy/chaordicledger-ipfs -i -- /bin/sh)
@@ -48,6 +53,7 @@ function create_sample_file() {
 function create_ipfs() {
   init_storage_volumes
   create_service
+  create_ingress
   local wait=15
   sleep $wait
   echo "Waiting ${wait} seconds after IPFS service creation."
@@ -55,6 +61,7 @@ function create_ipfs() {
 }
 
 function delete_ipfs() {
+  kubectl delete -f ../config/ipfs_ingress.yaml -n $NS
   kubectl delete -f ../config/ipfs_service.yaml -n $NS
   kubectl delete -f ../config/ipfs_pvc.yaml -n $NS
   kubectl delete -f ../config/ipfs_pv.yaml -n $NS
