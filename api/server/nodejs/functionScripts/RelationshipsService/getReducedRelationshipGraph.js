@@ -6,7 +6,7 @@ exports.getReducedRelationshipGraph = function (artifactID, maxDepth) {
 
   const srcFileName = "/graph.json"
   const outFileName = "/tmp/reducedChaordicLedgerRelationshipGraph.json"
-  const prefix = "testReduce"
+  const prefix = "apiReduced"
 
   return new Promise((resolve, reject) => {
     exec(`touch ${outFileName} && export ipfsPodName=$(kubectl -n chaordicledger get pods | grep "ipfs-" | awk '{print $1;}') && export ipfsPodIp=$(kubectl -n chaordicledger get pod $ipfsPodName -o json | jq -r '.status.podIP') && export no_proxy=$ipfsPodIp && curl -X POST http://$ipfsPodIp:5001/api/v0/files/read?arg=${srcFileName} -o ${outFileName} && python3 utils/digraphReducer.py -t ${prefix}_${artifactID} -p ${prefix} -o /tmp -r ${artifactID} -f ${outFileName} -d ${maxDepth}`, (error, stdout, stderr) => {
