@@ -478,6 +478,40 @@
         }
       }
     },
+    "/relationships/getReducedRelationshipGraph": {
+      "get": {
+        "summary": "Gets the file describing the relationships between artifacts with focus on a given artifact.",
+        "description": "Gets the file describing the relationships between artifacts with focus on a given artifact",
+        "operationId": "getReducedRelationshipGraph",
+        "parameters": [
+          {
+            "name": "artifactID",
+            "in": "query",
+            "description": "ID of the artifact around which the graph should be focused",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "maxDepth",
+            "in": "query",
+            "description": "The maximum relationship depth.",
+            "required": true,
+            "type": "integer"
+          }
+        ],
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
     "/relationships/createRelationship": {
       "post": {
         "summary": "Creates a new relationship between nodes.",

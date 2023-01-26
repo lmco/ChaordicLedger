@@ -106,9 +106,10 @@ if __name__ == "__main__":
         located = False
         for node in data["nodes"]:
             if node["NodeID"] == args.rootArtifact:
-                add_node(node, dotgraph)
+                #add_node(node, dotgraph)
                 located = True
                 break
+
         if located:
             log.info(f"Located specified root artifact {args.rootArtifact}")
 
@@ -118,6 +119,11 @@ if __name__ == "__main__":
             processedNodes=set()
             while level < args.maxDepth:
                 for node in nodesIdsToProcess.copy():
+                    for dataNode in data["nodes"]:
+                        if dataNode["NodeID"] == node:
+                            add_node(dataNode, dotgraph)
+                            break
+
                     log.info(f"Level {level}: Processing node {node}")
                     for edge in data["edges"]:
                         if edge["NodeIDA"] == node:
@@ -128,6 +134,13 @@ if __name__ == "__main__":
                     nodesIdsToProcess.remove(node)
                     processedNodes.add(node)
                 level += 1
+            
+            # Include info for remaining linked nodes.
+            for node in nodesIdsToProcess.copy():
+                for dataNode in data["nodes"]:
+                    if dataNode["NodeID"] == node:
+                        add_node(dataNode, dotgraph)
+                        break
 
             dotFileName = generate_graph_file(
                 args.outDir, args.prefix.replace(" ", ""), dotgraph)

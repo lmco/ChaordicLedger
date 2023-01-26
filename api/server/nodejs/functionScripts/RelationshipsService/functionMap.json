@@ -7,6 +7,9 @@
   "getRelationshipGraphFile": {
     "source": "getRelationshipGraphFile.js"
   },
+  "getReducedRelationshipGraph": {
+    "source": "getReducedRelationshipGraph.js"
+  },
   "createNode": {
     "script": "createNode.sh",
     "parameters": [
