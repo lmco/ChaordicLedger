@@ -496,6 +496,7 @@
             "in": "query",
             "description": "The maximum relationship depth.",
             "required": false,
+            "default": 3,
             "type": "integer"
           }
         ],
