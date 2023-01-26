@@ -62,7 +62,6 @@ class="underline"
 1. Enable role-based authorization.
 1. Enable TLS for chaincode.
 1. Enable use of specified Certificate Authority.
-1. Add API method to retrieve a subset of the relationship graph with a specific depth or distance of relationships.
 1. Add API method for drill-down requests.
 1. Add served rendering of relationship graphs. Possible starting point [https://github.com/wangkuiyi/graphviz-server](https://github.com/wangkuiyi/graphviz-server)
 1.	Increase the TRL by executing the platform on edge-style hardware devices by way of third-party users.
