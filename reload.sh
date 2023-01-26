@@ -130,6 +130,14 @@ syslog "Querying metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
 ./network query ${ARTIFACT_CONTENT_CCNAME} '{"Args":["GetAllContent"]}'
 
+# Setup local routing so API can reach the pods
+controlPlaneIP=$(docker container inspect chaordiccluster-control-plane --format '{{ .NetworkSettings.Networks.kind.IPAddress }}')
+ipfsPodName=$(kubectl -n chaordicledger get pods | grep "ipfs-" | awk '{print $1;}')
+ipfsPodIp=$(kubectl -n chaordicledger get pod $ipfsPodName -o json | jq -r '.status.podIP')
+sudo ip route add $ipfsPodIp via $controlPlaneIP || true
+
+ip route
+
 syslog "Pull the latest nodejs-server.zip artifact from the latest successful GitHub run."
 
 #   Note: Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
@@ -185,7 +193,7 @@ then
 fi
 
 syslog "Getting the current graph state."
-currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraph')
+currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraphFile')
 syslog "$(echo $currentGraphState | tr -d '[:space:]')"
 
 syslog "Getting a list of all known artifacts."

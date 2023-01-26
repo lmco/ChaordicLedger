@@ -13,11 +13,11 @@ COPY graphProcessor.py ./
 
 ENV HTTP_PROXY=
 ENV HTTPS_PROXY=
-ENV IPFS_API_SERVER=/dns/ipfs-ui/tcp/12345/http
+ENV IPFS_API_SERVER=/dns/ipfs-rpc-api/tcp/5001/http
 ENV MODE="init"
 ENV NODE="{}"
 ENV RELATIONSHIP="{}"
 
 RUN pip install ipfshttpclient
 
-ENTRYPOINT python ./graphProcessor.py -i /dns/ipfs-ui/tcp/5001/http -m "$MODE" -n "$NODE" -r "$RELATIONSHIP"
+ENTRYPOINT python ./graphProcessor.py -i $IPFS_API_SERVER -m "$MODE" -n "$NODE" -r "$RELATIONSHIP"

@@ -112,6 +112,18 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             functionExpressions = []
             divider = ""
             stringify=False
+
+            if "source" in mapfile[key]:
+                with open(os.path.join(inputdir, mapfile[key]["source"]), 'r') as source:
+                    line = source.readline()
+                    while line:
+                        f.writelines(line)
+                        line=source.readline()
+                    
+                    f.writelines(os.linesep)
+                    f.writelines(os.linesep)
+                continue
+
             if "stringifyParameters" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":
                 stringify = True
 

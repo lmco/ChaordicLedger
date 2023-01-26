@@ -27,7 +27,7 @@ def configureLogging():
 
 class MyServer(BaseHTTPRequestHandler):
     def write_data(self, data):
-        client = ipfshttpclient.connect("/dns/ipfs-ui/tcp/5001/http")
+        client = ipfshttpclient.connect("/dns/ipfs-rpc-api/tcp/5001/http")
         jsonData = json.loads(data)
         graph = client.files.read(
             "/graph.json").decode('utf-8')
@@ -78,7 +78,7 @@ class MyServer(BaseHTTPRequestHandler):
         log.info("Received %s", post_body)
         try:
             self.write_data(post_body)
-            # output = subprocess.run(args=["python", "graphProcessor.py", "-i /dns/ipfs-ui/tcp/5001/http",
+            # output = subprocess.run(args=["python", "graphProcessor.py", "-i /dns/ipfs-rpc-api/tcp/5001/http",
             #                               '-m "write"', "-n " + post_body, '-r "{}"'], shell=True)
             # log.info("Output: %s", output)
         except Exception as e:

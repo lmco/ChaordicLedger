@@ -1,5 +1,4 @@
 import argparse
-import logging
 import json
 import os
 import requests
@@ -38,23 +37,28 @@ if __name__ == "__main__":
                        "Content-Type": form.content_type}
             response = session.post(
                 artifactUrl, headers=headers, data=form.to_string())
-            print(f"Code: {response.status_code} - {response.text}")
 
             data = json.loads(response.text)["result"]
-            print(data)
-
-            responseMap[file] = data
+            if data is None:
+                print(f"Error uploading {file}!")
+            else:
+                print(f"Code: {response.status_code} - {response.text}")
+                responseMap[file] = data
         session.close()
 
         for relation in inputMap[file]:
             sourceName = responseMap[file]["result"]["IPFSName"]
-            targetName = responseMap[relation]["result"]["IPFSName"]
-            print(
-                f"Submitting relationship between \"{file}\" (\"{sourceName}\") and \"{relation}\" (\"{targetName}\") to {relationshipUrl}.")
+            if relation not in responseMap:
+                print(f"No relation to set for {sourceName}.")
+            else:
+                print(f"{sourceName}: {responseMap[relation]}")
+                targetName = responseMap[relation]["result"]["IPFSName"]
+                print(
+                    f"Submitting relationship between \"{file}\" (\"{sourceName}\") and \"{relation}\" (\"{targetName}\") to {relationshipUrl}.")
 
-            response = requests.post(relationshipUrl, json={
-                "nodeida": sourceName,
-                "nodeidb": targetName
-            })
+                response = requests.post(relationshipUrl, json={
+                    "nodeida": sourceName,
+                    "nodeidb": targetName
+                })
 
-            print(f"Code: {response.status_code} - {response.text}")
+                print(f"Code: {response.status_code} - {response.text}")

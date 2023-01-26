@@ -19,7 +19,7 @@ function testerr() {
 }
 
 function getGraphState() {
-  url="${API_ROOT_URL}/relationships/getRelationshipGraph"
+  url="${API_ROOT_URL}/relationships/getRelationshipGraphFile"
   testlog "Getting current graph state from ${url}"
   currentGraphState=$(curl -s -X GET --header 'Accept: application/json' "${url}")
   testlog $(echo $currentGraphState | tr -d '[:space:]')

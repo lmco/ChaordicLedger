@@ -181,6 +181,36 @@
         }
       }
     },
+    "/artifacts/getArtifactFile": {
+      "get": {
+        "summary": "Gets an existing artifact.",
+        "description": "Gets an existing artifact.",
+        "operationId": "getArtifactFile",
+        "tags": [
+          "Artifacts"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "parameters": [
+          {
+            "name": "artifactID",
+            "in": "query",
+            "description": "ID of artifact to get",
+            "required": true,
+            "type": "string"
+          }
+        ],
+        "responses": {
+          "400": {
+            "description": "Invalid ID supplied"
+          },
+          "404": {
+            "description": "Artifact not found"
+          }
+        }
+      }
+    },
     "/artifacts/getArtifactObject": {
       "get": {
         "summary": "Gets an existing artifact.",
@@ -416,11 +446,65 @@
         "summary": "Gets the relationships between artifacts.",
         "description": "Gets the relationships between artifacts.",
         "operationId": "getRelationshipGraph",
+        "deprecated": true,
         "tags": [
           "Relationships"
         ],
         "produces": [
           "application/json"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/relationships/getRelationshipGraphFile": {
+      "get": {
+        "summary": "Gets the file describing the relationships between artifacts.",
+        "description": "Gets the file describing the relationships between artifacts.",
+        "operationId": "getRelationshipGraphFile",
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/octet-stream"
+        ],
+        "responses": {
+          "404": {
+            "description": "File not found"
+          }
+        }
+      }
+    },
+    "/relationships/getReducedRelationshipGraph": {
+      "get": {
+        "summary": "Gets the file describing the relationships between artifacts with focus on a given artifact.",
+        "description": "Gets the file describing the relationships between artifacts with focus on a given artifact",
+        "operationId": "getReducedRelationshipGraph",
+        "parameters": [
+          {
+            "name": "artifactID",
+            "in": "query",
+            "description": "ID of the artifact around which the graph should be focused",
+            "required": true,
+            "type": "string"
+          },
+          {
+            "name": "maxDepth",
+            "in": "query",
+            "description": "The maximum relationship depth.",
+            "required": false,
+            "default": 3,
+            "type": "integer"
+          }
+        ],
+        "tags": [
+          "Relationships"
+        ],
+        "produces": [
+          "application/octet-stream"
         ],
         "responses": {
           "404": {

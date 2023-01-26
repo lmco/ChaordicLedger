@@ -1,0 +1,106 @@
+{
+    "nodes": [
+        {
+            "NodeID": "TopLevel",
+            "FileID": "A"
+        },
+        {
+            "NodeID": "Level11",
+            "FileID": "B11"
+        },
+        {
+            "NodeID": "Level12",
+            "FileID": "B12"
+        },
+        {
+            "NodeID": "Level13",
+            "FileID": "B13"
+        },
+        {
+            "NodeID": "Level14",
+            "FileID": "B14"
+        },
+        {
+            "NodeID": "Level15",
+            "FileID": "B15"
+        },
+        {
+            "NodeID": "Level21",
+            "FileID": "B21"
+        },
+        {
+            "NodeID": "Level22",
+            "FileID": "B22"
+        },
+        {
+            "NodeID": "Level23",
+            "FileID": "B23"
+        },
+        {
+            "NodeID": "Level31",
+            "FileID": "B31"
+        },
+        {
+            "NodeID": "Level32",
+            "FileID": "B32"
+        },
+        {
+            "NodeID": "Level41",
+            "FileID": "B41"
+        },
+        {
+            "NodeID": "Level51",
+            "FileID": "B51"
+        }
+    ],
+    "edges": [
+        {
+            "NodeIDA": "TopLevel",
+            "NodeIDB": "Level11"
+        },
+        {
+            "NodeIDA": "TopLevel",
+            "NodeIDB": "Level12"
+        },
+        {
+            "NodeIDA": "TopLevel",
+            "NodeIDB": "Level13"
+        },
+        {
+            "NodeIDA": "TopLevel",
+            "NodeIDB": "Level14"
+        },
+        {
+            "NodeIDA": "TopLevel",
+            "NodeIDB": "Level15"
+        },
+        {
+            "NodeIDA": "Level13",
+            "NodeIDB": "Level21"
+        },
+        {
+            "NodeIDA": "Level13",
+            "NodeIDB": "Level22"
+        },
+        {
+            "NodeIDA": "Level13",
+            "NodeIDB": "Level23"
+        },
+        {
+            "NodeIDA": "Level23",
+            "NodeIDB": "Level31"
+        },
+        {
+            "NodeIDA": "Level23",
+            "NodeIDB": "Level32"
+        },
+        {
+            "NodeIDA": "Level32",
+            "NodeIDB": "Level41"
+        },
+        {
+            "NodeIDA": "Level41",
+            "NodeIDB": "Level51"
+        }
+    ]
+}

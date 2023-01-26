@@ -63,7 +63,7 @@ if __name__ == "__main__":
         "area": "3"  # Only used by patchwork.
     }
 
-    url = "http://localhost:8080/v1/relationships/getRelationshipGraph"
+    url = "http://localhost:8080/v1/relationships/getRelationshipGraphFile"
     log.info(f"Accessing {url} to retrieve relationship data.")
     response = requests.get(url)
 
@@ -71,7 +71,7 @@ if __name__ == "__main__":
     dotgraph = Digraph(name=title,
                        graph_attr=graphattributes)
 
-    data = json.loads(response.text)["result"]
+    data = json.loads(response.text)
 
     for node in data["nodes"]:
         add_node(node, dotgraph)

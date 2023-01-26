@@ -1,4 +1,7 @@
 {
+  "getArtifactFile": {
+    "source": "getArtifactFile.js"
+  },
   "getArtifactObject": {
     "script": "getArtifactObject.sh",
     "parameters": [
