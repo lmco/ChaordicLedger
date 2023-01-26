@@ -64,7 +64,7 @@ orchestratorLog "Scenario execution complete."
 #orchestratorLog "Retrieving all blocks from the blockchain."
 #./getAllBlocks.sh
 
-if [ -z ${signalfile+x} ];
+if [ -z "${signalfile}" ];
 then
   orchestratorLog "No signal file defined."
 else

@@ -4,7 +4,7 @@ SCENARIO_NAME="Create One Hundred Randomly-Related Artifacts"
 setTestOutdir
 
 FILE_COUNT_TO_GENERATE=100
-RANDOM_RANGE=50
+RANDOM_RANGE=100
 
 graphsdir=$TEST_OUT_DIR/graphs
 filesdir=$TEST_OUT_DIR/files

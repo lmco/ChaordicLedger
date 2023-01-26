@@ -134,7 +134,7 @@ syslog "Querying metadata chaincode."
 controlPlaneIP=$(docker container inspect chaordiccluster-control-plane --format '{{ .NetworkSettings.Networks.kind.IPAddress }}')
 ipfsPodName=$(kubectl -n chaordicledger get pods | grep "ipfs-" | awk '{print $1;}')
 ipfsPodIp=$(kubectl -n chaordicledger get pod $ipfsPodName -o json | jq -r '.status.podIP')
-sudo ip route add $ipfsPodIp via $controlPlaneIP
+sudo ip route add $ipfsPodIp via $controlPlaneIP || true
 
 ip route
 
@@ -193,7 +193,7 @@ then
 fi
 
 syslog "Getting the current graph state."
-currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraph')
+currentGraphState=$(curl -s -X GET --header 'Accept: application/json' 'http://localhost:8080/v1/relationships/getRelationshipGraphFile')
 syslog "$(echo $currentGraphState | tr -d '[:space:]')"
 
 syslog "Getting a list of all known artifacts."
