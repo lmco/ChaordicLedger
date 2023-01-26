@@ -141,10 +141,11 @@ if __name__ == "__main__":
                     if dataNode["NodeID"] == node:
                         add_node(dataNode, dotgraph)
                         break
-
-            dotFileName = generate_graph_file(
-                args.outDir, args.prefix.replace(" ", ""), dotgraph)
-            
-            log.info(f"Created GraphViz file {dotFileName}")
         else:
             log.error(f"Could not locate specified root artifact {args.rootArtifact}")
+
+        # Make a file in all cases.
+        dotFileName = generate_graph_file(
+                args.outDir, args.prefix.replace(" ", ""), dotgraph)
+
+        log.info(f"Created GraphViz file {dotFileName}")
