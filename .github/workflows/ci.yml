@@ -121,7 +121,7 @@ jobs:
           cat ./api/server/nodejs/writerFunctions.js >> ${{ env.OUT_NODEJS }}/utils/writer.js
           cat ./api/server/nodejs/customArtifactControllerFunctions.js >> ${{ env.OUT_NODEJS }}/controllers/Artifacts.js
           #cat ./api/server/nodejs/customRelationshipControllerFunctions.js >> ${{ env.OUT_NODEJS }}/controllers/Relationships.js
-          cp ./tools/digraphReducer.py >> ${{ env.OUT_NODEJS }}/utils/
+          cp ./tools/digraphReducer.py ${{ env.OUT_NODEJS }}/utils/
 
       # - name: Generate NPM package details
       #   run: |
