@@ -2,15 +2,15 @@
 set -e
 
 if [ -d "apiServer" ]; then
-  echo "Removing API server directory."
-  rm -rf apiServer
+    echo "Removing API server directory."
+    rm -rf apiServer
 else
-  echo "NOT removing API server directory. It does not exist."
+    echo "NOT removing API server directory. It does not exist."
 fi
 
 if [ -f nodejs-server.zip ]; then
-  echo "Removing nodejs server archive."
-  rm nodejs-server.zip
+    echo "Removing nodejs server archive."
+    rm nodejs-server.zip
 fi
 
 #   Note: Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
