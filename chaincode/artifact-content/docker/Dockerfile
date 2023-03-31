@@ -29,7 +29,7 @@ RUN rm -rf /var/cache/apk/* && \
   update-ca-certificates && \
   #go mod init github.com/chaordicledger/artifact-content/chaincode-external && \
   go mod vendor && \
-  go mod tidy && \
+  go mod tidy -compat=1.17 && \
   go get -d -v ./... && \
   go install -v ./...
 
