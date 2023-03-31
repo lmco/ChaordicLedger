@@ -1,6 +1,6 @@
 # Reference: https://github.com/hyperledgendary/fabric-ccaas-asset-transfer-basic
 
-ARG GO_VER=1.16
+ARG GO_VER=1.17
 ARG ALPINE_VER=3.12
 
 FROM golang:${GO_VER}-alpine${ALPINE_VER}

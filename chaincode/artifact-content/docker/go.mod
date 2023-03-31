@@ -1,6 +1,6 @@
 module github.com/chaordicledger/artifact-content/chaincode-external
 
-go 1.16
+go 1.17
 
 require (
 	github.com/hyperledger/fabric-chaincode-go v0.0.0-20200424173110-d7076418f212
