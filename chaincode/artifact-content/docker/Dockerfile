@@ -1,7 +1,7 @@
 # Reference: https://github.com/hyperledgendary/fabric-ccaas-asset-transfer-basic
 
-ARG GO_VER=1.14.4
-ARG ALPINE_VER=3.12
+ARG GO_VER=1.17.0
+ARG ALPINE_VER=3.14
 
 FROM golang:${GO_VER}-alpine${ALPINE_VER}
 
@@ -29,7 +29,7 @@ RUN rm -rf /var/cache/apk/* && \
   update-ca-certificates && \
   #go mod init github.com/chaordicledger/artifact-content/chaincode-external && \
   go mod vendor && \
-  go mod tidy && \
+  go mod tidy -compat=1.17 && \
   go get -d -v ./... && \
   go install -v ./...
 
