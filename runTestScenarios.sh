@@ -4,14 +4,14 @@ set -e
 signalfile=$1
 
 function orchestratorLog() {
-  now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  echo -e "[$now | Orchestrator | INFO] $1"
+        now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        echo -e "[$now | Orchestrator | INFO] $1"
 }
 
 function waitForSeconds() {
-  wait=$1
-  orchestratorLog "Waiting ${wait} seconds"
-  sleep $wait
+        wait=$1
+        orchestratorLog "Waiting ${wait} seconds"
+        sleep $wait
 }
 
 orchestratorLog "Orchestrator Started"
@@ -28,12 +28,12 @@ pushd scenarios
 waitForSeconds 60
 
 pushd industrial/gpsExample
- ./gpsExample.sh
+./gpsExample.sh
 popd
 waitForSeconds 60
 
 pushd industrial/salesSystem
- ./salesSystem.sh
+./salesSystem.sh
 popd
 waitForSeconds 60
 
@@ -64,12 +64,11 @@ orchestratorLog "Scenario execution complete."
 #orchestratorLog "Retrieving all blocks from the blockchain."
 #./getAllBlocks.sh
 
-if [ -z "${signalfile}" ];
-then
-  orchestratorLog "No signal file defined."
+if [ -z "${signalfile}" ]; then
+        orchestratorLog "No signal file defined."
 else
-  orchestratorLog "Touching signal file ${signalfile}"
-  touch ${signalfile}
+        orchestratorLog "Touching signal file ${signalfile}"
+        touch ${signalfile}
 fi
 
 orchestratorLog "Done."
