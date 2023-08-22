@@ -5,30 +5,29 @@ start=$SECONDS
 BASEDIR=$(dirname "$0")
 
 function log() {
-  now=`date -u +"%Y-%m-%dT%H:%M:%SZ"`
-  echo "[$now] $1"
+        now=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+        echo "[$now] $1"
 }
 
 function terminateProcess() {
-  expr=$1
-  result=$(ps -ef | grep "$expr" | grep -v grep | awk '{print $2;}')
+        expr=$1
+        result=$(ps -ef | grep "$expr" | grep -v grep | awk '{print $2;}')
 
-  if [ -z "$result" ]; then
-    syslog "No need to terminate \"$expr\"; it's not running."
-  else
-    syslog "Terminating process matching \"$expr\" that has PID $result."
-    kill -9 $result
-  fi
+        if [ -z "$result" ]; then
+                syslog "No need to terminate \"$expr\"; it's not running."
+        else
+                syslog "Terminating process matching \"$expr\" that has PID $result."
+                kill -9 $result
+        fi
 }
 
 function removeCertsIfExist() {
-  result=$(find $1 -type f -name \*.cer | wc -l)
-  if [ $result -gt 0 ]
-  then
-    rm $1/*.cer
-  else
-    echo "NOT removing certificate files from $1; no certificate files exist in that directory."
-  fi
+        result=$(find $1 -type f -name \*.cer | wc -l)
+        if [ $result -gt 0 ]; then
+                rm $1/*.cer
+        else
+                echo "NOT removing certificate files from $1; no certificate files exist in that directory."
+        fi
 }
 
 ls -rotl
@@ -54,8 +53,8 @@ mkdir -p test/cachain/
 
 syslog "Loading corporate Certificate Authority certificates where necessary."
 pushd LMChain
-for file in *.cer; do 
-    mv -- "$file" "${file%.cer}.crt"
+for file in *.cer; do
+        mv -- "$file" "${file%.cer}.crt"
 done
 popd
 
@@ -69,8 +68,8 @@ syslog "Removing Certificate Authority certificate extraction directory."
 rm -rf LMChain
 
 if [ -f kubectl_proxy.log ]; then
-  syslog "Removing kubectl proxy log."
-  rm kubectl_proxy.log
+        syslog "Removing kubectl proxy log."
+        rm kubectl_proxy.log
 fi
 
 syslog "Terminating kubectl port-forwarding for monitoring."
@@ -83,15 +82,15 @@ syslog "Terminaging nodejs Swagger UI."
 terminateProcess "node index"
 
 if [ -d "apiServer" ]; then
-  syslog "Removing API server directory."
-  rm -rf apiServer
+        syslog "Removing API server directory."
+        rm -rf apiServer
 else
-  syslog "NOT removing API server directory. It does not exist."
+        syslog "NOT removing API server directory. It does not exist."
 fi
 
 if [ -f nodejs-server.zip ]; then
-  syslog "Removing nodejs server archive."
-  rm nodejs-server.zip
+        syslog "Removing nodejs server archive."
+        rm nodejs-server.zip
 fi
 
 export ADDITIONAL_CA_CERTS_LOCATION="${PWD}/test/cachain/"
@@ -102,14 +101,14 @@ syslog "Initializing the system."
 pwd
 ls -l
 ./network purge &&
-./network init &&
-./network msp 2 1 1 && # msp OrgCount OrdererCount PeerCount
-./network channel 2 && # channel OrgCount
-./network peer 1 1 &&  # peer OrdererCount PeerCount
-./network ipfs &&
-./network graphinit &&
-./network graphprocessor &&
-./network chaincode 1 1 # chaincode OrgCount PeerCount
+        ./network init &&
+        ./network msp 2 1 1 && # msp OrgCount OrdererCount PeerCount
+        ./network channel 2 && # channel OrgCount
+        ./network peer 1 1 &&  # peer OrdererCount PeerCount
+        ./network ipfs &&
+        ./network graphinit &&
+        ./network graphprocessor &&
+        ./network chaincode 1 1 # chaincode OrgCount PeerCount
 
 syslog "Invoking metadata chaincode."
 ./network query ${ARTIFACT_METADATA_CCNAME} '{"Args":["GetAllMetadata"]}'
@@ -117,13 +116,13 @@ syslog "Invoking metadata chaincode."
 LfileArray=("randomArtifact0.bin" "randomArtifact1.txt")
 timestamp=$(date -u +%Y-%m-%dT%H:%M:%SZ)
 for item in ${LfileArray[*]}; do
-  syslog "Adding metadata for artifact \"$item\" to the ledger."
-  itemhash=$(sha512sum ${item} | awk '{print $1;}')
-  itemsize=$(du -b ${item} | awk '{print $1;}')
-  itemcontent=$(cat ${item} | base64 -w 0)
-  
-  ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
-  ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
+        syslog "Adding metadata for artifact \"$item\" to the ledger."
+        itemhash=$(sha512sum ${item} | awk '{print $1;}')
+        itemsize=$(du -b ${item} | awk '{print $1;}')
+        itemcontent=$(cat ${item} | base64 -w 0)
+
+        ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["CreateMetadata","'${timestamp}'","'${itemhash}'","SHA512","'${item}'","'${itemsize}'"]}'
+        ./network invoke ${ARTIFACT_METADATA_CCNAME} '{"Args":["MetadataExists","'${item}'"]}'
 done
 
 syslog "Querying metadata chaincode."
@@ -153,43 +152,41 @@ unzip nodejs-server.zip -d apiServer
 pushd apiServer
 syslog "Starting API server."
 npm install connect
-nohup npm start > apiserver.log 2>&1  &
+nohup npm start >apiserver.log 2>&1 &
 popd
 
 syslog "Waiting for the API server to start."
 sleep 10
 
-if [ "$CL_MONITOR" == "true" ];
-then
-  ./network monitor
+if [ "$CL_MONITOR" == "true" ]; then
+        ./network monitor
 
-  syslog "Deploying dashboard"
-  kubectl apply -f dashboards/kubernetes/recommended.yaml
-  kubectl apply -f metrics/components.yaml
-  kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
+        syslog "Deploying dashboard"
+        kubectl apply -f dashboards/kubernetes/recommended.yaml
+        kubectl apply -f metrics/components.yaml
+        kubectl rollout status deployment metrics-server -n kube-system --timeout=3600s &&
+                syslog "Creating service account for dashboard"
+        kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
 
-  syslog "Creating service account for dashboard"
-  kubectl apply -f dashboards/kubernetes/dashboard-adminuser.yaml
+        # TODO: This may not be necessary.
+        #syslog "Creating access token for service account"
+        #kubectl -n kubernetes-dashboard create token admin-user
 
-  # TODO: This may not be necessary.
-  #syslog "Creating access token for service account"
-  #kubectl -n kubernetes-dashboard create token admin-user
+        kubectl create serviceaccount dashboard-admin-sa
+        kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
+        kubectl create token dashboard-admin-sa
 
-  kubectl create serviceaccount dashboard-admin-sa
-  kubectl create clusterrolebinding dashboard-admin-sa --clusterrole=cluster-admin --serviceaccount=default:dashboard-admin-sa
-  kubectl create token dashboard-admin-sa
+        # kubectl apply -f dashboards/kubernetes/recommended.yaml --enable-skip-login &&
+        # kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
 
-  # kubectl apply -f dashboards/kubernetes/recommended.yaml --enable-skip-login &&
-  # kubectl rollout status deployment kubernetes-dashboard -n kubernetes-dashboard --timeout=120s
+        syslog "Starting kubectl proxy."
+        nohup kubectl proxy >kubectl_proxy.log 2>&1 &
 
-  syslog "Starting kubectl proxy."
-  nohup kubectl proxy > kubectl_proxy.log 2>&1 &
-
-  rm -rf kube-state-metrics
-  git clone https://github.com/kubernetes/kube-state-metrics.git
-  cd kube-state-metrics
-  kubectl apply -f examples/standard
-  #Or?: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
+        rm -rf kube-state-metrics
+        git clone https://github.com/kubernetes/kube-state-metrics.git
+        cd kube-state-metrics
+        kubectl apply -f examples/standard
+        #Or?: kubectl apply -f https://github.com/kubernetes-sigs/metrics-server/releases/latest/download/components.yaml
 fi
 
 syslog "Getting the current graph state."
@@ -200,28 +197,25 @@ syslog "Getting a list of all known artifacts."
 allArtifacts=$(curl -s -X GET "http://localhost:8080/v1/artifacts/listAllArtifacts" -H "accept: */*")
 syslog "$(echo $allArtifacts | jq .result | tr -d '[:space:]')"
 
-if [ "$allArtifacts" == "" ]
-then
-  syserr "No response from system."
+if [ "$allArtifacts" == "" ]; then
+        syserr "No response from system."
 else
-  result=$(echo $allArtifacts | jq .result)
+        result=$(echo $allArtifacts | jq .result)
 
-  if [ "$result" == '""' ]
-  then
-    syslog "No known artifacts."
-  else
-    ipfsNames=$(echo $result | jq .[].IPFSName | sed "s|\"||g")
-    
-    for name in $ipfsNames
-    do
-      syslog "Getting contents of known artifact with name \"$name\""
-      fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifacts/getArtifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
-      syslog $fileData
-    done
-  fi
+        if [ "$result" == '""' ]; then
+                syslog "No known artifacts."
+        else
+                ipfsNames=$(echo $result | jq .[].IPFSName | sed "s|\"||g")
+
+                for name in $ipfsNames; do
+                        syslog "Getting contents of known artifact with name \"$name\""
+                        fileData=$(curl -X GET --header 'Accept: application/json' "http://localhost:8080/v1/artifacts/getArtifactObject?artifactID=${name}" | jq .result | sed "s|\\\\n||g")
+                        syslog $fileData
+                done
+        fi
 fi
 
-duration=$(( SECONDS - start ))
+duration=$((SECONDS - start))
 
 syslog "View the API documentation at http://localhost:8080/docs"
 syslog "View the Elastic dashboard at http://localhost:5601/"
