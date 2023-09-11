@@ -1,4 +1,4 @@
-#/bin/sh
+#!/bin/sh
 
 # Poll the metrics on an interval specified in seconds
 
@@ -8,20 +8,19 @@ export signalfile=$3
 
 mkdir -p $outdir
 
-while :
-do
-    # Use ISO-8601 formatting for UTC timestamp
-    timestamp=$(date -u '+%Y%m%dT%H%M%SZ')
+while :; do
+        # Use ISO-8601 formatting for UTC timestamp
+        timestamp=$(date -u '+%Y%m%dT%H%M%SZ')
 
-    # A timestamp is included in each sample, which likely won't directly align with the timestamp capture above.
-    # The timestamp is used to keep the sample's filenames unique.
-    kubectl get --raw /apis/metrics.k8s.io/v1beta1/pods -n chaordicledger | jq '. | del ( ."items"[] | select(.metadata.namespace != "chaordicledger"))' > ${outdir}/${timestamp}_sample.json
-      
-    echo "[${timestamp}] Waiting ${wait} to gather next sample"
-    sleep ${wait}
+        # A timestamp is included in each sample, which likely won't directly align with the timestamp capture above.
+        # The timestamp is used to keep the sample's filenames unique.
+        kubectl get --raw /apis/metrics.k8s.io/v1beta1/pods -n chaordicledger | jq '. | del ( ."items"[] | select(.metadata.namespace != "chaordicledger"))' >${outdir}/${timestamp}_sample.json
 
-    if [[ -f "$signalfile" ]]; then
-        echo "Signal file $signalfile exists; stopping monitor"
-        break
-    fi
+        echo "[${timestamp}] Waiting ${wait} to gather next sample"
+        sleep ${wait}
+
+        if [[ -f "$signalfile" ]]; then
+                echo "Signal file $signalfile exists; stopping monitor"
+                break
+        fi
 done
