@@ -50,16 +50,31 @@ def validateMode(mode):
 
 def validateArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--ipfsapiserver", action="store",
-                        help="The address of the IPFS API (e.g. /dns/localhost/tcp/5001/http)", required=False, default="/dns/ipfs-rpc-api/tcp/5001/http")
+    parser.add_argument(
+        "-i",
+        "--ipfsapiserver",
+        action="store",
+        help="The address of the IPFS API (e.g. /dns/localhost/tcp/5001/http)",
+        required=False,
+        default="/dns/ipfs-rpc-api/tcp/5001/http")
     # parser.add_argument("-g", "--graphfile", action="store",
     #                     help="The name of the file representing the graph", required=True, default="graph.json")
-    parser.add_argument("-m", "--mode", action="store",
-                        help="Execution mode: [init|read|write]", required=False, default="init")
-    parser.add_argument("-n", "--node", action="store",
-                        help="A node to add", required=False)
-    parser.add_argument("-r", "--relationship", action="store",
-                        help="A relationship to add", required=False)
+    parser.add_argument("-m",
+                        "--mode",
+                        action="store",
+                        help="Execution mode: [init|read|write]",
+                        required=False,
+                        default="init")
+    parser.add_argument("-n",
+                        "--node",
+                        action="store",
+                        help="A node to add",
+                        required=False)
+    parser.add_argument("-r",
+                        "--relationship",
+                        action="store",
+                        help="A relationship to add",
+                        required=False)
 
     args = parser.parse_args()
 
@@ -86,10 +101,7 @@ if __name__ == "__main__":
     jsonRelationship = json.loads(relationship)
 
     if mode == "init":
-        initialGraphState = {
-            "nodes": [],
-            "edges": []
-        }
+        initialGraphState = {"nodes": [], "edges": []}
 
         # with open("/graph.json", "wb") as f:
         #     json.dump(initialGraphState, f)
@@ -97,15 +109,17 @@ if __name__ == "__main__":
         jsonStr = json.dumps(initialGraphState)
         #response = client.files.write("/", jsonStr.encode('utf-8'))
         #response = client.files.write("/graph.json", "graph.json")
-        response = client.files.write(
-            "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
+        response = client.files.write("/graph.json",
+                                      io.BytesIO(jsonStr.encode('utf-8')),
+                                      create=True,
+                                      truncate=True)
         log.info(response)
     elif mode == "read":
         response = client.files.read("/graph.json")
         log.info(response.decode())
     elif mode == "write":
-        jsonData = json.loads(client.files.read(
-            "/graph.json").decode('utf-8)'))
+        jsonData = json.loads(
+            client.files.read("/graph.json").decode('utf-8)'))
         if len(jsonNode) > 0:
             log.info("Appending node: %s", node)
             jsonData["nodes"].append(jsonNode)
@@ -116,12 +130,15 @@ if __name__ == "__main__":
 
         jsonStr = json.dumps(jsonData)
         log.info("Writing updated graph content: %s", jsonStr)
-        response = client.files.write(
-            "/graph.json", io.BytesIO(jsonStr.encode('utf-8')), create=True, truncate=True)
+        response = client.files.write("/graph.json",
+                                      io.BytesIO(jsonStr.encode('utf-8')),
+                                      create=True,
+                                      truncate=True)
         log.info("Response from IPFS File API Client: %s", response)
     else:
         log.error("Invalid mode %s provided.", mode)
 
     endtime = datetime.utcnow()
-    log.info(
+    log.info("Done modifying graph file. Execution completed in %s",
+             endtime - starttime)
         "Done modifying graph file. Execution completed in %s", endtime-starttime)
