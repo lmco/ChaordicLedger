@@ -16,12 +16,12 @@ content=$(cat $filename | sed 's|"|\\"|g')
 #       The workaround is to redirect to a file and cat the contents.
 resultfile="${friendlytimestamp}_${TX_ID}_result.txt"
 peer chaincode \
-      invoke \
-      -o org0-orderer1:6050 \
-      --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
-      -n qscc \
-      -C cl \
-      -c "{\"function\":\"GetTransactionByID\",\"Args\":[\"cl\", \"${TX_ID}\"]}" > $resultfile 2>&1
+        invoke \
+        -o org0-orderer1:6050 \
+        --tls --cafile /var/hyperledger/fabric/organizations/ordererOrganizations/org0.example.com/msp/tlscacerts/org0-tls-ca.pem \
+        -n qscc \
+        -C cl \
+        -c "{\"function\":\"GetTransactionByID\",\"Args\":[\"cl\", \"${TX_ID}\"]}" >$resultfile 2>&1
 
 status=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*result: ||g" | cut -d " " -f 1)
 payload=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*payload:||g" | base64 -w 0)
@@ -33,9 +33,8 @@ payload=$(cat $resultfile | grep chaincodeInvokeOrQuery | sed "s|.*payload:||g" 
 #       The protobuf format also contains incompatible escape characters for JSON payloads, so
 #       this is being returned as a base64-encoded string.
 
-if [ "$payload" == "" ]
-then
-  payload="\"\""
+if [ "$payload" == "" ]; then
+        payload="\"\""
 fi
 
 #end=$(date +%s%N)
