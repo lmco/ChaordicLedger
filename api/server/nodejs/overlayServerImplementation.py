@@ -19,8 +19,11 @@ def configureLogging(outdir):
     stdout_handler.setLevel(logging.INFO)
     stdout_handler.setFormatter(formatter)
 
-    file_handler = logging.FileHandler(os.path.join(
-        outdir, f"{datetime.now().isoformat().replace(':','_').split('.')[0]}.log"))
+    file_handler = logging.FileHandler(
+        os.path.join(
+            outdir,
+            f"{datetime.now().isoformat().replace(':','_').split('.')[0]}.log")
+    )
     file_handler.setLevel(logging.DEBUG)
     file_handler.setFormatter(formatter)
 
@@ -30,16 +33,32 @@ def configureLogging(outdir):
 
 def validateArgs():
     parser = argparse.ArgumentParser()
-    parser.add_argument("-i", "--inputdir", action="store",
-                        help="The input directory", required=True)
-    parser.add_argument("-m", "--mapfile", action="store",
-                        help="The map of the functions to their implementations", required=True)
-    parser.add_argument("-o", "--outputdir", action="store",
-                        help="The output directory", required=True)
-    parser.add_argument("-f", "--outputfile", action="store",
-                        help="The output file", required=True)
-    parser.add_argument("-n", "--namespace", action="store",
-                        help="The Kubernetes namespace", default="chaordicledger")
+    parser.add_argument("-i",
+                        "--inputdir",
+                        action="store",
+                        help="The input directory",
+                        required=True)
+    parser.add_argument(
+        "-m",
+        "--mapfile",
+        action="store",
+        help="The map of the functions to their implementations",
+        required=True)
+    parser.add_argument("-o",
+                        "--outputdir",
+                        action="store",
+                        help="The output directory",
+                        required=True)
+    parser.add_argument("-f",
+                        "--outputfile",
+                        action="store",
+                        help="The output file",
+                        required=True)
+    parser.add_argument("-n",
+                        "--namespace",
+                        action="store",
+                        help="The Kubernetes namespace",
+                        default="chaordicledger")
 
     args = parser.parse_args()
 
@@ -72,7 +91,8 @@ def getReplacementExpression(arg, stringify):
     return retVal
 
 
-def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, outputfile: str, namespace: str):
+def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str,
+                                outputfile: str, namespace: str):
     log.info("Overlaying server implementation")
 
     outputpath = os.path.join(outputdir, outputfile)
@@ -94,10 +114,12 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
         f.write(f'  switch (unit) {openbrace}{os.linesep}')
         f.write(f"    case 'milli':{os.linesep}")
         f.write(
-            f'      return hrTime[0] * 1000 + hrTime[1] / 1000000;{os.linesep}')
+            f'      return hrTime[0] * 1000 + hrTime[1] / 1000000;{os.linesep}'
+        )
         f.write(f"    case 'micro':{os.linesep}")
         f.write(
-            f'      return hrTime[0] * 1000000 + hrTime[1] / 1000;{os.linesep}')
+            f'      return hrTime[0] * 1000000 + hrTime[1] / 1000;{os.linesep}'
+        )
         f.write(f"    case 'nano':{os.linesep}")
         f.write(f'    default:{os.linesep}')
         f.write(
@@ -111,28 +133,31 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             functionParams = []
             functionExpressions = []
             divider = ""
-            stringify=False
+            stringify = False
 
             if "source" in mapfile[key]:
-                with open(os.path.join(inputdir, mapfile[key]["source"]), 'r') as source:
+                with open(os.path.join(inputdir, mapfile[key]["source"]),
+                          'r') as source:
                     line = source.readline()
                     while line:
                         f.writelines(line)
-                        line=source.readline()
-                    
+                        line = source.readline()
+
                     f.writelines(os.linesep)
                     f.writelines(os.linesep)
                 continue
 
-            if "stringifyParameters" in mapfile[key] and mapfile[key]["stringifyParameters"] == "true":
+            if "stringifyParameters" in mapfile[key] and mapfile[key][
+                    "stringifyParameters"] == "true":
                 stringify = True
 
             if "parameters" in mapfile[key]:
                 functionParams = mapfile[key]["parameters"]
-                log.info('Parameters for operation "%s" are "%s"',
-                         key, functionParams)
+                log.info('Parameters for operation "%s" are "%s"', key,
+                         functionParams)
                 for param in functionParams:
-                    functionExpressions.append(getReplacementExpression(param, stringify))
+                    functionExpressions.append(
+                        getReplacementExpression(param, stringify))
                     divider = " | "
 
             directResult = False
@@ -154,52 +179,67 @@ def overlayServerImplementation(inputdir: str, mapfile: dict, outputdir: str, ou
             log.info('Expression for operation "%s" is "%s"', key, expression)
 
             f.write(
-                f'exports.{key} = function ({",".join(functionParams)}) {openbrace}{os.linesep}')
+                f'exports.{key} = function ({",".join(functionParams)}) {openbrace}{os.linesep}'
+            )
             f.write(f"  var start = now('nano')" + f'{os.linesep}')
             f.write(f'  const exec = require("child_process").exec;' +
                     f'{os.linesep}')
 
             if "copyToTarget" in mapfile[key]:
-                src=mapfile[key]["copyToTarget"]["src"]
-                dst=mapfile[key]["copyToTarget"]["dst"]
+                src = mapfile[key]["copyToTarget"]["src"]
+                dst = mapfile[key]["copyToTarget"]["dst"]
                 f.write(f"const fs = require('fs'){os.linesep}")
-                f.write(f"var tmpfileName=`formdata_${openbrace}now('nano'){closebrace}.json`{os.linesep}")
-                f.write(f'var tmpfilePath=`/tmp/${openbrace}tmpfileName{closebrace}`{os.linesep}')
+                f.write(
+                    f"var tmpfileName=`formdata_${openbrace}now('nano'){closebrace}.json`{os.linesep}"
+                )
+                f.write(
+                    f'var tmpfilePath=`/tmp/${openbrace}tmpfileName{closebrace}`{os.linesep}'
+                )
                 f.write(f'let data = JSON.stringify({src});{os.linesep}')
                 f.write(f'fs.writeFileSync(tmpfilePath, data);{os.linesep}')
 
             f.write(
-                f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}')
+                f'  return new Promise(function (resolve, reject) {openbrace}{os.linesep}'
+            )
 
             if "copyToTarget" in mapfile[key]:
-                f.write(f'        exec(`kubectl get pods -l=app={dst} -n chaordicledger | grep -v "NAME" | cut -d " " -f1`, (error, stdout, stderr) => {openbrace}{os.linesep}')
-                f.write(f'        if (error) {openbrace}{os.linesep}')
-                f.write(f"          var end = now('nano'){os.linesep}")
-                f.write('          resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
-                f.write(f'      {closebrace} else {openbrace}{os.linesep}')
                 f.write(
-                         '        var podname=stdout.trim()' + f'{os.linesep}')
-                f.write( '        exec(`kubectl cp -n chaordicledger ${tmpfilePath} ${podname}:${tmpfileName}`, (error, stdout, stderr) => ' + f'{openbrace}{os.linesep}')
+                    f'        exec(`kubectl get pods -l=app={dst} -n chaordicledger | grep -v "NAME" | cut -d " " -f1`, (error, stdout, stderr) => {openbrace}{os.linesep}'
+                )
                 f.write(f'        if (error) {openbrace}{os.linesep}')
                 f.write(f"          var end = now('nano'){os.linesep}")
-                f.write('           resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                f.write(
+                    '          resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })'
+                    + f'{os.linesep}')
+                f.write(f'      {closebrace} else {openbrace}{os.linesep}')
+                f.write('        var podname=stdout.trim()' + f'{os.linesep}')
+                f.write(
+                    '        exec(`kubectl cp -n chaordicledger ${tmpfilePath} ${podname}:${tmpfileName}`, (error, stdout, stderr) => '
+                    + f'{openbrace}{os.linesep}')
+                f.write(f'        if (error) {openbrace}{os.linesep}')
+                f.write(f"          var end = now('nano'){os.linesep}")
+                f.write(
+                    '           resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })'
+                    + f'{os.linesep}')
                 f.write(f'        {closebrace} else {openbrace}{os.linesep}')
 
             f.write(
-                        f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}')
+                f'    exec(`{expression}`, (error, stdout, stderr) => {openbrace}{os.linesep}'
+            )
             f.write(f"      var end = now('nano'){os.linesep}")
             f.write(f'      if (error) {openbrace}{os.linesep}')
             f.write(
-                '        resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })' + f'{os.linesep}')
-            f.write(
-                f'      {closebrace} else {openbrace}{os.linesep}')
+                '        resolve({ "result": null, "error": stderr, "durationInNanoseconds": end - start })'
+                + f'{os.linesep}')
+            f.write(f'      {closebrace} else {openbrace}{os.linesep}')
             if directResult:
                 f.write('        resolve(stdout)' + f'{os.linesep}')
             else:
+                f.write('        const obj = JSON.parse(stdout)' +
+                        f'{os.linesep}')
                 f.write(
-                    '        const obj = JSON.parse(stdout)' + f'{os.linesep}')
-                f.write(
-                    '        resolve({ "result": obj, "error": null, "durationInNanoseconds": end - start })' + f'{os.linesep}')
+                    '        resolve({ "result": obj, "error": null, "durationInNanoseconds": end - start })'
+                    + f'{os.linesep}')
             if "copyToTarget" in mapfile[key]:
                 f.write(f'              {closebrace}{os.linesep}')
                 f.write(f'          {closebrace});{os.linesep}')
@@ -222,9 +262,10 @@ if __name__ == "__main__":
     log.info("Output file: %s", outputfile)
     log.info("Namespace: %s", namespace)
 
-    overlayServerImplementation(
-        inputdir, mapfile, outputdir, outputfile, namespace)
+    overlayServerImplementation(inputdir, mapfile, outputdir, outputfile,
+                                namespace)
 
     endtime = datetime.utcnow()
     log.info(
-        "Done overlaying server implementation. Execution completed in %s", endtime-starttime)
+        "Done overlaying server implementation. Execution completed in %s",
+        endtime - starttime)
