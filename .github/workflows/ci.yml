@@ -24,7 +24,7 @@ jobs:
     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: API Generation Setup
         run: |
@@ -140,7 +140,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -209,7 +209,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Copy API Definition
         run: cp ${{ env.SWAGGER_API_FILE }} ${{ env.BUILD_DIR }}
@@ -237,7 +237,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -263,7 +263,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -289,7 +289,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -325,7 +325,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -350,7 +350,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -375,7 +375,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
 
       - name: Build image
         run: |
@@ -393,9 +393,9 @@ jobs:
   build-obsidian-lightswitch-chaincode:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
       - name: Checkout the Obsidian repo
-        uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+        uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
         with:
           repository: mcoblenz/Obsidian
           path: './Obsidian'
@@ -453,7 +453,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@ee0669bd1cc54295c223e0bb666b733df41de1c5 # v2
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v2
       - uses: actions/download-artifact@9bc31d5ccc31df68ecc42ccf4149144866c47d8a # v3
       - name: Prepare
         run: |
