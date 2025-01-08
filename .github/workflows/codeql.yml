@@ -43,7 +43,7 @@ jobs:
 
       # Initializes the CodeQL tools for scanning.
       - name: Initialize CodeQL
-        uses: github/codeql-action/init@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v2
+        uses: github/codeql-action/init@277b89701e930e6af7a758f50afa5185bfc53c81 # v2
         
         with:
           languages: ${{ matrix.language }}
@@ -58,7 +58,7 @@ jobs:
       # Autobuild attempts to build any compiled languages (C/C++, C#, Go, Java, or Swift).
       # If this step fails, then you should remove it and run the build manually (see below)
       - name: Autobuild
-        uses: github/codeql-action/autobuild@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3
+        uses: github/codeql-action/autobuild@277b89701e930e6af7a758f50afa5185bfc53c81 # v3
 
       # Command-line programs to run using the OS shell.
       # See https://docs.github.com/en/actions/using-workflows/workflow-syntax-for-github-actions#jobsjob_idstepsrun
@@ -71,7 +71,7 @@ jobs:
       #     ./location_of_script_within_repo/buildscript.sh
 
       - name: Perform CodeQL Analysis
-        uses: github/codeql-action/analyze@48ab28a6f5dbc2a99bf1e0131198dd8f1df78169 # v3
+        uses: github/codeql-action/analyze@277b89701e930e6af7a758f50afa5185bfc53c81 # v3
         
         with:
           category: "/language:${{ matrix.language }}"
