@@ -83,7 +83,7 @@ jobs:
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l nodejs-server -o ${{ env.OUT_NODEJS }}
 
       - name: API Server Implementation - NodeJS
-        uses: actions/setup-python@e9aba2c848f5ebd159c070c61ea2c4e2b122355e # v2
+        uses: actions/setup-python@0b93645e9fea7318ecaed2b359559ac225c90a2b # v2
         with:
           python-version: 3.8 #install the python needed
       - name: Overlay NodeJS Server Implementation
