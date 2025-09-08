@@ -5,16 +5,12 @@ on:
     secrets:
       registry:
         required: true
-        type: string
       registry_host:
         required: true
-        type: string
       image_name:
         required: true
-        type: string
       image_version:
         required: true
-        type: string
       user:
         required: true
       token:
