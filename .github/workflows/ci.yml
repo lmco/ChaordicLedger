@@ -36,7 +36,7 @@ jobs:
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l go -o ${{ env.OUT_GO }}
 
       - name: Archive generated GO code
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
         with:
           name: go-api
           path: ${{ env.OUT_GO }}
@@ -72,7 +72,7 @@ jobs:
           ls -rotl ${OUT_JAVA}
 
       - name: Archive generated JAVA code
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
         with:
           name: java-api
           path: ${{ env.OUT_JAVA }}
@@ -126,7 +126,7 @@ jobs:
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
         with:
           name: nodejs-server
           path: ${{ env.OUT_NODEJS }}
@@ -176,7 +176,7 @@ jobs:
           echo "buildRoot=${PWD}" >> $GITHUB_ENV
 
       - name: Publish Java client jar
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
         with:
           name: java-client
           path: ${{ env.buildRoot }}/build/libs/*.jar
@@ -192,7 +192,7 @@ jobs:
           echo "targetRoot=${PWD}/target" >> $GITHUB_ENV
 
       - name: Publish packaged Java client jar
-        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
         with:
           name: java-client-package
           path: |
@@ -436,7 +436,7 @@ jobs:
 #          echo "buildRoot=${PWD}" >> $GITHUB_ENV
 #          popd
 #      - name: Publish chaincode jar
-#        uses: actions/upload-artifact@330a01c490aca151604b8cf639adc76d48f6c5d4 # v3
+#        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v3
 #        with:
 #          name: lightswitch-chaincode
 #          path: |
