@@ -160,7 +160,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: [generate-api-code, docker-API-Builder]
     steps:
-      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v3
+      - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v3
 
       - name: List java-api Directory Contents
         run: ls -rotl java-api
@@ -454,7 +454,7 @@ jobs:
 #      contents: read
 #    steps:
 #      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v2
-#      - uses: actions/download-artifact@37930b1c2abaa49bbe596cd826c3c89aef350131 # v3
+#      - uses: actions/download-artifact@70fc10c6e5e1ce46ad2ea6f2b72d43f7d47b13c3 # v3
 #      - name: Prepare
 #        run: |
 #          pushd lightswitch-chaincode/build/libs
