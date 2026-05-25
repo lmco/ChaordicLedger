@@ -137,21 +137,17 @@ sudo ip route add $ipfsPodIp via $controlPlaneIP || true
 
 ip route
 
-syslog "Pull the latest nodejs-server.zip artifact from the latest successful GitHub run."
+syslog "Building Node.js API server locally."
 
-#   Note: Ideally, this would be in an NPM registry, but an account doesn't yet exist for the lmco organization.
-#   TODO: Once the org exists, look into NPM packaging at https://docs.github.com/en/actions/publishing-packages/publishing-nodejs-packages
-. githubReadToken.sh
-latestSuccessfulRun=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs?state=Success | jq '.workflow_runs[0].id')
-zipDownloadUrl=$(curl -H "Accept: application/vnd.github.v3+json" https://api.github.com/repos/lmco/chaordicledger/actions/runs/${latestSuccessfulRun}/artifacts | jq '.artifacts[] | select(.name=="nodejs-server")' | jq '.archive_download_url' | tr -d '\"')
-curl -vvv -L -H "Accept: application/vnd.github.v3+json" -H "Authorization: token ${githubReadToken}" ${zipDownloadUrl} --output nodejs-server.zip
-
-syslog "Extracting nodejs-server.zip artifact."
-unzip nodejs-server.zip -d apiServer
+./scripts/build-nodejs-server.sh
 
 pushd apiServer
-syslog "Starting API server."
+syslog "Installing API server dependencies."
+
+npm install
 npm install connect
+
+syslog "Starting API server."
 nohup npm start >apiserver.log 2>&1 &
 popd
 
