@@ -141,4 +141,3 @@ if __name__ == "__main__":
     endtime = datetime.utcnow()
     log.info("Done modifying graph file. Execution completed in %s",
              endtime - starttime)
-        "Done modifying graph file. Execution completed in %s", endtime-starttime)
