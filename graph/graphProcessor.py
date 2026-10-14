@@ -69,20 +69,22 @@ def validateArgs():
                         "--node",
                         action="store",
                         help="A node to add",
-                        required=False)
+                        required=False,
+                        default="{}")
     parser.add_argument("-r",
                         "--relationship",
                         action="store",
                         help="A relationship to add",
-                        required=False)
+                        required=False,
+                        default="{}")
 
     args = parser.parse_args()
-
-    client = ipfshttpclient.connect(args.ipfsapiserver)
 
     validateMode(args.mode)
     validateNode(args.node)
     validateRelationship(args.relationship)
+
+    client = ipfshttpclient.connect(args.ipfsapiserver)
 
     return (client, args.mode, args.node, args.relationship)
 
