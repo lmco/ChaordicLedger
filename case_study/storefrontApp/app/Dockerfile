@@ -1,4 +1,4 @@
-FROM python:3.11.0b3-slim-bullseye AS builder
+FROM python:3.11-slim-bookworm AS builder
 
 LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
 LABEL org.opencontainers.image.description="Microservice for a case study of using ChaordicLedger during development."
