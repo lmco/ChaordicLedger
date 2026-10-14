@@ -1,5 +1,5 @@
 import argparse
-from datetime import datetime
+from datetime import datetime, timezone
 import io
 import json
 import logging
@@ -88,7 +88,7 @@ def validateArgs():
 
 
 if __name__ == "__main__":
-    starttime = datetime.utcnow()
+    starttime = datetime.now(timezone.utc)
 
     configureLogging()
     (client, mode, node, relationship) = validateArgs()
@@ -119,7 +119,7 @@ if __name__ == "__main__":
         log.info(response.decode())
     elif mode == "write":
         jsonData = json.loads(
-            client.files.read("/graph.json").decode('utf-8)'))
+            client.files.read("/graph.json").decode('utf-8'))
         if len(jsonNode) > 0:
             log.info("Appending node: %s", node)
             jsonData["nodes"].append(jsonNode)
@@ -138,6 +138,6 @@ if __name__ == "__main__":
     else:
         log.error("Invalid mode %s provided.", mode)
 
-    endtime = datetime.utcnow()
+    endtime = datetime.now(timezone.utc)
     log.info("Done modifying graph file. Execution completed in %s",
              endtime - starttime)
