@@ -9,6 +9,7 @@ import sys
 
 hostName = "0.0.0.0"
 serverPort = 5678
+maxBodyBytes = 1024 * 1024
 log = logging.getLogger(__name__)
 
 
@@ -78,6 +79,9 @@ class MyServer(BaseHTTPRequestHandler):
                 raise ValueError("negative Content-Length")
         except (TypeError, ValueError):
             self._send_json(411, {"error": "A valid Content-Length header is required"})
+            return
+        if content_len > maxBodyBytes:
+            self._send_json(413, {"error": f"Request body exceeds {maxBodyBytes} bytes"})
             return
         log.info("Content Length %s", content_len)
         post_body = self.rfile.read(content_len)
