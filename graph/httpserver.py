@@ -9,6 +9,7 @@ import sys
 
 hostName = "0.0.0.0"
 serverPort = 5678
+maxBodyBytes = 1024 * 1024
 log = logging.getLogger(__name__)
 
 
@@ -26,66 +27,83 @@ def configureLogging():
 
 
 class MyServer(BaseHTTPRequestHandler):
-    def write_data(self, data):
-        client = ipfshttpclient.connect("/dns/ipfs-rpc-api/tcp/5001/http")
-        jsonData = json.loads(data)
-        graph = client.files.read(
-            "/graph.json").decode('utf-8')
-        log.info(graph)
-        graphData = json.loads(graph)
-        if len(jsonData) > 0 and "Type" in jsonData:
-            # Need to identify type:
-            datatype = jsonData["Type"]
-            data = jsonData["Data"]
-            skip = False
-            if datatype == "node":
-                log.info(f"Appending node: %s", data)
-                graphData["nodes"].append(data)
-            elif datatype == "relationship":
-                log.info(f"Appending edge: %s", data)
-                graphData["edges"].append(data)
-            else:
-                log.error("Unrecognized type: %s", datatype)
-                skip = True
+    def parse_body(self, jsonData):
+        if not isinstance(jsonData, dict) or "Type" not in jsonData:
+            raise ValueError("Unrecognized data, no type provided")
+        if "Data" not in jsonData:
+            raise ValueError("No data provided")
 
-            if not skip:
-                graphStr = json.dumps(graphData)
-                log.info(f"Writing updated graph content: %s", graphStr)
-                response = client.files.write(
-                    "/graph.json", io.BytesIO(graphStr.encode('utf-8')), create=True, truncate=True)
-                log.info(response)
+        datatype = jsonData["Type"]
+        data = jsonData["Data"]
+        if datatype == "node":
+            key = "nodes"
+        elif datatype == "relationship":
+            key = "edges"
         else:
-            log.error("Unrecognized data, no type provided: %s", jsonData)
+            raise ValueError(f"Unrecognized type: {datatype}")
+        return key, data
 
-    def _set_headers(self):
-        self.send_response(200)
+    def write_data(self, key, data):
+        with ipfshttpclient.connect("/dns/ipfs-rpc-api/tcp/5001/http") as client:
+            graph = client.files.read(
+                "/graph.json").decode('utf-8')
+            log.info(graph)
+            graphData = json.loads(graph)
+
+            log.info("Appending to %s: %s", key, data)
+            graphData[key].append(data)
+
+            graphStr = json.dumps(graphData)
+            log.info("Writing updated graph content: %s", graphStr)
+            response = client.files.write(
+                "/graph.json", io.BytesIO(graphStr.encode('utf-8')), create=True, truncate=True)
+            log.info(response)
+
+    def _set_headers(self, status=200):
+        self.send_response(status)
         self.send_header('Content-type', 'application/json')
         self.end_headers()
 
+    def _send_json(self, status, body):
+        self._set_headers(status)
+        self.wfile.write((json.dumps(body) + "\n").encode())
+
     def do_GET(self):
-        self._set_headers()
-        response = '{ "response" : "received GET request" }\n'
-        self.wfile.write(response.encode())
+        self._send_json(200, {"response": "received GET request"})
 
     def do_POST(self):
         '''Reads post request body'''
-        self._set_headers()
-        content_len = int(self.headers.get('Content-Length'))
-        log.info("Content Length %s", content_len)
-        post_body_bin = self.rfile.read(content_len)
-        log.info("Received %s", post_body_bin)
-        post_body = post_body_bin.decode()
-        log.info("Received %s", post_body)
         try:
-            self.write_data(post_body)
-            # output = subprocess.run(args=["python", "graphProcessor.py", "-i /dns/ipfs-rpc-api/tcp/5001/http",
-            #                               '-m "write"', "-n " + post_body, '-r "{}"'], shell=True)
-            # log.info("Output: %s", output)
-        except Exception as e:
-            log.error(e)
+            content_len = int(self.headers.get('Content-Length'))
+            if content_len < 0:
+                raise ValueError("negative Content-Length")
+        except (TypeError, ValueError):
+            self._send_json(411, {"error": "A valid Content-Length header is required"})
+            return
+        if content_len > maxBodyBytes:
+            self._send_json(413, {"error": f"Request body exceeds {maxBodyBytes} bytes"})
+            return
+        log.info("Content Length %s", content_len)
+        post_body = self.rfile.read(content_len)
+        log.info("Received %s", post_body)
 
-        response = "{ " + f'"response" : {post_body}' + "}\n"
-        self.wfile.write(response.encode())
+        try:
+            jsonData = json.loads(post_body)
+            key, data = self.parse_body(jsonData)
+        except ValueError as e:
+            # Includes JSONDecodeError and UnicodeDecodeError.
+            log.error("Rejected request: %s", e)
+            self._send_json(400, {"error": str(e)})
+            return
+
+        try:
+            self.write_data(key, data)
+        except Exception as e:
+            log.exception("Failed to update graph")
+            self._send_json(500, {"error": str(e)})
+            return
+
+        self._send_json(200, {"response": jsonData})
 
     def do_PUT(self):
         log.info("Received a PUT, treating as a POST")
