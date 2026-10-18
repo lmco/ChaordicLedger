@@ -26,7 +26,7 @@ def configureLogging():
 
 
 class MyServer(BaseHTTPRequestHandler):
-    def write_data(self, jsonData):
+    def parse_body(self, jsonData):
         if not isinstance(jsonData, dict) or "Type" not in jsonData:
             raise ValueError("Unrecognized data, no type provided")
         if "Data" not in jsonData:
@@ -40,21 +40,23 @@ class MyServer(BaseHTTPRequestHandler):
             key = "edges"
         else:
             raise ValueError(f"Unrecognized type: {datatype}")
+        return key, data
 
-        client = ipfshttpclient.connect("/dns/ipfs-rpc-api/tcp/5001/http")
-        graph = client.files.read(
-            "/graph.json").decode('utf-8')
-        log.info(graph)
-        graphData = json.loads(graph)
+    def write_data(self, key, data):
+        with ipfshttpclient.connect("/dns/ipfs-rpc-api/tcp/5001/http") as client:
+            graph = client.files.read(
+                "/graph.json").decode('utf-8')
+            log.info(graph)
+            graphData = json.loads(graph)
 
-        log.info("Appending %s: %s", datatype, data)
-        graphData[key].append(data)
+            log.info("Appending to %s: %s", key, data)
+            graphData[key].append(data)
 
-        graphStr = json.dumps(graphData)
-        log.info("Writing updated graph content: %s", graphStr)
-        response = client.files.write(
-            "/graph.json", io.BytesIO(graphStr.encode('utf-8')), create=True, truncate=True)
-        log.info(response)
+            graphStr = json.dumps(graphData)
+            log.info("Writing updated graph content: %s", graphStr)
+            response = client.files.write(
+                "/graph.json", io.BytesIO(graphStr.encode('utf-8')), create=True, truncate=True)
+            log.info(response)
 
     def _set_headers(self, status=200):
         self.send_response(status)
@@ -72,6 +74,8 @@ class MyServer(BaseHTTPRequestHandler):
         '''Reads post request body'''
         try:
             content_len = int(self.headers.get('Content-Length'))
+            if content_len < 0:
+                raise ValueError("negative Content-Length")
         except (TypeError, ValueError):
             self._send_json(411, {"error": "A valid Content-Length header is required"})
             return
@@ -81,12 +85,15 @@ class MyServer(BaseHTTPRequestHandler):
 
         try:
             jsonData = json.loads(post_body)
-            self.write_data(jsonData)
+            key, data = self.parse_body(jsonData)
         except ValueError as e:
             # Includes JSONDecodeError and UnicodeDecodeError.
             log.error("Rejected request: %s", e)
             self._send_json(400, {"error": str(e)})
             return
+
+        try:
+            self.write_data(key, data)
         except Exception as e:
             log.exception("Failed to update graph")
             self._send_json(500, {"error": str(e)})
