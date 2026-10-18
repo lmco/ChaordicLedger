@@ -1,4 +1,4 @@
-FROM python:3.11.0b3-slim-buster
+FROM python:3.11-slim-bookworm
 
 LABEL org.opencontainers.image.authors="michael.f.marchini@lmco.com"
 LABEL org.opencontainers.image.description="Server for graph processing."
