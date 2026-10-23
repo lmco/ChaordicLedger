@@ -75,10 +75,10 @@ fi
 syslog "Terminating kubectl port-forwarding for monitoring."
 terminateProcess "kubectl port-forward"
 
-syslog "Terminaging kubectl proxy."
+syslog "Terminating kubectl proxy."
 terminateProcess "kubectl proxy"
 
-syslog "Terminaging nodejs Swagger UI."
+syslog "Terminating nodejs Swagger UI."
 terminateProcess "node index"
 
 if [ -d "apiServer" ]; then
