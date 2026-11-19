@@ -28,11 +28,13 @@ func PostRelationshipToGraph(relationshipData RelationshipData, url string) {
 		fmt.Println("Executing request")
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
+			// resp is nil here: closing its body would panic, and the
+			// transaction with it, whenever the graph service is down.
 			fmt.Println("Error sending relationship creation request: ", err)
 		} else {
 			fmt.Println("Request executed")
+			defer resp.Body.Close()
 		}
-		defer resp.Body.Close()
 	}
 }
 
@@ -53,7 +55,7 @@ func (s *SmartContract) CreateRelationship(ctx contractapi.TransactionContextInt
 	}
 
 	// Create a relationship in the relationship tree
-	PostRelationshipToGraph(relationshipData, "http://graph-service:12345")
+	PostRelationshipToGraph(relationshipData, graphServiceURL)
 
 	relationshipDataJSON, err := json.Marshal(relationshipData)
 	if err != nil {

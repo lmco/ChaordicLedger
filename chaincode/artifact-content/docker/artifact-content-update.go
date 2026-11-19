@@ -47,7 +47,7 @@ func (s *SmartContract) UpdateContent(ctx contractapi.TransactionContextInterfac
 	fmt.Printf("Encoding: %s\n", formData.Encoding)
 	fmt.Printf("MIMEType: %s\n", formData.MimeType)
 	fmt.Printf("Buffer Type: %s\n", formData.Buffer.Type)
-	fmt.Printf("Buffer Data: %s\n", formData.Buffer.Data)
+	fmt.Printf("Buffer Data: %d\n", formData.Buffer.Data)
 	fmt.Printf("Size: %d\n", formData.Size)
 	fmt.Println()
 

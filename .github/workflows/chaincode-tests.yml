@@ -1,0 +1,30 @@
+name: Chaincode tests
+
+on: [push, pull_request]
+
+permissions:
+  contents: read
+
+jobs:
+  go-test:
+    name: ${{ matrix.module }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        module: [artifact-content, artifact-metadata, artifact-relationship]
+    defaults:
+      run:
+        working-directory: chaincode/${{ matrix.module }}/docker
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      # The Go each module's go.mod names, the one its Dockerfile builds with
+      # (1.14 for metadata and relationship, 1.17 for content).
+      - uses: actions/setup-go@d8cbb8045d7f43706b9177cceb36c1f91a6644d5 # v7.1.0
+        with:
+          go-version-file: chaincode/${{ matrix.module }}/docker/go.mod
+          cache-dependency-path: chaincode/${{ matrix.module }}/docker/go.sum
+      - name: go vet
+        run: go vet ./...
+      - name: go test
+        run: go test -count=1 ./...
