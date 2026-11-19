@@ -1,9 +1,15 @@
 name: CI
 
-on: [push]
+# A pull request builds every image and the Java API, but logs in to the registry
+# and pushes nothing: a pull request from a fork has no token that may, and its
+# images are not yet reviewed. A push publishes, as before.
+on: [push, pull_request]
+
+permissions:
+  contents: read
 
 env:
-  DOCKER_REGIRSTY_HOST: ghcr.io
+  DOCKER_REGISTRY_HOST: ghcr.io
   DOCKER_REGISTRY: ghcr.io/lmco/chaordicledger
   CUSTOM_BUILDER_IMAGE_NAME: customgradlebuilder
   CUSTOM_BUILDER_IMAGE_VERSION: 0.0.1
@@ -24,7 +30,7 @@ jobs:
     # Reference: https://github.com/swagger-api/swagger-codegen/blob/master/standalone-gen-dev/standalone-generator-development.md
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: API Generation Setup
         run: |
@@ -36,7 +42,7 @@ jobs:
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l go -o ${{ env.OUT_GO }}
 
       - name: Archive generated GO code
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: go-api
           path: ${{ env.OUT_GO }}
@@ -72,7 +78,7 @@ jobs:
           ls -rotl ${OUT_JAVA}
 
       - name: Archive generated JAVA code
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: java-api
           path: ${{ env.OUT_JAVA }}
@@ -83,9 +89,9 @@ jobs:
           java -jar ${{ env.SWAGGER_CODEGEN_CLI_LOCAL_JAR }} generate -i ${{ env.SWAGGER_API_FILE }} -l nodejs-server -o ${{ env.OUT_NODEJS }}
 
       - name: API Server Implementation - NodeJS
-        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v2
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
         with:
-          python-version: 3.8 #install the python needed
+          python-version: "3.12"
       - name: Overlay NodeJS Server Implementation
         run: |
           # Need to overlay the functional implementation to the generated code.
@@ -126,7 +132,7 @@ jobs:
       # - name: Generate NPM package details
       #   run: |
       - name: Archive generated NodeJS code
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: nodejs-server
           path: ${{ env.OUT_NODEJS }}
@@ -140,7 +146,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -149,9 +155,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
           
@@ -159,14 +167,20 @@ jobs:
   build-java-api:
     runs-on: ubuntu-latest
     needs: [generate-api-code, docker-API-Builder]
+    # It pulls the builder image docker-API-Builder pushes (public, so a pull
+    # request pulls main's without logging in).
+    permissions:
+      contents: read
+      packages: read
     steps:
-      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v3
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
 
       - name: List java-api Directory Contents
         run: ls -rotl java-api
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Build Java API
         run: |
@@ -176,7 +190,7 @@ jobs:
           echo "buildRoot=${PWD}" >> $GITHUB_ENV
 
       - name: Publish Java client jar
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: java-client
           path: ${{ env.buildRoot }}/build/libs/*.jar
@@ -192,7 +206,7 @@ jobs:
           echo "targetRoot=${PWD}/target" >> $GITHUB_ENV
 
       - name: Publish packaged Java client jar
-        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         with:
           name: java-client-package
           path: |
@@ -209,7 +223,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Copy API Definition
         run: cp ${{ env.SWAGGER_API_FILE }} ${{ env.BUILD_DIR }}
@@ -221,9 +235,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -237,7 +253,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -246,9 +262,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -263,7 +281,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -272,9 +290,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -289,7 +309,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -298,9 +318,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -308,7 +330,7 @@ jobs:
   #   uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
   #   secrets:
   #     registry: ${{ env.DOCKER_REGISTRY }}
-  #     registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
+  #     registry_host: ${{ env.DOCKER_REGISTRY_HOST }}
   #     image_name: ${{ env.IMAGE_NAME }}
   #     image_version: ${{ env.IMAGE_VERSION }}
   #   secrets:
@@ -325,7 +347,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -334,9 +356,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -350,7 +374,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -359,9 +383,11 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
@@ -375,7 +401,7 @@ jobs:
       packages: write
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Build image
         run: |
@@ -384,18 +410,20 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        if: github.event_name == 'push'
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
+        if: github.event_name == 'push'
         run: |
           docker push ${{ env.imageTag }}
 
 #  build-obsidian-lightswitch-chaincode:
 #    runs-on: ubuntu-latest
 #    steps:
-#      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+#      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 #      - name: Checkout the Obsidian repo
-#        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
+#        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 #        with:
 #          repository: mcoblenz/Obsidian
 #          path: './Obsidian'
@@ -436,7 +464,7 @@ jobs:
 #          echo "buildRoot=${PWD}" >> $GITHUB_ENV
 #          popd
 #      - name: Publish chaincode jar
-#        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v3
+#        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
 #        with:
 #          name: lightswitch-chaincode
 #          path: |
@@ -453,8 +481,8 @@ jobs:
 #      packages: write
 #      contents: read
 #    steps:
-#      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v2
-#      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v3
+#      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+#      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
 #      - name: Prepare
 #        run: |
 #          pushd lightswitch-chaincode/build/libs
@@ -474,7 +502,7 @@ jobs:
 #          echo "imageTag=${imageTag}" >> $GITHUB_ENV
 #
 #      - name: Log in to registry
-#        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+#        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 #
 #      - name: Push image
 #        run: |
