@@ -5,3 +5,11 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    groups:
+      # init, autobuild and analyze must be at one version: CodeQL refuses a
+      # run whose steps differ ("Loaded a configuration file for version ...,
+      # but running version ..."), so a pull request bumping one of them alone
+      # can never pass.
+      codeql-action:
+        patterns:
+          - "github/codeql-action*"
