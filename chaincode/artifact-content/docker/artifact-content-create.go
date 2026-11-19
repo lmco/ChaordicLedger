@@ -92,6 +92,11 @@ func TestUploadFolderRaw() {
 	})
 
 	resp, err := http.Post("http://ipfs-rpc-api:5001/api/v0/add?pin=true&recursive=true&wrap-with-directory=true", ct, r)
+	if err != nil {
+		fmt.Println("err: ", err)
+		return
+	}
+	defer resp.Body.Close()
 
 	respAsBytes, err := ioutil.ReadAll(resp.Body)
 	fmt.Println("response: ", string(respAsBytes))
@@ -126,6 +131,7 @@ func TestAPI(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	defer resp.Body.Close()
@@ -199,6 +205,7 @@ func TryGetURL(url string) {
 	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
 
 	defer resp.Body.Close()
@@ -243,11 +250,13 @@ func PostToGraph(nodedata NodeData, url string) {
 		fmt.Println("Executing request")
 		resp, err := http.DefaultClient.Do(req)
 		if err != nil {
+			// resp is nil here: closing its body would panic, and the
+			// transaction with it, whenever the graph service is down.
 			fmt.Println("Error sending node data creation request: ", err)
 		} else {
 			fmt.Println("Request executed")
+			defer resp.Body.Close()
 		}
-		defer resp.Body.Close()
 	}
 }
 
