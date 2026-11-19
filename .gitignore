@@ -28,3 +28,6 @@ infrastructure/.corporateEnvfile
 .terraform/
 kube-state-metrics/
 __pycache__
+
+# Gradle's per-project cache (lock files, file hashes): written by every build
+.gradle/
