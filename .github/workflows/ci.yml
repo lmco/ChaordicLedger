@@ -3,7 +3,7 @@ name: CI
 on: [push]
 
 env:
-  DOCKER_REGIRSTY_HOST: ghcr.io
+  DOCKER_REGISTRY_HOST: ghcr.io
   DOCKER_REGISTRY: ghcr.io/lmco/chaordicledger
   CUSTOM_BUILDER_IMAGE_NAME: customgradlebuilder
   CUSTOM_BUILDER_IMAGE_VERSION: 0.0.1
@@ -149,7 +149,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -166,7 +166,7 @@ jobs:
         run: ls -rotl java-api
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Build Java API
         run: |
@@ -221,7 +221,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -246,7 +246,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -272,7 +272,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -298,7 +298,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -308,7 +308,7 @@ jobs:
   #   uses: lmco/ChaordicLedger/.github/workflows/build-and-push-docker.yml@api_hookup
   #   secrets:
   #     registry: ${{ env.DOCKER_REGISTRY }}
-  #     registry_host: ${{ env.DOCKER_REGIRSTY_HOST }}
+  #     registry_host: ${{ env.DOCKER_REGISTRY_HOST }}
   #     image_name: ${{ env.IMAGE_NAME }}
   #     image_version: ${{ env.IMAGE_VERSION }}
   #   secrets:
@@ -334,7 +334,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -359,7 +359,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -384,7 +384,7 @@ jobs:
           echo "imageTag=${imageTag}" >> $GITHUB_ENV
 
       - name: Log in to registry
-        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 
       - name: Push image
         run: |
@@ -474,7 +474,7 @@ jobs:
 #          echo "imageTag=${imageTag}" >> $GITHUB_ENV
 #
 #      - name: Log in to registry
-#        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGIRSTY_HOST }} -u ${{ github.actor }} --password-stdin
+#        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ${{ env.DOCKER_REGISTRY_HOST }} -u ${{ github.actor }} --password-stdin
 #
 #      - name: Push image
 #        run: |
